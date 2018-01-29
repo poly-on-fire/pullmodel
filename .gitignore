@@ -1,1 +1,4 @@
-# Add any directories, files, or patterns you don't want to be tracked by version control
+public/bower_components
+functions/node_modules
+nopass.sh
+.idea
