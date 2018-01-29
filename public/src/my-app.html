@@ -1,0 +1,378 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html"/>
+<link rel="import" href="my-icons.html">
+<link rel="lazy-import" href="my-about.html">
+<link rel="lazy-import" href="my-super-admin.html">
+<link rel="lazy-import" href="my-view2.html">
+<link rel="lazy-import" href="my-view3.html">
+<link rel="lazy-import" href="my-view404.html">
+<link rel="import" href="visibility-controller.html">
+<link rel="import" href="../bower_components/iron-cookie/iron-cookie.html">
+
+<dom-module id="my-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: green;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+
+      .card {
+        margin: 24px;
+        padding: 16px;
+        color: #757575;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+
+    <!--non-visual components-->
+    <firebase-app id='firebase' auth-domain="pullmodel.com"
+                  database-url="https://pullmodel-5d998.firebaseio.com/"
+                  projectId:
+    "pullmodel-5d998"
+    api-key="AIzaSyDiXkbQjp9kITeLZFaZPHDGS1BetcPlvCo">
+    </firebase-app>
+    <firebase-auth id="googleAuth" user="{{user}}" provider="google" on-error="handleError">
+    </firebase-auth>
+    <firebase-auth id="fbAuth" user="{{user}}" provider="facebook" on-error="handleError">
+    </firebase-auth>
+    <firebase-auth id="twitterAuth" user="{{user}}" provider="twitter" on-error="handleError">
+    </firebase-auth>
+    <firebase-auth id="githubAuth" user="{{user}}" provider="github" on-error="handleError">
+    </firebase-auth>
+    <iron-cookie id="cookie" name="cookie" value="{{cookieValue}}" uri-safe></iron-cookie>
+    <visibility-controller user=[[user]]></visibility-controller>
+
+    <div hidden$="[[!role.show.a]]">
+      <div class="card" hidden$="[[user]]">
+        <p>Access to pullModel.com is limited to invitations,
+          but if you visited previously on another device you'll have to sign in again, from this device.
+          Please submit your email to access the sign-in button.
+        </p>
+        <input id="emailSubmit" type="text" email="email"><br>
+        <button on-click="myFunction">Submit</button>
+      </div>
+    </div>
+
+    <div hidden$="[[user]]">
+      <div class="card" hidden$=[[!role.show.b]]>
+        <h1>&nbsp;Signing in to pullModel.com:</h1>
+        <paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>
+        <p>Facebook login may your best choice, if you're a typical Facebook user.</p>
+        <p>PullModel offers Facebook messaging as an option, if you are a user of Facebook Messenger.</p>
+        <hr>
+        <p>Or alternatley,login with a Google or Twitter sign in.</p>
+        <paper-button raised on-tap="googlelogin" hidden$="[[user]]"><img src="../images/google.png"/></paper-button>
+        <paper-button raised on-tap="twitterlogin" hidden$="[[user]]"><img src="../images/twitter.png"/></paper-button>
+        <paper-button raised on-tap="githublogin" hidden$="[[user]]"><img src="../images/github.png"/></paper-button>
+        <h1>Why do we use social media logins?</h1>
+        <p>Social media companies handle login security much better than we ever could!</p>
+        <p>So we let them do the heavy lifting, they give us a unique ID for you - to make sure we recognize you when
+          you come back.</p>
+        <p>Once you pick your option, you'll need to stick with it, on this site.</p>
+      </div>
+    </div>
+
+    <!-- .... else display the app as it was written before auth required -
+    This is somewhat clumsy and brutish, but good enough for a demo app -->
+    <div hidden$="[[!user]]">
+      <app-location
+              route="{{route}}"
+              query-params="{{queryParams}}"
+              url-space-regex="^[[rootPath]]">
+      </app-location>
+
+      <app-route
+              route="{{route}}"
+              pattern="[[rootPath]]:page"
+              data="{{routeData}}"
+              tail="{{subroute}}">
+      </app-route>
+
+      <app-drawer-layout fullbleed narrow="{{narrow}}">
+        <!-- Drawer content -->
+        <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+          <div style="height: 100%; overflow: auto;"><!--scrolling-->
+            <app-toolbar>Menu</app-toolbar>
+            <iron-selector hidden$="[[!user]]" selected="[[page]]" attr-for-selected="name" class="drawer-list"
+                           role="navigation">
+              <div hidden$=[[!role.show.d]]><a name="about" href="[[rootPath]]about">About</a></div>
+              <div hidden$=[[!role.show.d]]><a name="read-faq" href="[[rootPath]]read-faq">FAQ</a></div>
+              <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
+                Support</a></div>
+              <div hidden$=[[!role.show.g]]><a name="manage-topics" href="[[rootPath]]manage-topics">Manage Your
+                Topics</a></div>
+              <div hidden$=[[!role.show.g]]><a name="manage-messages" href="[[rootPath]]manage-messages">Manage Your
+                Messages</a></div>
+              <div hidden$=[[!role.show.g]]><a name="leader-profile" href="[[rootPath]]leader-profile">My Profile</a>
+              </div>
+              <div hidden$=[[!role.show.j]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Subscriber
+                Groups</a></div>
+              <div hidden$=[[!role.show.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
+                Requests</a></div>
+              <div hidden$=[[!role.show.h]]><a name="manage-profiles" href="[[rootPath]]manage-profiles">Admin the
+                Profiles</a></div>
+              <div hidden$=[[!role.show.h]]><a name="manage-faq" href="[[rootPath]]manage-faq">Admin the FAQ</a></div>
+              <div hidden$=[[!role.show.j]]><a name="message-meta" href="[[rootPath]]message-meta">message-meta</a>
+              </div>
+              <div hidden$=[[!role.show.g]]><a name="message-content"
+                                               href="[[rootPath]]message-content">message-content</a></div>
+              <div hidden$=[[!role.show.j]]><a name="security-groups"
+                                               href="[[rootPath]]security-groups">security-groups</a></div>
+              <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
+              <div hidden$=[[!role.show.j]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">manage-subscribers</a>
+              </div>
+              <div hidden$=[[!role.show.j]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">manage-subscriptions</a>
+              </div>
+              <div hidden$=[[!role.show.j]]><a name="email-access" href="[[rootPath]]email-access">email-access</a>
+              </div>
+              <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
+            </iron-selector>
+            <div hidden$="[[!user]]">
+              <span hidden$="[[!user]]">&nbsp;&nbsp;<paper-button raised on-tap="logout">Sign Out</paper-button></span>
+            </div>
+          </div>
+        </app-drawer>
+
+        <!-- Main content -->
+        <app-header-layout has-scrolling-region>
+          <app-header slot="header" condenses reveals effects="waterfall">
+            <app-toolbar>
+              <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+              <div main-title>pullModel.com</div>
+            </app-toolbar>
+          </app-header>
+
+          <iron-pages
+                  selected="[[page]]"
+                  attr-for-selected="name"
+                  fallback-selection="view404"
+                  role="main">
+            <my-about name="about" user=[[user]]></my-about>
+            <super-admin name="super-admin" user=[[user]]></super-admin>
+            <security-groups name="security-groups" user=[[user]]></security-groups>
+            <topic-types name="topic-types" user=[[user]]></topic-types>
+            <manage-profiles name="manage-profiles" user=[[user]]></manage-profiles>
+            <manage-faq name="manage-faq" user=[[user]]></manage-faq>
+            <read-faq name="read-faq" user=[[user]]></read-faq>
+            <manage-requests name="manage-requests" user=[[user]]></manage-requests>
+            <support-request name="support-request" user=[[user]]></support-request>
+            <manage-topics name="manage-topics" user=[[user]]></manage-topics>
+            <message-meta name="message-meta" user=[[user]]></message-meta>
+            <message-content name="message-content" user=[[user]]></message-content>
+            <manage-messages name="manage-messages" user=[[user]]></manage-messages>
+            <subscriber-groups name="subscriber-groups" user=[[user]]></subscriber-groups>
+            <manage-subscribers name="manage-subscribers" user=[[user]]></manage-subscribers>
+            <manage-subscriptions name="manage-subscriptions" user=[[user]]></manage-subscriptions>
+            <email-access name="email-access" user=[[user]]></email-access>
+            <leader-profile name="leader-profile" user=[[user]]></leader-profile>
+            <my-view404 name="view404"></my-view404>
+          </iron-pages>
+        </app-header-layout>
+      </app-drawer-layout>
+    </div>
+  </template>
+
+  <script>
+    class MyApp extends ReduxMixin(Polymer.Element) {
+      static get is() {
+        return 'my-app';
+      }
+
+      static get properties() {
+        return {
+          user: Object,
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          routeData: Object,
+          subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+          role: {
+            type: Object,
+            statePath: 'role',
+            observer: '_onRole'
+          },
+          queryParams: {
+            type: Object,
+            observer: '_paramsChanged'
+          },
+          cookieValue: {
+            type: String
+          }
+        };
+      }
+
+      _onRole() {
+        if (!!this.user) {
+          // console.log("\nENTERING MY APP ON ROLE\n"+this.user.uid+'\n'+JSON.stringify(this.role));
+          // regardless of what happens milliseconds later, at least the user
+          // has earned promotion to unknownUser
+          if (!!this.role && !!this.role.show && !this.role.show.d) {
+            this.dispatch(VisibilityController.actions.showUnknownUser());
+          }
+          // FUTURE TODO in case I want to make the form more responsive than firebase
+          // get a temporary role from the cookie?
+          // frankly this is probably not worth the effort?
+          // because firebase will always be fast enough, or if it is slow
+          // then I would not get this far because firebase auth would have been slow
+          //   this.role = JSON.parse(this.$.cookie.value);
+          // }else{
+          //   this.$.cookie.value = JSON.stringify(this.role);
+          // }
+          // console.log("\nUSER\n"+this.user.uid+'\n'+JSON.stringify(this.user.providerData[0].providerId));
+        }
+      }
+
+      googlelogin() {
+        return this.$.googleAuth.signInWithPopup();
+      }
+
+      fblogin() {
+        return this.$.fbAuth.signInWithPopup();
+      }
+
+      twitterlogin() {
+        return this.$.twitterAuth.signInWithPopup();
+      }
+
+      githublogin() {
+        return this.$.githubAuth.signInWithPopup();
+      }
+
+      logout() {
+        return this.$.fbAuth.signOut();
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+        // If no page was found in the route data, page will be an empty string.
+        // Default to 'about' in that case.
+        this.page = page || 'about';
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      _paramsChanged(queryParams) {
+        if (!!queryParams && !!queryParams.email) {
+          //something here to submit email to node function
+          console.log('\nEMAIL\n' +
+            'EMAIL SUBMITTED TO FIREBASE FUNCTION\n' +
+            JSON.stringify(queryParams.email));
+          this.dispatch(VisibilityController.actions.showUnknown());
+        }
+      }
+
+      myFunction() {
+        let email = this.$.emailSubmit.value;
+        if (!email) {
+          alert("Please furnish an email address!");
+          return;
+        }
+
+        if (this.validateEmail(email)) {
+          this.dispatch(VisibilityController.actions.showUnknown());
+        } else {
+          alert("'" + email + "' is an invalid email address!");
+        }
+      }
+
+      validateEmail(email) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+          return (true)
+        }
+        return (false)
+      }
+    }
+
+    window.customElements.define(MyApp.is, MyApp);
+  </script>
+</dom-module>

@@ -1,0 +1,102 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="read-faq">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="queryFaqs" path="/faq" data="{{faqs}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">FAQ</div>
+      <p>Frequently Asked Questions:</p>
+    </div>
+    <div class="card">
+      <template is="dom-repeat" items="[[faqs]]" as="faq">
+        <h4>[[faq.name]]</h4>
+        <ul>
+          <li>[[faq.description]]</li>
+        </ul>
+      </template>
+    </div>
+    <div class="card">
+      <h3 id="addTitle">Add Question:</h3>
+      <p>Is there a question we have not answered that you believe others would also have?</p>
+      <input id="key" type="text" name="key" hidden/>
+      <form action="/" method="get" id="addupdate">
+        <paper-input id="name" label="Your question:" required placeholder=" "></paper-input>
+        <button id="add" on-click="add" type="button">Add</button>
+      </form>
+    </div>
+  </template>
+
+  <script>
+    class ReadFaq extends Polymer.Element {
+      static get is() {
+        return 'read-faq';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          }
+        }
+      }
+
+      add() {
+        var postData = {
+          name: this.$.name.value,
+          description: 'TBD - awaiting admin to answer',
+          timestamp: Date.now()
+        }
+        var newFaqKey = this.$.queryFaqs.ref.push().key
+        var updates = {}
+        updates["/" + newFaqKey] = postData;
+        this.$.queryFaqs.ref.update(updates);
+        this.$.name.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      display(e) {
+        var key = e.currentTarget.faq.$key;
+        var faqQueryRef = this.$.queryFaqs.ref.child(key);
+        var aFaq = null;
+        faqQueryRef.on('value', function (snapshot) {
+          aFaq = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.name.value = aFaq.name;
+        this.$.description.value = aFaq.description;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      remove(e) {
+        var key = e.currentTarget.faq.$key;
+        this.$.queryFaqs.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(ReadFaq.is, ReadFaq);
+  </script>
+</dom-module>

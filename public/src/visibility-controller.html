@@ -1,0 +1,204 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html"/>
+<link rel="import" href="./redux-store.html">
+
+<dom-module id="visibility-controller">
+  <template>
+    <firebase-document id="queryVisibility" path="/users/[[user.uid]]/role" data="{{role}}" disabled>
+    </firebase-document>
+  </template>
+
+  <script>
+    class VisibilityController extends ReduxMixin(Polymer.Element) {
+      static get is() {
+        return 'visibility-controller';
+      }
+
+      static get properties() {
+        return {
+          role: {
+            type: String,
+            observer: '_onRole'
+          },
+          user: {
+            type: Object,
+            observer: '_onUser'
+          }
+        }
+      }
+
+      static get actions() {
+        return {
+          showAnonymous() {
+            return {
+              type: 'SHOW_ANONYMOUS'
+            }
+          },
+          showPassive() {
+            return {
+              type: 'SHOW_PASSIVE'
+            }
+          },
+          showUnknown() {
+            return {
+              type: 'SHOW_UNKNOWN'
+            }
+          },
+          showInvited() {
+            return {
+              type: 'SHOW_INVITED'
+            }
+          },
+          showPassiveUser() {
+            return {
+              type: 'SHOW_PASSIVE_USER'
+            }
+          },
+          showUnknownUser() {
+            return {
+              type: 'SHOW_UNKNOWN_USER'
+            }
+          },
+          showSubscriber() {
+            return {
+              type: 'SHOW_SUBSCRIBER'
+            }
+          },
+          showPendingLeader() {
+            return {
+              type: 'SHOW_PENDING_LEADER'
+            }
+          },
+          showLeader() {
+            return {
+              type: 'SHOW_LEADER'
+            }
+          },
+          showAdmin() {
+            return {
+              type: 'SHOW_ADMIN'
+            }
+          },
+          showSuperAdmin() {
+            return {
+              type: 'SHOW_SUPER_ADMIN'
+            }
+          },
+          displayAnonymous() {
+            return {
+              type: 'DISPLAY_ANONYMOUS'
+            }
+          },
+          displayPassive() {
+            return {
+              type: 'DISPLAY_PASSIVE'
+            }
+          },
+          displayUnknown() {
+            return {
+              type: 'DISPLAY_UNKNOWN'
+            }
+          },
+          displayInvited() {
+            return {
+              type: 'DISPLAY_INVITED'
+            }
+          },
+          displayPassiveUser() {
+            return {
+              type: 'DISPLAY_PASSIVE_USER'
+            }
+          },
+          displayUnknownUser() {
+            return {
+              type: 'DISPLAY_UNKNOWN_USER'
+            }
+          },
+          displaySubscriber() {
+            return {
+              type: 'DISPLAY_SUBSCRIBER'
+            }
+          },
+          displayPendingLeader() {
+            return {
+              type: 'DISPLAY_PENDING_LEADER'
+            }
+          },
+          displayLeader() {
+            return {
+              type: 'DISPLAY_LEADER'
+            }
+          },
+          displayAdmin() {
+            return {
+              type: 'DISPLAY_ADMIN'
+            }
+          },
+          displaySuperAdmin() {
+            return {
+              type: 'DISPLAY_SUPER_ADMIN'
+            }
+          }
+        }
+      }
+
+      // without this, fires before it is ready
+      _onUser() {
+        if (!!this.user && !!this.user.uid) {
+          this.$.queryVisibility.disabled = false;
+        }
+      }
+
+      _onRole() {
+        // console.log("ENTERING VC.ON ROLE\n"+ JSON.stringify(this.role));
+        let role = this.role;
+        if (!!role) {
+          switch (role) {
+            case 'anonymous':
+              this.dispatch(VisibilityController.actions.showAnonymous());
+              break;
+            case 'passive':
+              this.dispatch(VisibilityController.actions.showPassive());
+              break;
+            case 'unknown':
+              this.dispatch(VisibilityController.actions.showUnknown());
+              break;
+            case 'invited':
+              this.dispatch(VisibilityController.actions.showInvited());
+              break;
+            case 'passiveUser':
+              this.dispatch(VisibilityController.actions.showPassiveUser());
+              break;
+            case 'unknownUser':
+              this.dispatch(VisibilityController.actions.showUnknownUser());
+              break;
+            case 'subscriber':
+              this.dispatch(VisibilityController.actions.showSubscriber());
+              break;
+            case 'pendingLeader':
+              this.dispatch(VisibilityController.actions.showPendingLeader());
+              break;
+            case 'leader':
+              this.dispatch(VisibilityController.actions.showLeader());
+              break;
+            case 'admin':
+              this.dispatch(VisibilityController.actions.showAdminTest());
+              break;
+            case 'superAdmin':
+              this.dispatch(VisibilityController.actions.showSuperAdmin());
+              break;
+            default:
+              // console.log('\nLEAVING VC.ON ROLE WITH DEFAULT\n');
+              this.dispatch(VisibilityController.actions.showAnonymous());
+          }
+          // }else{
+          //   console.log('\nLEAVING VC.ON ROLE WITHOUT PROCESSING\n');
+        }
+      }
+    }
+
+    window.customElements.define(VisibilityController.is, VisibilityController);
+  </script>
+</dom-module>

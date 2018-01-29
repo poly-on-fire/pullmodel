@@ -1,0 +1,459 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+<link rel="import" href="db-combo-box.html">
+
+<dom-module id="manage-topics">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <user-profile id="cdProfile" fresh="{{fresh}}" invited="{{invited}}" pending="{{pending}}" nuskin="{{nuskin}}"
+                  dist="{{dist}}" admin="{{admin}}"></user-profile>
+    <firebase-auth id="auth" user="{{user}}" on-error="handleError">
+    </firebase-auth>
+    <firebase-query id="queryTopics" path="/users/[[user.uid]]/topic" data="{{topics}}">
+    </firebase-query>
+    <firebase-query id="queryTopicLookup" path="/topicLookup">
+    </firebase-query>
+    <firebase-query id="queryTopicName" path="/users/[[user.uid]]/topicName" data="{{topicNames}}">
+    </firebase-query>
+
+    <div class="card" hidden$=[[!user]]>
+      <div class="circle">Topic</div>
+      <h3 id="addTitle">Add a New Topic</h3>
+      <h3 id="updateTitle" hidden>Update Topic</h3>
+      <div class="card">
+        <iron-form id="addupdate">
+          <form method="get" action="/">
+            <db-combo-box id="topicType" field='name'
+                          placeholder='Select option from dropdown button at right.'
+                          dbpath="/topicType" combolabel="Select Topic Type"
+                          error-message="Please select a Topic Type" on-change="isThisWeb"></db-combo-box>
+            <input id="isWeb" hidden></input>
+            <iron-autogrow-textarea id="name"
+                                    placeholder="enter name here"></iron-autogrow-textarea>
+            <p>Description:</p>
+            <iron-autogrow-textarea id="description"
+                                    placeholder="Notes to self (if any) - What is this topic about?"></iron-autogrow-textarea>
+            <div id="hasWeb" class="card" hidden>
+              <p>Lead Capture Page:</p>
+              <iron-autogrow-textarea id="aHeadline" placeholder="Headline" required
+                                      error-message="Please provide headline text"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <iron-autogrow-textarea id="aPre" placeholder="Paragraph above video" required
+                                      error-message="Please provide pre-video text"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <iron-autogrow-textarea id="aVideo" placeholder="Youtube link" required
+                                      error-message="Please provide video link"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <iron-autogrow-textarea id="aPost" placeholder="Paragraph below video" required
+                                      error-message="Please provide post-video text"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <p>Sales Page:</p>
+              <iron-autogrow-textarea id="bHeadline" placeholder="Headline" required
+                                      error-message="Please provide headline text"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <iron-autogrow-textarea id="bPre" placeholder="Paragraph above video" required
+                                      error-message="Please provide pre-video text"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <iron-autogrow-textarea id="bVideo" placeholder="Youtube link" required
+                                      error-message="Please provide video link"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+              <iron-autogrow-textarea id="bPost" placeholder="Paragraph below video" required
+                                      error-message="Please provide post-video text"
+                                      hidden></iron-autogrow-textarea>
+              <br>
+            </div>
+            <input id="key" type="text" name="key" hidden/>
+            <div id="formControls">
+              <paper-button raised id="add" on-tap="add">Add</paper-button>
+              <paper-button raised id="update" on-tap="update" hidden>Update</paper-button>
+              <paper-button raised id="clear" on-tap="clear">Cancel/Clear</paper-button>
+            </div>
+          </form>
+        </iron-form>
+        <hr>
+      </div>
+
+      <h3>My Topics</h3>
+      <div class="card">
+        <div class="topics">
+          <ul id="topics-list">
+            <template is="dom-repeat" items="[[topics]]" as="topic">
+              <li>
+                <p class="content">
+                  <span><b>[[topic.name]]</b></span>
+                  <br>
+                  <span><b>Lead Capture Page: </b><br><a href="[[topic.leadCaptureLink]]"
+                                                         target="_blank"> View page </a><small><br>Page will not be deployed for at least 5 minutes after creating.</small></span>
+                  <!--<br>-->
+                  <!--<span><b>Sales Link: </b>[[topic.salesLink]]</span>-->
+                </p>
+                <paper-icon-button raised topic="[[topic]]" on-tap="remove"
+                                   icon="my-icons:close"></paper-icon-button>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="card">
+  <db-combo-box id="topicType" field='name'
+                placeholder='Select topic type'
+                dbpath="/topicType" combolabel="Select Topic Type" required
+                error-message="Please select a Topic Type" on-change="isThisWeb"></db-combo-box> -->
+    </div>
+    <!-- <div class="card">
+      <input id="key" type="text" name="key" hidden/>
+      <form action="/" method="get" id="addupdate">
+        <paper-input id="name" label="Name:" required placeholder="Type topic here "></paper-input>
+        <iron-label>
+          Description:
+          <iron-autogrow-textarea id="description" placeholder="Type description here" required></iron-autogrow-textarea>
+        </iron-label>
+        <br>
+        <button id="add" on-click="add" type="button">Add</button>
+        <button id="update" on-click="update" type="button" hidden>Update</button>
+        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
+      </form>
+  </div> -->
+    <!-- <div class="card">
+      <table style="width:100%; border: 1px solid black; padding: 15px;" >
+        <tr>
+          <th>Delete</th>
+          <th>Update</th>
+          <th>Topic</th>
+          <th>Description</th>
+        </tr>
+        <template is="dom-repeat" items="[[topics]]" as="topic">
+          <tr>
+            <td><paper-icon-button raised topic="[[topic]]" on-tap="remove" icon="my-icons:close">Delete</paper-icon-button></td>
+            <td><paper-icon-button raised topic="[[topic]]" on-tap="display" icon="my-icons:chevron-right">Update</paper-icon-button></td>
+            <td>[[topic.name]]</td>
+            <td>[[topic.description]]</td>
+          </tr>
+        </template>
+      </table>
+    </div> -->
+  </template>
+
+  <script>
+    class ManageTopics extends Polymer.Element {
+      static get is() {
+        return 'manage-topics';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          },
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      _timeUseful() {
+        let time = '' + Date.now();
+        time = time.substring(8, time.length);
+        return '\n' + time + '\n';
+      }
+
+      isThisWeb() {
+        if (this.hasLeadCapture(this.$.topicType.value)) {
+          this.$.hasWeb.hidden = false;
+          this.$.aHeadline.hidden = false;
+          this.$.aPre.hidden = false;
+          this.$.aVideo.hidden = false;
+          this.$.aPost.hidden = false;
+          this.$.bHeadline.hidden = false;
+          this.$.bPre.hidden = false;
+          this.$.bVideo.hidden = false;
+          this.$.bPost.hidden = false;
+          this.$.aHeadline.required = true;
+          this.$.aPre.required = true;
+          this.$.aVideo.required = true;
+          this.$.aPost.required = true;
+          this.$.bHeadline.required = true;
+          this.$.bPre.required = true;
+          this.$.bVideo.required = true;
+          this.$.bPost.required = true;
+        } else {
+          this.$.hasWeb.hidden = true;
+          this.$.aHeadline.hidden = false;
+          this.$.aPre.hidden = false;
+          this.$.aVideo.hidden = false;
+          this.$.aPost.hidden = false;
+          this.$.bHeadline.hidden = false;
+          this.$.bPre.hidden = false;
+          this.$.bVideo.hidden = false;
+          this.$.bPost.hidden = false;
+          this.$.aHeadline.required = false;
+          this.$.aPre.required = false;
+          this.$.aVideo.required = false;
+          this.$.aPost.required = false;
+          this.$.bHeadline.required = false;
+          this.$.bPre.required = false;
+          this.$.bVideo.required = false;
+          this.$.bPost.required = false;
+          this.$.aHeadline.value = null;
+          this.$.aPre.value = null;
+          this.$.aVideo.value = null;
+          this.$.aPost.value = null;
+          this.$.bHeadline.value = null;
+          this.$.bPre.value = null;
+          this.$.bVideo.value = null;
+          this.$.bPost.value = null;
+        }
+      }
+
+      hasLeadCapture(val) {
+        if (typeof val !== undefined && val !== "undefined" && val !== "null" && val && (val.includes("dual"))) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      resetForm() {
+        this.$.name.value = null;
+        this.$.description.value = null;
+      }
+
+      add() {
+        let timestamp = Date.now();
+        var newTopicKey = this.$.queryTopics.ref.push().key;
+        let friendlyName = this._friendlyName(newTopicKey);
+        let leadLink = null;
+        if (this.hasLeadCapture(this.$.topicType.value)) {
+          leadLink = "https://clouddancer.info/z" + newTopicKey + "c.html";
+        }
+        let postData = {
+          topicType: this.$.topicType.value,
+          name: friendlyName,
+          description: this.$.description.value ? this.$.description.value : "",
+          timestamp: timestamp
+        }
+
+        if (this.$.hasWeb.hidden == false) {
+          postData.aHeadline = this.$.aHeadline.value ? this.$.aHeadline.value : "",
+            postData.aPre = this.$.aPre.value ? this.$.aPre.value : "",
+            postData.aVideo = this.$.aVideo.value ? this.$.aVideo.value : "",
+            postData.aPost = this.$.aPost.value ? this.$.aPost.value : "",
+            postData.bHeadline = this.$.bHeadline.value ? this.$.bHeadline.value : "",
+            postData.bPre = this.$.bPre.value ? this.$.bPre.value : "",
+            postData.bVideo = this.$.bVideo.value ? this.$.bVideo.value : "",
+            postData.bPost = this.$.bPost.value ? this.$.bPost.value : "",
+            postData.leadCaptureLink = leadLink
+        }
+        let updates = {}
+        updates["/" + newTopicKey] = postData;
+        this.$.queryTopics.ref.update(updates);
+
+        let topicLookupData = {
+          sponsorKey: this.user.uid,
+          sponsorName: this.user.displayName
+        };
+        let topicLookupUpdates = {};
+        topicLookupUpdates["/" + newTopicKey] = topicLookupData;
+        this.$.queryTopicLookup.ref.update(topicLookupUpdates);
+
+        let crossRefData = {
+          topicKey: newTopicKey
+        };
+        let crossRefUpdates = {};
+        crossRefUpdates["/" + friendlyName] = crossRefData;
+        this.$.queryTopicName.ref.update(crossRefUpdates);
+
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.aHeadline.value = null;
+        this.$.aPre.value = null;
+        this.$.aVideo.value = null;
+        this.$.aPost.value = null;
+        this.$.bHeadline.value = null;
+        this.$.bPre.value = null;
+        this.$.bVideo.value = null;
+        this.$.bPost.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      update(e) {
+        let descrip = this.$.description.value ? this.$.description.value : "";
+        let key = this.$.key.value;
+        let topicQueryRef = this.$.queryTopics.ref.child(key);
+        let postData = {
+          name: this.$.name.value,
+          description: descrip,
+          timestamp: Date.now()
+        }
+        topicQueryRef.ref.update(postData);
+        this.$.name.value = null;
+        this.$.description.value = null;
+
+        this.$.key.hidden = true;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.addupdate.reset()
+        return;
+      }
+
+      badd() {
+        if (this.$.addupdate.validate()) {
+          let newTopicsKey = this.$.queryTopics.ref.push().key
+          // var friendlyName = this.friendlyName(newTopicsKey, this.$.category.value, this.$.topicType.value);
+          let leadLink = null;
+          if (this.hasLeadCapture(this.$.topicType.value)) {
+            leadLink = "https://clouddancer.info/z" + newTopicsKey + "c.html";
+          }
+          let topicData = {
+            // category: this.$.category.value,
+            topicType: this.$.topicType.value,
+            // name: friendlyName,
+            leadCaptureLink: leadLink,
+            timestamp: Date.now()
+          };
+          let crossRefData = {
+            topicKey: newTopicsKey
+          };
+          let desc = this.$.description.value;
+          if (typeof desc !== "undefined" && desc !== "undefined" && desc !== "null" && desc) {
+            topicData.description = desc;
+          }
+          if (this.$.hasWeb.hidden == false) {
+            topicData.aHeadline = this.$.aHeadline.value;
+            topicData.aPre = encodeURIComponent(this.$.aPre.value);
+            topicData.aVideo = encodeURIComponent(this.$.aVideo.value);
+            topicData.aPost = encodeURIComponent(this.$.aPost.value);
+            topicData.bHeadline = this.$.bHeadline.value;
+            topicData.bPre = encodeURIComponent(this.$.bPre.value);
+            topicData.bVideo = encodeURIComponent(this.$.bVideo.value);
+            topicData.bPost = encodeURIComponent(this.$.bPost.value);
+          }
+          let topicUpdates = {};
+          topicUpdates["/" + newTopicsKey] = topicData;
+          this.$.queryTopics.ref.update(topicUpdates);
+          // var topicLookupData = {
+          //     sponsorKey: this.user.uid,
+          //     sponsorNsId: window.cdProfile.nsId,
+          //     sponsorName: window.cdProfile.properName
+          // };
+          let topicLookupUpdates = {};
+          topicLookupUpdates["/" + newTopicsKey] = topicLookupData;
+          this.$.queryTopicLookup.ref.update(topicLookupUpdates);
+          let crossRefUpdates = {};
+          crossRefUpdates["/" + friendlyName] = crossRefData;
+          this.$.queryTopicName.ref.update(crossRefUpdates);
+
+          this.$.name.value = null;
+          this.$.description.value = null;
+          this.$.addupdate.reset();
+        }
+        return;
+      }
+
+      clear() {
+        this.$.addupdate.reset();
+        return;
+      }
+
+      _friendlyName(seedKey) {
+        return this.$.name.value + "|~" + this.yyyymmdd() + "~|" + seedKey.substring(seedKey.length - 10, seedKey.length);
+      }
+
+      yyyymmdd() {
+        let d = new Date(),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+      }
+
+      display(e) {
+        let key = e.currentTarget.topic.$key;
+        let topicQueryRef = this.$.queryTopics.ref.child(key);
+        let aTopic = null;
+        topicQueryRef.on('value', function (snapshot) {
+          aTopic = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.sortIndex.value = aTopic.sortIndex;
+        this.$.name.value = aTopic.name;
+        this.$.description.value = aTopic.description;
+        this.$.link.value = aTopic.link;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      // clear() {
+      //   this.$.addupdate.reset();
+      //   this.$.name.value = null;
+      //   this.$.description.value = null;
+      //   this.$.add.hidden = false;
+      //   this.$.update.hidden = true;
+      //   this.$.addTitle.hidden = false;
+      //   this.$.updateTitle.hidden = true;
+      //   return;
+      // }
+
+      // display(e) {
+      //     var key = e.currentTarget.topic.$key;
+      //     var topicQueryRef = this.$.queryTopics.ref.child(key);
+      //     var aTopic = null;
+      //     topicQueryRef.on('value', function(snapshot) {
+      //       aTopic = snapshot.val();
+      //     });
+      //     this.$.key.value = key;
+      //     this.$.name.value = aTopic.name;
+      //     this.$.description.value = aTopic.description;
+      //     this.$.add.hidden = true;
+      //     this.$.update.hidden = false;
+      //     this.$.addTitle.hidden = true;
+      //     this.$.updateTitle.hidden = false;
+      // }
+
+      remove(e) {
+        var key = e.currentTarget.topic.$key;
+        this.$.queryTopics.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(ManageTopics.is, ManageTopics);
+  </script>
+</dom-module>

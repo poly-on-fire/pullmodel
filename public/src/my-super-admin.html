@@ -1,0 +1,109 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<dom-module id="super-admin">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card" hidden$=[[!role.show.s]]>
+      <div class="circle">2</div>
+      <h1>SuperAdmin</h1>
+      <iron-selector name="listSelection" attr-for-selected="name" on-selected-changed="_itemSelected"
+                     selected="[[vsbl]]">
+        <div name="anonymous">anonymous</div>
+        <div name="passive">passive</div>
+        <div name="unknown">unknown</div>
+        <div name="invited">invited</div>
+        <div name="passiveUser">passiveUser</div>
+        <div name="unknownUser">unknownUser</div>
+        <div name="subscriber">subscriber</div>
+        <div name="pendingLeader">pendingLeader</div>
+        <div name="leader">leader</div>
+        <div name="admin">admin</div>
+        <div name="superAdmin">superAdmin</div>
+      </iron-selector>
+    </div>
+  </template>
+
+  <script>
+    class SuperAdmin extends ReduxMixin(Polymer.Element) {
+      static get is() {
+        return 'super-admin';
+      }
+
+      static get properties() {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      _itemSelected(e, detail) {
+        let role = e.detail.value;
+        if (!!role) {
+          switch (role) {
+            case 'anonymous':
+              this.dispatch(VisibilityController.actions.displayAnonymous())
+              break;
+            case 'passive':
+              this.dispatch(VisibilityController.actions.displayPassive())
+              break;
+            case 'unknown':
+              this.dispatch(VisibilityController.actions.displayUnknown())
+              break;
+            case 'invited':
+              this.dispatch(VisibilityController.actions.displayInvited())
+              break;
+            case 'passiveUser':
+              this.dispatch(VisibilityController.actions.displayPassiveUser())
+              break;
+            case 'unknownUser':
+              this.dispatch(VisibilityController.actions.displayUnknownUser())
+              break;
+            case 'subscriber':
+              this.dispatch(VisibilityController.actions.displaySubscriber())
+              break;
+            case 'pendingLeader':
+              this.dispatch(VisibilityController.actions.displayPendingLeader())
+              break;
+            case 'leader':
+              this.dispatch(VisibilityController.actions.displayLeader())
+              break;
+            case 'admin':
+              this.dispatch(VisibilityController.actions.displayAdmin())
+              break;
+            case 'superAdmin':
+              this.dispatch(VisibilityController.actions.displaySuperAdmin())
+              break;
+            case 'superAdminTest':
+              this.dispatch(VisibilityController.actions.showHSS())
+              break;
+            default:
+            // happens on initial display
+          }
+        }
+      }
+
+    }
+
+    window.customElements.define(SuperAdmin.is, SuperAdmin);
+  </script>
+</dom-module>

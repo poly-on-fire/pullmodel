@@ -1,0 +1,172 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="email-access">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="queryEmails" path="/emailAccess" data="{{emails}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">EmailAccess</div>
+      <p>Explanation: this gives anonymous visitors the chance to self promote if already in the system.</p>
+      <p>Manual input is provided for but in reality this should always be triggered off or other inputs</p>
+      <p>Possibly this page should be deleted in favor of just using the admin UI?</p>
+    </div>
+    <div class="card">
+      <h3 id="addTitle">Add Email</h3>
+      <h3 id="updateTitle" hidden>Update Email</h3>
+      <input id="key" type="text" name="key" hidden/>
+      <form action="/" method="get" id="addupdate">
+        <paper-input id="name" label="Name:" required placeholder="Type name here "></paper-input>
+        <iron-label>
+          Description:
+          <iron-autogrow-textarea id="description" placeholder="Type description here"
+                                  required></iron-autogrow-textarea>
+        </iron-label>
+        <br>
+        <button id="add" on-click="add" type="button">Add</button>
+        <button id="update" on-click="update" type="button" hidden>Update</button>
+        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
+      </form>
+    </div>
+    <div class="card">
+      <table style="width:100%; border: 1px solid black; padding: 15px;">
+        <tr>
+          <th>Delete</th>
+          <th>Update</th>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+        <template is="dom-repeat" items="[[emails]]" as="email">
+          <tr>
+            <td>
+              <paper-icon-button raised email="[[email]]" on-tap="remove" icon="my-icons:close">Delete
+              </paper-icon-button>
+            </td>
+            <td>
+              <paper-icon-button raised email="[[email]]" on-tap="display" icon="my-icons:chevron-right">Update
+              </paper-icon-button>
+            </td>
+            <td>[[email.name]]</td>
+            <td>[[email.description]]</td>
+          </tr>
+        </template>
+      </table>
+    </div>
+  </template>
+
+  <script>
+    class EmailAccess extends Polymer.Element {
+      static get is() {
+        return 'email-access';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          },
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      resetForm() {
+        this.$.name.value = null;
+        this.$.description.value = null;
+      }
+
+      update(e) {
+        var descrip = this.$.description.value ? this.$.description.value : "";
+        var key = this.$.key.value;
+        var emailQueryRef = this.$.queryEmails.ref.child(key);
+        var postData = {
+          name: this.$.name.value,
+          description: descrip,
+          timestamp: Date.now()
+        }
+        emailQueryRef.ref.update(postData);
+        this.$.name.value = null;
+        this.$.description.value = null;
+
+        this.$.key.hidden = true;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.addupdate.reset()
+        return;
+      }
+
+      add() {
+        var postData = {
+          name: this.$.name.value,
+          description: this.$.description.value ? this.$.description.value : "",
+          timestamp: Date.now()
+        }
+        var newEmailKey = this.$.queryEmails.ref.push().key
+        var updates = {}
+        updates["/" + newEmailKey] = postData;
+        this.$.queryEmails.ref.update(updates);
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      clear() {
+        this.$.addupdate.reset();
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.updateTitle.hidden = true;
+        return;
+      }
+
+      display(e) {
+        var key = e.currentTarget.email.$key;
+        var emailQueryRef = this.$.queryEmails.ref.child(key);
+        var aEmail = null;
+        emailQueryRef.on('value', function (snapshot) {
+          aEmail = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.name.value = aEmail.name;
+        this.$.description.value = aEmail.description;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      remove(e) {
+        var key = e.currentTarget.email.$key;
+        this.$.queryEmails.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(EmailAccess.is, EmailAccess);
+  </script>
+</dom-module>

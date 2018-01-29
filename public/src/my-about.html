@@ -1,0 +1,71 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-about">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div hidden$="[[!user]]">
+      <div class="card" hidden$=[[!role.show.d]]>
+        <div class="circle">1</div>
+        <h1>Don't be Pushed! <em>Pull:</em></h1>
+        <p><strong>Pull</strong> in some drip irrigation - for your <strong>mind</strong>.</p>
+        <p>Glazing over when presented with unfamiliar material? <br>Short exposures, repeated days apart and varied,
+          make it easier for picking up fresh ideas.</p>
+        <br>
+        <p><em>You</em> pick what you pull in. Other people or organizations have always picked what gets
+          <em>pushed</em>.</p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>You won't find a lot of articles on the web about using Drip Irrigation for the Human Mind. That's too bad,
+          because you may find it more pleasant and effective than being pushed around by the broadcast information that
+          we've all become accustomed to.</p>
+
+      </div>
+    </div>
+  </template>
+
+  <script>
+    class MyAbout extends ReduxMixin(Polymer.Element) {
+      static get is() {
+        return 'my-about';
+      }
+
+      static get properties() {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+    }
+
+    window.customElements.define(MyAbout.is, MyAbout);
+  </script>
+</dom-module>

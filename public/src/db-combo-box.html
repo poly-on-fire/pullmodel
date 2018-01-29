@@ -1,0 +1,103 @@
+<link rel="import" href="../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html"/>
+<link rel="import" href="../bower_components/vaadin-valo-theme/vaadin-combo-box.html">
+<link rel="import" href="../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+
+<dom-module id="db-combo-box">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <firebase-auth id="auth" user="{{user}}" on-error="handleError">
+    </firebase-auth>
+    <firebase-document disabled id="firebaseDoc" path="[[dbpath]]" data="{{dbvalues}}">
+    </firebase-document>
+    <vaadin-combo-box id="comboBox" label="[[combolabel]]" items="[[_values]]" value="{{value}}" required=[[required]]
+                      error-message=[[errorMessage]] placeholder=[[placeholder]]></vaadin-combo-box>
+  </template>
+
+  <script>
+    /**
+     * `db-combo-box`
+     * wrapper for vaadin combo box to talk to db
+     */
+    class DbComboBox extends Polymer.Element {
+      static get is() {
+        return 'db-combo-box';
+      }
+
+      static get properties() {
+        return {
+          required: {
+            type: Boolean,
+            notify: true
+          },
+          field: {
+            type: String,
+          },
+          errorMessage: {
+            type: String,
+            notify: true
+          },
+          dbpath: {
+            type: String
+          },
+          combolabel: {
+            type: String
+          },
+          dbvalues: {
+            type: Object,
+            observer: 'dbValuesChanged'
+          },
+          user: {
+            type: Object,
+            observer: 'userChanged'
+          },
+          _values: {
+            type: Array
+          },
+          value: {
+            type: String,
+            notify: true
+          },
+          placeholder: {
+            type: String
+          }
+        };
+      }
+
+      userChanged(user) {
+        if (!!user) {
+          this.$.firebaseDoc.disabled = false;
+        }
+      }
+
+      dbValuesChanged() {
+        var field = this.field;
+        if (!!field) {
+          field = this.field
+        }
+        var dbobject = this.dbvalues;
+        var keys = [];
+        if (!field) {
+          for (var key in dbobject) {
+            keys.push(key);
+          }
+        } else {
+          for (var key in dbobject) {
+            var fieldData = dbobject[key];
+            keys.push(dbobject[key][field]);
+          }
+        }
+        this._values = keys;
+      }
+    }
+
+    window.customElements.define(DbComboBox.is, DbComboBox);
+  </script>
+</dom-module>

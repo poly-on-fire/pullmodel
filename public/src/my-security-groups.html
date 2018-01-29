@@ -1,0 +1,162 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="security-groups">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="querySecurityGroups" path="/securityGroup" data="{{securityGroups}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">SecurityGroup</div>
+    </div>
+    <div class="card">
+      <h3 id="addTitle">Add SecurityGroup</h3>
+      <h3 id="updateTitle" hidden>Update SecurityGroup</h3>
+      <input id="key" type="text" name="key" hidden/>
+      <form action="/" method="get" id="addupdate">
+        <paper-input id="name" label="Security Role:" required placeholder="Type security role here "></paper-input>
+        <iron-label>
+          Description:<br>
+          <iron-autogrow-textarea id="description" placeholder="Type description here"
+                                  required></iron-autogrow-textarea>
+        </iron-label>
+        <br>
+        <button id="add" on-click="add" type="button">Add</button>
+        <button id="update" on-click="update" type="button" hidden>Update</button>
+        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
+      </form>
+    </div>
+    <div class="card">
+      <table style="width:100%; border: 1px solid black; padding: 15px;">
+        <tr>
+          <th>Role</th>
+          <th>Description</th>
+        </tr>
+        <template is="dom-repeat" items="[[securityGroups]]" as="securityGroup">
+          <tr>
+            <td>
+              <paper-icon-button raised securitygroup="[[securityGroup]]" on-tap="remove" icon="my-icons:close">Delete
+              </paper-icon-button>
+              <paper-icon-button raised securitygroup="[[securityGroup]]" on-tap="display"
+                                 icon="my-icons:chevron-right">Update
+              </paper-icon-button>
+              [[securityGroup.name]]
+            </td>
+            <td>[[securityGroup.description]]</td>
+          </tr>
+        </template>
+      </table>
+    </div>
+  </template>
+
+  <script>
+    class SecurityGroups extends Polymer.Element {
+      static get is() {
+        return 'security-groups';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          }
+        }
+      }
+
+      resetForm() {
+        this.$.name.value = null;
+        this.$.description.value = null;
+      }
+
+      update(e) {
+        var descrip = this.$.description.value ? this.$.description.value : "";
+        var key = this.$.key.value;
+        var securityGroupQueryRef = this.$.querySecurityGroups.ref.child(key);
+        var postData = {
+          name: this.$.name.value,
+          description: descrip,
+          timestamp: Date.now()
+        }
+        securityGroupQueryRef.ref.update(postData);
+        this.$.name.value = null;
+        this.$.description.value = null;
+
+        this.$.key.hidden = true;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.addupdate.reset()
+        return;
+      }
+
+      add() {
+        var postData = {
+          name: this.$.name.value,
+          description: this.$.description.value ? this.$.description.value : "",
+          timestamp: Date.now()
+        }
+        var newSecurityGroupKey = this.$.querySecurityGroups.ref.push().key
+        var updates = {}
+        updates["/" + newSecurityGroupKey] = postData;
+        this.$.querySecurityGroups.ref.update(updates);
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      clear() {
+        this.$.addupdate.reset();
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.updateTitle.hidden = true;
+        return;
+      }
+
+      display(e) {
+        var key = e.currentTarget.securitygroup.$key;
+        var securityGroupQueryRef = this.$.querySecurityGroups.ref.child(key);
+        var aSecurityGroup = null;
+        securityGroupQueryRef.on('value', function (snapshot) {
+          aSecurityGroup = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.name.value = aSecurityGroup.name;
+        this.$.description.value = aSecurityGroup.description;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      remove(e) {
+        var key = e.currentTarget.securitygroup.$key;
+        this.$.querySecurityGroups.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(SecurityGroups.is, SecurityGroups);
+  </script>
+</dom-module>

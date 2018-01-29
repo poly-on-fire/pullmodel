@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "VisibilityRoulette": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    },
+    "securityGroup": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    },
+    "profile": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    },
+    "faq": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    },
+    "topicType": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    },
+    "request": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    },
+    "topicLookup": {
+			".write": "auth !== null",
+			".read": "auth !== null"
+    }
+  }
+}

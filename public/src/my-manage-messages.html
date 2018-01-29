@@ -1,0 +1,259 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+<link rel="import" href="db-combo-box.html">
+
+<dom-module id="manage-messages">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="queryTopicName" path="/users/[[user.uid]]/topicName">
+    </firebase-query>
+    <firebase-query id="queryUserEmailMeta" path="/users/[[user.uid]]/emailMeta" data="{{emailMetas}}">
+    </firebase-query>
+    <firebase-query id="queryUserEmailContent" path="/users/[[user.uid]]/emailContent"
+                    data="{{userEmailContent}}">
+    </firebase-query>
+    <firebase-query id="queryTopic" path="/users/[[user.uid]]/topic" data="{{Topic}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">Message</div>
+    </div>
+    <div class="card">
+      <h3 id="addTitle">Add Message</h3>
+      <h3 id="updateTitle" hidden>Update Message</h3>
+      <input id="key" type="text" name="key" hidden/>
+      <iron-form id="addupdate">
+        <form action="/" method="get">
+          <br>
+          <db-combo-box id="topic"
+                        placeholder='Select topic' field='name'
+                        dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
+                        error-message="Please select a Topic" required></db-combo-box>
+          <br>
+          <iron-label>
+            Day:
+            <iron-input id='day' allowed-pattern="[0-9]">
+              <input pattern="\d{5}">
+            </iron-input>
+          </iron-label>
+          <br>
+          <iron-label>
+            Subject:
+            <iron-autogrow-textarea id="subject" placeholder="Type subject here"
+                                    required></iron-autogrow-textarea>
+          </iron-label>
+          <br>
+          <iron-label>
+            Body:
+            <iron-autogrow-textarea id="emailBody" placeholder="Type body here"
+                                    required></iron-autogrow-textarea>
+          </iron-label>
+          <br>
+          <button id="add" on-click="add" type="button">Add</button>
+          <button id="update" on-click="update" type="button" hidden>Update</button>
+          <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
+        </form>
+      </iron-form>
+    </div>
+    <div class="card">
+      <table style="width:100%; border: 1px solid black; padding: 15px;">
+        <tr>
+          <th>Delete</th>
+          <th>Update</th>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+        <template is="dom-repeat" items="[[messages]]" as="message">
+          <tr>
+            <td>
+              <paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close">
+                Delete
+              </paper-icon-button>
+            </td>
+            <td>
+              <paper-icon-button raised message="[[message]]" on-tap="display"
+                                 icon="my-icons:chevron-right">Update
+              </paper-icon-button>
+            </td>
+            <td>[[message.name]]</td>
+            <td>[[message.description]]</td>
+          </tr>
+        </template>
+      </table>
+    </div>
+  </template>
+
+  <script>
+    class ManageMessages extends Polymer.Element {
+      static get is() {
+        return 'manage-messages';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          },
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      resetForm() {
+        this.$.name.value = null;
+        this.$.description.value = null;
+      }
+
+      update(e) {
+        let descrip = this.$.description.value ? this.$.description.value : "";
+        let key = this.$.key.value;
+        let messageQueryRef = this.$.queryMessages.ref.child(key);
+        let postData = {
+          name: this.$.name.value,
+          description: descrip,
+          timestamp: Date.now()
+        }
+        messageQueryRef.ref.update(postData);
+        this.$.name.value = null;
+        this.$.description.value = null;
+
+        this.$.key.hidden = true;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.addupdate.reset()
+        return;
+      }
+
+      add() {
+        let emailKey = this.$.queryUserEmailContent.ref.push().key
+        let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
+        let emailContent = {
+          emailBody: this.$.emailBody.value,
+          subject: this.$.subject.value,
+        };
+        emailMetaObject.contentExtract = this.bodyExtract(emailContent);
+        emailMetaObject.subject = this.$.subject.value;
+        emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
+        emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
+        emailMetaObject.day = parseInt(this.$.day.value);
+        let emailMetaUpdates = {};
+        emailMetaUpdates["/" + emailKey] = emailMetaObject;
+        this.$.queryUserEmailMeta.ref.update(emailMetaUpdates);
+        let emailContentUpdates = {};
+        emailContentUpdates["/" + emailKey] = emailContent;
+        this.$.queryUserEmailContent.ref.update(emailContentUpdates);
+        this.$.topic.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      emailMetaObjectCreate(topicName) {
+        let topicKey = this.topicKeyLookup(topicName);
+        let topic = this.topicLookup(topicKey);
+        let emailMetaObject = {
+          topicType: topic.topicType,
+          topicName: topicName,
+          topicKey: topicKey
+        };
+        return emailMetaObject;
+      }
+
+      topicKeyLookup(topicName) {
+        let aTopic;
+        let topicNameQueryRef = this.$.queryTopicName.ref.child(topicName);
+        topicNameQueryRef.on('value', function (snapshot) {
+          aTopic = snapshot.val();
+        });
+        return aTopic.topicKey;
+      }
+
+      topicLookup(topicKey) {
+        let aTopic;
+        let topicQueryRef = this.$.queryTopic.ref.child(topicKey);
+        topicQueryRef.on('value', function (snapshot) {
+          aTopic = snapshot.val();
+        });
+        return aTopic;
+      }
+
+      bodyExtract(emailContent) {
+        let extract = emailContent.emailBody.replace(/(\r\n|\n|\r)/gm, "");
+        extract = extract.substring(0, 100)
+        return extract;
+      }
+
+      emailSubjectExtract(subjectInput) {
+        let subject = subjectInput;
+        subject = subject.toUpperCase();
+        if (subject.length > 40) {
+          subject = subject.substring(0, 40);
+        }
+        return subject;
+      }
+
+      topicExtract(topicName) {
+        let date = topicName.substring(0, 10);
+        let extractTopic = topicName.substring(21, topicName.length)
+        if (extractTopic.startsWith("nex")) {
+          extractTopic = extractTopic.substring(3, extractTopic.length);
+        }
+        return date + " " + extractTopic;
+      }
+
+      clear() {
+        this.$.addupdate.reset();
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.updateTitle.hidden = true;
+        return;
+      }
+
+      display(e) {
+        let key = e.currentTarget.message.$key;
+        let messageQueryRef = this.$.queryMessages.ref.child(key);
+        let aMessage = null;
+        messageQueryRef.on('value', function (snapshot) {
+          aMessage = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.name.value = aMessage.name;
+        this.$.description.value = aMessage.description;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      remove(e) {
+        let key = e.currentTarget.message.$key;
+        this.$.queryMessages.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(ManageMessages.is, ManageMessages);
+  </script>
+</dom-module>

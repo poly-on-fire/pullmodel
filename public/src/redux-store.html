@@ -1,0 +1,114 @@
+<link rel="import" href="../bower_components/polymer-redux/polymer-redux.html"/>
+
+<script>
+  const initialState = {role: {show: {'a': true}}};
+
+  const reducer = (state, action) => {
+    // console.log("\nENTERING REDUCER WITH\n" + JSON.stringify(state) + '\n' + action.type);
+    if (!state) {
+      return initialState;
+    }
+
+    const {type, payload} = action;
+
+    var returnValue = initialState;
+
+    switch (type) {
+      case 'SHOW_ANONYMOUS':
+        returnValue =
+          {role: {show: {'a': true}}};
+        break;
+      case 'SHOW_PASSIVE':
+        returnValue =
+          {role: {show: {'b': true}}};
+        break;
+      case 'SHOW_UNKNOWN':
+        returnValue =
+          {role: {show: {'b': true}}};
+        break;
+      case 'SHOW_INVITED':
+        returnValue =
+          {role: {show: {'b': true}}};
+        break;
+      case 'SHOW_PASSIVE_USER':
+        returnValue =
+          {role: {show: {'c': true, 'd': true}}};
+        break;
+      case 'SHOW_UNKNOWN_USER':
+        returnValue =
+          {role: {show: {'d': true}}};
+        break;
+      case 'SHOW_SUBSCRIBER':
+        returnValue =
+          {role: {show: {'d': true, 'e': true}}};
+        break;
+      case 'SHOW_PENDING_LEADER':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'f': true}}};
+        break;
+      case 'SHOW_LEADER':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'g': true, 's': true}}};
+        break;
+      case 'SHOW_ADMIN':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true}}};
+        break;
+      case 'SHOW_SUPER_ADMIN':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true, 'j': true, 's': true}}};
+        break;
+      case 'DISPLAY_ANONYMOUS':
+        returnValue =
+          {role: {show: {'a': true, 's': true}}};
+        break;
+      case 'DISPLAY_PASSIVE':
+        returnValue =
+          {role: {show: {'b': true, 's': true}}};
+        break;
+      case 'DISPLAY_UNKNOWN':
+        returnValue =
+          {role: {show: {'b': true, 's': true}}};
+        break;
+      case 'DISPLAY_INVITED':
+        returnValue =
+          {role: {show: {'b': true, 's': true}}};
+        break;
+      case 'DISPLAY_PASSIVE_USER':
+        returnValue =
+          {role: {show: {'c': true, 'd': true, 's': true}}};
+        break;
+      case 'DISPLAY_UNKNOWN_USER':
+        returnValue =
+          {role: {show: {'d': true, 's': true}}};
+        break;
+      case 'DISPLAY_SUBSCRIBER':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 's': true}}};
+        break;
+      case 'DISPLAY_PENDING_LEADER':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'f': true, 's': true}}};
+        break;
+      case 'DISPLAY_LEADER':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'g': true, 's': true}}};
+        break;
+      case 'DISPLAY_ADMIN':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true, 's': true}}};
+        break;
+      case 'DISPLAY_SUPER_ADMIN':
+        returnValue =
+          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true, 'j': true, 's': true}}};
+        break;
+      default:
+        returnValue = initialState;
+    }
+    // console.log("\nLEAVING REDUCER WITH\n" + JSON.stringify(returnValue));
+    return returnValue;
+  };
+
+  const store = Redux.createStore(reducer);
+  const ReduxMixin = PolymerRedux(store);
+</script>

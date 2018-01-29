@@ -1,0 +1,170 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="manage-subscribers">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="querySubscribers" path="/users/[[user.uid]]/subscriber" data="{{subscribers}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">Subscriber</div>
+    </div>
+    <div class="card">
+      <h3 id="addTitle">Add Subscriber</h3>
+      <h3 id="updateTitle" hidden>Update Subscriber</h3>
+      <input id="key" type="text" name="key" hidden/>
+      <form action="/" method="get" id="addupdate">
+        <paper-input id="name" label="Name:" required placeholder="Type name here "></paper-input>
+        <iron-label>
+          Description:
+          <iron-autogrow-textarea id="description" placeholder="Type description here"
+                                  required></iron-autogrow-textarea>
+        </iron-label>
+        <br>
+        <button id="add" on-click="add" type="button">Add</button>
+        <button id="update" on-click="update" type="button" hidden>Update</button>
+        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
+      </form>
+    </div>
+    <div class="card">
+      <table style="width:100%; border: 1px solid black; padding: 15px;">
+        <tr>
+          <th>Delete</th>
+          <th>Update</th>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+        <template is="dom-repeat" items="[[subscribers]]" as="subscriber">
+          <tr>
+            <td>
+              <paper-icon-button raised subscriber="[[subscriber]]" on-tap="remove" icon="my-icons:close">Delete
+              </paper-icon-button>
+            </td>
+            <td>
+              <paper-icon-button raised subscriber="[[subscriber]]" on-tap="display" icon="my-icons:chevron-right">
+                Update
+              </paper-icon-button>
+            </td>
+            <td>[[subscriber.name]]</td>
+            <td>[[subscriber.description]]</td>
+          </tr>
+        </template>
+      </table>
+    </div>
+  </template>
+
+  <script>
+    class ManageSubscribers extends Polymer.Element {
+      static get is() {
+        return 'manage-subscribers';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          },
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      resetForm() {
+        this.$.name.value = null;
+        this.$.description.value = null;
+      }
+
+      update(e) {
+        var descrip = this.$.description.value ? this.$.description.value : "";
+        var key = this.$.key.value;
+        var subscriberQueryRef = this.$.querySubscribers.ref.child(key);
+        var postData = {
+          name: this.$.name.value,
+          description: descrip,
+          timestamp: Date.now()
+        }
+        subscriberQueryRef.ref.update(postData);
+        this.$.name.value = null;
+        this.$.description.value = null;
+
+        this.$.key.hidden = true;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.addupdate.reset()
+        return;
+      }
+
+      add() {
+        var postData = {
+          name: this.$.name.value,
+          description: this.$.description.value ? this.$.description.value : "",
+          timestamp: Date.now()
+        }
+        var newSubscriberKey = this.$.querySubscribers.ref.push().key
+        var updates = {}
+        updates["/" + newSubscriberKey] = postData;
+        this.$.querySubscribers.ref.update(updates);
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      clear() {
+        this.$.addupdate.reset();
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.updateTitle.hidden = true;
+        return;
+      }
+
+      display(e) {
+        var key = e.currentTarget.subscriber.$key;
+        var subscriberQueryRef = this.$.querySubscribers.ref.child(key);
+        var aSubscriber = null;
+        subscriberQueryRef.on('value', function (snapshot) {
+          aSubscriber = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.name.value = aSubscriber.name;
+        this.$.description.value = aSubscriber.description;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      remove(e) {
+        var key = e.currentTarget.subscriber.$key;
+        this.$.querySubscribers.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(ManageSubscribers.is, ManageSubscribers);
+  </script>
+</dom-module>
