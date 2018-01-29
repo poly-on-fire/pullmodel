@@ -17,14 +17,14 @@ I've been writing apps that suck, since 1972 when I wrote my first APL Basic app
 
 Web components in a PWA, deployed on a free hosting platform such as Firebase make all of these sucks go away.
 
-* No excuses - anyone with decent technical chops can write, deploy, maintain, and pay for a fully featured app.
+* **No excuses** - anyone with decent technical chops can write, deploy, maintain, and pay for a fully featured app.
 * Front end, back end, whole deal - **NO OPS!** Not devOps, NO OPS. Bad ass.
-* Anyone can afford it, free tier is enough, paid tier is affordable.
-* Deploys anywhere, mobile, desktop, anywhere that a browser is already installed.
+* **Anyone can bankroll it**, free tier is enough, paid tier is affordable.
+* **Deploys anywhere**, mobile, desktop, anywhere that a browser is already installed.
 * Won't have to rewrite in 'latest' 3 years later??? Because this relies **browser** code, not a fat layer on top.
-* Awesome features even compete with native phone apps. But still works on desktop!
+* Awesome features even **compete with native** phone apps. But still works on desktop!
 * Responsive - lightweight code uses browser to do the heavy lifting.
-* Don't even get me started on how cool the realtime database is, says the decades-experienced back end dev.
+* Don't even get me started on how cool the **event based** realtime database is, says the decades-experienced synchronous back end dev.
 
 Personal opinion: _We haven't yet metabolized how big this moment is._ We're so used to _this sucks_ that it might not 
 occur to us how the ground will shift when it doesn't suck any more.  If it sucks from 1972 to 2017, and it doesn't suck 
@@ -89,4 +89,32 @@ The good news for a techie is that it's pretty easy to install and run on your o
 
 None of these rack up any kind of serious monthly charges, but you still have to set them up to run the app in 
 it's fully featured form.
+
+## Project Building Blocks ##
+
+This project was used to initialize almost all of the other projects
+
+* poly-on-fire-init
+
+These projects were code-builing blocks - demo/test projects for code before implementing them in pullmodel:
+
+* poly-on-fire-cookies
+* poly-on-fire-crud-simple		
+* poly-on-fire-social-logins
+* poly-on-fire-fb-messenger-bot		
+* poly-on-fire-nodejs-admin-server
+* poly-on-fire-query-params		
+* poly-on-fire-redux
+* poly-on-fire-all-ui-combined		
+* poly-on-fire-roles-DB-permissions
+
+This project does the back end processing by listening for changes in the database and responding with other changes in 
+the database.
+
+autopm
+
+
+
+
+
 
