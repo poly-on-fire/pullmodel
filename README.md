@@ -6,12 +6,14 @@ It is developed by me, Pete Carapetyan, on and off in 2016, 2017, 2018.
 
 ## Why? What is the Motive?
 
-I've been writing apps that suck, since 1972 when I wrote my first APL Basic app on a main frame. They **always fall short:**
+I've been writing apps that suck, since 1972 when I wrote my first APL Basic app on a 1960's mainframe. 
+They **always fall short:**
+
 
 * Won't **deploy** on meaningfully wide array of devices.
 * **Hard** to write or maintain the code.
 * What I write is immediately **obsolete** code because the next, and also **fat**, framework is completely better and different.
-* Tail wags dog - Easy to write but then deploying subsequent **releases** becomes a nightmare.
+* Subsequent **releases** becomes a nightmare.
 * Features are too **limited** - users find app more trouble than it's worth.
 * High **costs** make it where only a large corporation can bankroll a decent application through it's lifecycle.
 
@@ -107,13 +109,6 @@ These projects were code-builing blocks - demo/test projects for code before imp
 * poly-on-fire-redux
 * poly-on-fire-all-ui-combined		
 * poly-on-fire-roles-DB-permissions
-
-This project does the back end processing by listening for changes in the database and responding with other changes in 
-the database.
-
-autopm
-
-
 
 
 

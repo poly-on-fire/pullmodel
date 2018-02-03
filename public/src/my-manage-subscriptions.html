@@ -23,47 +23,62 @@
       <div class="circle">Subscription</div>
     </div>
     <div class="card">
-      <h3 id="addTitle">Add Subscription</h3>
-      <h3 id="updateTitle" hidden>Update Subscription</h3>
-      <input id="key" type="text" name="key" hidden/>
-      <form action="/" method="get" id="addupdate">
-        <paper-input id="name" label="Name:" required placeholder="Type name here "></paper-input>
-        <iron-label>
-          Description:
-          <iron-autogrow-textarea id="description" placeholder="Type description here"
-                                  required></iron-autogrow-textarea>
-        </iron-label>
-        <br>
-        <button id="add" on-click="add" type="button">Add</button>
-        <button id="update" on-click="update" type="button" hidden>Update</button>
-        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
-      </form>
+      <p>Needs to include this functionality</p>
+      <ul>
+        <li>list of things I am subscribed to</li>
+        <li>list of other things I could subscribe to with topic and author</li>
+        <li>For each, toggle on SMS notices, FB Messaging</li>
+        <li>For each, unsubscribe button</li>
+        <li>If unsubscribed, then re-subscribe button</li>
+        <li>If re-subscribe the option to pick up where left off</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
     </div>
-    <div class="card">
-      <table style="width:100%; border: 1px solid black; padding: 15px;">
-        <tr>
-          <th>Delete</th>
-          <th>Update</th>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
-        <template is="dom-repeat" items="[[subscriptions]]" as="subscription">
-          <tr>
-            <td>
-              <paper-icon-button raised subscription="[[subscription]]" on-tap="remove" icon="my-icons:close">Delete
-              </paper-icon-button>
-            </td>
-            <td>
-              <paper-icon-button raised subscription="[[subscription]]" on-tap="display" icon="my-icons:chevron-right">
-                Update
-              </paper-icon-button>
-            </td>
-            <td>[[subscription.name]]</td>
-            <td>[[subscription.description]]</td>
-          </tr>
-        </template>
-      </table>
-    </div>
+    <!--<div class="card">-->
+      <!--<h3 id="addTitle">Add Subscription</h3>-->
+      <!--<h3 id="updateTitle" hidden>Update Subscription</h3>-->
+      <!--<input id="key" type="text" name="key" hidden/>-->
+      <!--<form action="/" method="get" id="addupdate">-->
+        <!--<paper-input id="name" label="Name:" required placeholder="Type name here "></paper-input>-->
+        <!--<iron-label>-->
+          <!--Description:-->
+          <!--<iron-autogrow-textarea id="description" placeholder="Type description here"-->
+                                  <!--required></iron-autogrow-textarea>-->
+        <!--</iron-label>-->
+        <!--<br>-->
+        <!--<button id="add" on-click="add" type="button">Add</button>-->
+        <!--<button id="update" on-click="update" type="button" hidden>Update</button>-->
+        <!--<button id="clear" on-click="clear" type="button">Clear/Cancel</button>-->
+      <!--</form>-->
+    <!--</div>-->
+    <!--<div class="card">-->
+      <!--<table style="width:100%; border: 1px solid black; padding: 15px;">-->
+        <!--<tr>-->
+          <!--<th>Delete</th>-->
+          <!--<th>Update</th>-->
+          <!--<th>Name</th>-->
+          <!--<th>Description</th>-->
+        <!--</tr>-->
+        <!--<template is="dom-repeat" items="[[subscriptions]]" as="subscription">-->
+          <!--<tr>-->
+            <!--<td>-->
+              <!--<paper-icon-button raised subscription="[[subscription]]" on-tap="remove" icon="my-icons:close">Delete-->
+              <!--</paper-icon-button>-->
+            <!--</td>-->
+            <!--<td>-->
+              <!--<paper-icon-button raised subscription="[[subscription]]" on-tap="display" icon="my-icons:chevron-right">-->
+                <!--Update-->
+              <!--</paper-icon-button>-->
+            <!--</td>-->
+            <!--<td>[[subscription.name]]</td>-->
+            <!--<td>[[subscription.description]]</td>-->
+          <!--</tr>-->
+        <!--</template>-->
+      <!--</table>-->
+    <!--</div>-->
   </template>
 
   <script>

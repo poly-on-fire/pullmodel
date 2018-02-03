@@ -1,0 +1,166 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="user-profile">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="queryProfiles" path="/users/[[user.uid]]/profile" data="{{profiles}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">Profile</div>
+    </div>
+
+
+    <div class="card">
+      <p>Needs to include this functionality:</p>
+      <ul>
+        <li>whatever it takes to set up SMS as an option</li>
+        <li>whatever it takes to set up Facebook Messenger as an option</li>
+        <li>reply to email address</li>
+        <li>Promote yourself to leader from subscriber, subscriber from passive</li>
+        <li>Expand topics from those originally subscribed to</li>
+        <li>Maybe some other functionality as becomes needed later.</li>
+        <li></li>
+      </ul>
+    </div>
+    <!--<div class="card">-->
+      <!--<h3 id="addTitle">Add Profile</h3>-->
+      <!--<h3 id="updateTitle" hidden>Update Profile</h3>-->
+      <!--<input id="key" type="text" name="key" hidden/>-->
+      <!--<form action="/" method="get" id="addupdate">-->
+        <!--Name:<input id="name" type="text" name="name"><br>-->
+        <!--Description:<input id="description" type="text" name="description"><br>-->
+        <!--<button id="add" on-click="add" type="button">Add</button>-->
+        <!--<button id="update" on-click="update" type="button" hidden>Update</button>-->
+        <!--<button id="clear" on-click="clear" type="button">Clear/Cancel</button>-->
+      <!--</form>-->
+    <!--</div>-->
+    <!--<div class="card">-->
+      <!--<ul id="profiles-list">-->
+        <!--<template is="dom-repeat" items="[[profiles]]" as="profile">-->
+          <!--<li>-->
+                  <!--<span>-->
+                    <!--<paper-icon-button raised profile="[[profile]]" on-tap="remove"-->
+                                       <!--icon="my-icons:close">Delete</paper-icon-button>-->
+                    <!--<paper-icon-button raised profile="[[profile]]" on-tap="display" icon="my-icons:chevron-right">Update</paper-icon-button>-->
+                    <!--[[profile.name]] - [[profile.description]]-->
+                  <!--</span>-->
+          <!--</li>-->
+        <!--</template>-->
+      <!--</ul>-->
+    <!--</div>-->
+  </template>
+
+  <script>
+    class UserProfile extends Polymer.Element {
+      static get is() {
+        return 'user-profile';
+      }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_onUser'
+          },
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      resetForm() {
+        this.$.name.value = null;
+        this.$.description.value = null;
+      }
+
+      update(e) {
+        var descrip = this.$.description.value ? this.$.description.value : "";
+        var key = this.$.key.value;
+        var profileQueryRef = this.$.queryProfiles.ref.child(key);
+        var postData = {
+          name: this.$.name.value,
+          description: descrip,
+          timestamp: Date.now()
+        }
+        profileQueryRef.ref.update(postData);
+        this.$.name.value = null;
+        this.$.description.value = null;
+
+        this.$.key.hidden = true;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.addupdate.reset()
+        return;
+      }
+
+      add() {
+        var postData = {
+          name: this.$.name.value,
+          description: this.$.description.value ? this.$.description.value : "",
+          timestamp: Date.now()
+        }
+        var newProfileKey = this.$.queryProfiles.ref.push().key
+        var updates = {}
+        updates["/" + newProfileKey] = postData;
+        this.$.queryProfiles.ref.update(updates);
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.key.hidden = true;
+        this.$.update.hidden = true;
+        this.$.add.hidden = false;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
+        return;
+      }
+
+      clear() {
+        this.$.addupdate.reset();
+        this.$.name.value = null;
+        this.$.description.value = null;
+        this.$.add.hidden = false;
+        this.$.update.hidden = true;
+        this.$.addTitle.hidden = false;
+        this.$.updateTitle.hidden = true;
+        return;
+      }
+
+      display(e) {
+        var key = e.currentTarget.profile.$key;
+        var profileQueryRef = this.$.queryProfiles.ref.child(key);
+        var aProfile = null;
+        profileQueryRef.on('value', function (snapshot) {
+          aProfile = snapshot.val();
+        });
+        this.$.key.value = key;
+        this.$.name.value = aProfile.name;
+        this.$.description.value = aProfile.description;
+        this.$.add.hidden = true;
+        this.$.update.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.updateTitle.hidden = false;
+      }
+
+      remove(e) {
+        var key = e.currentTarget.profile.$key;
+        this.$.queryProfiles.ref.child(key).remove();
+      }
+    }
+
+    window.customElements.define(UserProfile.is, UserProfile);
+  </script>
+</dom-module>

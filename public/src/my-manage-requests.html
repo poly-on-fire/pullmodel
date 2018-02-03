@@ -41,23 +41,13 @@
     </div>
     <div class="card">
       <table style="width:100%; border: 1px solid black; padding: 15px;">
-        <tr>
-          <th>Delete</th>
-          <th>Update</th>
-          <th>Title</th>
-          <th>Description</th>
-        </tr>
         <template is="dom-repeat" items="[[requests]]" as="request">
           <tr>
             <td>
               <paper-icon-button raised request="[[request]]" on-tap="remove" icon="my-icons:close">Delete
               </paper-icon-button>
-            </td>
-            <td>
               <paper-icon-button raised request="[[request]]" on-tap="display" icon="my-icons:chevron-right">Update
-              </paper-icon-button>
-            </td>
-            <td>[[request.name]]</td>
+              </paper-icon-button>[[request.name]]</td>
             <td>[[request.description]]</td>
           </tr>
         </template>

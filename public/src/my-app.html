@@ -26,7 +26,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html"/>
 <link rel="import" href="my-icons.html">
 <link rel="lazy-import" href="my-about.html">
+<link rel="lazy-import" href="my-user-profile.html">
+<link rel="lazy-import" href="my-manage-faq.html">
+<link rel="lazy-import" href="my-manage-messages.html">
+<link rel="lazy-import" href="my-admin-profiles.html">
+<link rel="lazy-import" href="my-manage-requests.html">
+<link rel="lazy-import" href="my-manage-subscribers.html">
+<link rel="lazy-import" href="my-manage-subscriptions.html">
+<link rel="lazy-import" href="my-manage-topics.html">
+<link rel="lazy-import" href="my-read-faq.html">
+<link rel="lazy-import" href="my-security-groups.html">
+<link rel="lazy-import" href="my-subscriber-groups.html">
 <link rel="lazy-import" href="my-super-admin.html">
+<link rel="lazy-import" href="my-topic-types.html">
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
@@ -109,11 +121,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </p>
         <input id="emailSubmit" type="text" email="email"><br>
         <button on-click="myFunction">Submit</button>
+        <p>
+          need to add unsubscribe, report abuse, and other functionality links to this page.
+        </p>
       </div>
     </div>
 
     <div hidden$="[[user]]">
       <div class="card" hidden$=[[!role.show.b]]>
+        <p>If you're returning but from another device, please make sure you login from the same provider! In other words don't log in with twitter on one device and facebook from another, and expect your preferences to be maintained!</p>
         <h1>&nbsp;Signing in to pullModel.com:</h1>
         <paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>
         <p>Facebook login may your best choice, if you're a typical Facebook user.</p>
@@ -158,31 +174,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div hidden$=[[!role.show.d]]><a name="read-faq" href="[[rootPath]]read-faq">FAQ</a></div>
               <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
                 Support</a></div>
-              <div hidden$=[[!role.show.g]]><a name="manage-topics" href="[[rootPath]]manage-topics">Manage Your
-                Topics</a></div>
-              <div hidden$=[[!role.show.g]]><a name="manage-messages" href="[[rootPath]]manage-messages">Manage Your
-                Messages</a></div>
-              <div hidden$=[[!role.show.g]]><a name="leader-profile" href="[[rootPath]]leader-profile">My Profile</a>
+              <div hidden$=[[!role.show.d]]><a name="user-profile" href="[[rootPath]]user-profile">My Profile</a>
               </div>
-              <div hidden$=[[!role.show.j]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Subscriber
+              <div hidden$=[[!role.show.e]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My Subscriptions</a>
+              </div>
+              <div hidden$=[[!role.show.g]]><a name="manage-topics" href="[[rootPath]]manage-topics">
+                Topics You Message About</a></div>
+              <div hidden$=[[!role.show.g]]><a name="manage-messages" href="[[rootPath]]manage-messages">
+                Messages You Publish</a></div>
+              <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Manage Passive
                 Groups</a></div>
+              <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe Groups Passively</a>
+              </div>
               <div hidden$=[[!role.show.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
                 Requests</a></div>
-              <div hidden$=[[!role.show.h]]><a name="manage-profiles" href="[[rootPath]]manage-profiles">Admin the
+              <div hidden$=[[!role.show.h]]><a name="admin-profiles" href="[[rootPath]]admin-profiles">Admin the
                 Profiles</a></div>
               <div hidden$=[[!role.show.h]]><a name="manage-faq" href="[[rootPath]]manage-faq">Admin the FAQ</a></div>
-              <div hidden$=[[!role.show.j]]><a name="message-meta" href="[[rootPath]]message-meta">message-meta</a>
-              </div>
-              <div hidden$=[[!role.show.g]]><a name="message-content"
-                                               href="[[rootPath]]message-content">message-content</a></div>
               <div hidden$=[[!role.show.j]]><a name="security-groups"
                                                href="[[rootPath]]security-groups">security-groups</a></div>
               <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
-              <div hidden$=[[!role.show.j]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">manage-subscribers</a>
-              </div>
-              <div hidden$=[[!role.show.j]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">manage-subscriptions</a>
-              </div>
-              <div hidden$=[[!role.show.j]]><a name="email-access" href="[[rootPath]]email-access">email-access</a>
+             <div hidden$=[[!role.show.j]]><a name="email-access" href="[[rootPath]]email-access">email-access</a>
               </div>
               <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
             </iron-selector>
@@ -210,7 +222,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <super-admin name="super-admin" user=[[user]]></super-admin>
             <security-groups name="security-groups" user=[[user]]></security-groups>
             <topic-types name="topic-types" user=[[user]]></topic-types>
-            <manage-profiles name="manage-profiles" user=[[user]]></manage-profiles>
+            <admin-profiles name="admin-profiles" user=[[user]]></admin-profiles>
             <manage-faq name="manage-faq" user=[[user]]></manage-faq>
             <read-faq name="read-faq" user=[[user]]></read-faq>
             <manage-requests name="manage-requests" user=[[user]]></manage-requests>
@@ -223,7 +235,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <manage-subscribers name="manage-subscribers" user=[[user]]></manage-subscribers>
             <manage-subscriptions name="manage-subscriptions" user=[[user]]></manage-subscriptions>
             <email-access name="email-access" user=[[user]]></email-access>
-            <leader-profile name="leader-profile" user=[[user]]></leader-profile>
+            <user-profile name="user-profile" user=[[user]]></user-profile>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>

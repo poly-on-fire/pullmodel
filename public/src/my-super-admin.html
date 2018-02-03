@@ -33,7 +33,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div name="passiveUser">passiveUser</div>
         <div name="unknownUser">unknownUser</div>
         <div name="subscriber">subscriber</div>
-        <div name="pendingLeader">pendingLeader</div>
         <div name="leader">leader</div>
         <div name="admin">admin</div>
         <div name="superAdmin">superAdmin</div>
@@ -80,9 +79,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               break;
             case 'subscriber':
               this.dispatch(VisibilityController.actions.displaySubscriber())
-              break;
-            case 'pendingLeader':
-              this.dispatch(VisibilityController.actions.displayPendingLeader())
               break;
             case 'leader':
               this.dispatch(VisibilityController.actions.displayLeader())
