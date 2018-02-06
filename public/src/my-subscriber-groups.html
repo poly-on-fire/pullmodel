@@ -20,10 +20,12 @@
     <firebase-query id="querySubscriberGroups" path="/users/[[user.uid]]/subscriberGroup" data="{{subscriberGroups}}">
     </firebase-query>
     <div class="card">
-      <div class="circle">SubscriberGroup</div>
+      <div class="circle">SubscriberGroup:</div>
+      <p>Before you add any 'passive' subscribers, you'll need to add a group for them to belong to. </p>
+      <p>A passive subscriber may belong to more than one group. </p>
     </div>
     <div class="card">
-      <h3 id="addTitle">Add SubscriberGroup</h3>
+      <h3 id="addTitle">Add a Subscriber Group:</h3>
       <h3 id="updateTitle" hidden>Update SubscriberGroup</h3>
       <input id="key" type="text" name="key" hidden/>
       <form action="/" method="get" id="addupdate">

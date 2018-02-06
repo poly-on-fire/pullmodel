@@ -20,10 +20,13 @@
     <firebase-query id="querySubscribers" path="/users/[[user.uid]]/subscriber" data="{{subscribers}}">
     </firebase-query>
     <div class="card">
-      <div class="circle">Subscriber</div>
+      <div class="circle">PassiveSubscribers</div>
+      <p>Danger! This form could allow you to do creepy things! Don't be a creep!</p>
+      <p>By inputing email addresses into this form, you are representing that the persons being input have already agreed to receive your messages, but that you are doing the work of enrolling them.</p>
+      <p>If you choose to abuse this privilige and subscribe people without their consent, please expect your leader/publisher positions to be revoked.</p>
     </div>
     <div class="card">
-      <h3 id="addTitle">Add Subscriber</h3>
+      <h3 id="addTitle">Add Passive Subscribers</h3>
       <h3 id="updateTitle" hidden>Update Subscriber</h3>
       <input id="key" type="text" name="key" hidden/>
       <form action="/" method="get" id="addupdate">

@@ -115,27 +115,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div hidden$="[[!role.show.a]]">
       <div class="card" hidden$="[[user]]">
-        <p>Access to pullModel.com is limited to invitations,
-          but if you visited previously on another device you'll have to sign in again, from this device.
-          Please submit your email to access the sign-in button.
-        </p>
+        <p>Access to pullModel.com is limited to invitations or:</p>
+        <ul>
+          <li>
+            You had already been invited but had logged in from another device.
+          </li>
+          <li>
+            You received an email from this domain and wish to unsubscribe.
+          </li>
+          <li>
+            You wish to report abuse or spam to our admins.
+          </li>
+          <li>
+            You had heard about or seen this app - such as on github - and wanted to self-invite, to take a tour.
+          </li>
+        </ul>
+        <p>Please enter your email address to gain access to social login:</p>
         <input id="emailSubmit" type="text" email="email"><br>
         <button on-click="myFunction">Submit</button>
-        <p>
-          need to add unsubscribe, report abuse, and other functionality links to this page.
-        </p>
       </div>
     </div>
 
     <div hidden$="[[user]]">
       <div class="card" hidden$=[[!role.show.b]]>
-        <p>If you're returning but from another device, please make sure you login from the same provider! In other words don't log in with twitter on one device and facebook from another, and expect your preferences to be maintained!</p>
+        <p>If you're returning but from another device, please make sure you login from the same provider! <br>In other words don't log in with Twitter on one device and Facebook from another, and expect your preferences to be maintained!</p>
         <h1>&nbsp;Signing in to pullModel.com:</h1>
         <paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>
         <p>Facebook login may your best choice, if you're a typical Facebook user.</p>
         <p>PullModel offers Facebook messaging as an option, if you are a user of Facebook Messenger.</p>
         <hr>
-        <p>Or alternatley,login with a Google or Twitter sign in.</p>
+        <p>Or, login with a Google or Twitter sign in.<br>Twitter logins sometimes time-out, github will probably fail, but you're welcome to test it.</p>
         <paper-button raised on-tap="googlelogin" hidden$="[[user]]"><img src="../images/google.png"/></paper-button>
         <paper-button raised on-tap="twitterlogin" hidden$="[[user]]"><img src="../images/twitter.png"/></paper-button>
         <paper-button raised on-tap="githublogin" hidden$="[[user]]"><img src="../images/github.png"/></paper-button>
@@ -185,7 +194,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <!-- should be g reset to d for vaadin inspection-->
               <div hidden$=[[!role.show.d]]><a name="manage-messages" href="[[rootPath]]manage-messages">
                 Messages You Publish</a></div>
-              <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Manage Passive
+              <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
                 Groups</a></div>
               <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe Groups Passively</a>
               </div>
@@ -197,8 +206,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div hidden$=[[!role.show.j]]><a name="security-groups"
                                                href="[[rootPath]]security-groups">security-groups</a></div>
               <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
-             <div hidden$=[[!role.show.j]]><a name="email-access" href="[[rootPath]]email-access">email-access</a>
-              </div>
               <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
             </iron-selector>
             <div hidden$="[[!user]]">
@@ -237,7 +244,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <subscriber-groups name="subscriber-groups" user=[[user]]></subscriber-groups>
             <manage-subscribers name="manage-subscribers" user=[[user]]></manage-subscribers>
             <manage-subscriptions name="manage-subscriptions" user=[[user]]></manage-subscriptions>
-            <email-access name="email-access" user=[[user]]></email-access>
             <user-profile name="user-profile" user=[[user]]></user-profile>
             <my-view404 name="view404"></my-view404>
           </iron-pages>

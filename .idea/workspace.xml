@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ef761bb5-6a9e-456d-b27a-5ce54ae762b4" name="Default" comment="" />
+    <list default="true" id="ef761bb5-6a9e-456d-b27a-5ce54ae762b4" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-about.html" afterPath="$PROJECT_DIR$/public/src/my-about.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-app.html" afterPath="$PROJECT_DIR$/public/src/my-app.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-email-access.html" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-manage-subscribers.html" afterPath="$PROJECT_DIR$/public/src/my-manage-subscribers.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-manage-topics.html" afterPath="$PROJECT_DIR$/public/src/my-manage-topics.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-read-faq.html" afterPath="$PROJECT_DIR$/public/src/my-read-faq.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-subscriber-groups.html" afterPath="$PROJECT_DIR$/public/src/my-subscriber-groups.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-support-request.html" afterPath="$PROJECT_DIR$/public/src/my-support-request.html" />
+      <change beforePath="$PROJECT_DIR$/public/src/my-user-profile.html" afterPath="$PROJECT_DIR$/public/src/my-user-profile.html" />
+      <change beforePath="$PROJECT_DIR$/refresh_npm.sh" afterPath="$PROJECT_DIR$/refresh_npm.sh" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,25 +22,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="my-app.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/src/my-app.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="579">
-              <caret line="182" column="101" lean-forward="false" selection-start-line="182" selection-start-column="101" selection-end-line="182" selection-end-column="101" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>topicKeyLookup</find>
-      <find>queryTopicName</find>
-      <find>queryUserEmailContent</find>
-      <find>bodyExtract</find>
       <find>Campaign</find>
       <find>var</find>
       <find>console.log(</find>
@@ -37,7 +34,6 @@
       <find>DISPLAY_INVITED</find>
       <find>updateTitle</find>
       <find>addTitle</find>
-      <find>db-combo-box</find>
       <find>manage-topics</find>
       <find>lazy-import</find>
       <find>manage your t</find>
@@ -53,6 +49,13 @@
       <find>leader</find>
       <find>user</find>
       <find>system</find>
+      <find>email-access</find>
+      <find>Manage Passive</find>
+      <find>0.3.7</find>
+      <find>dropdown</find>
+      <find>db-combo-box</find>
+      <find>cType\&quot; field\=\'name\'\n                          placeholder\=\'Select option from dropdown button at right\.\'\n                          dbpath\=\&quot;\/topicType\&quot; combolabel\=\&quot;Select Topic Type\&quot;\n                          error\-message</find>
+      <find>topicNames</find>
     </findStrings>
     <replaceStrings>
       <replace>topic</replace>
@@ -63,10 +66,12 @@
       <replace>Admin</replace>
       <replace>User</replace>
       <replace>user</replace>
+      <replace>db-dropdown-menu</replace>
     </replaceStrings>
     <dirStrings>
-      <dir>$PROJECT_DIR$</dir>
       <dir>$PROJECT_DIR$/public/src</dir>
+      <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/public/bower_components</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -88,27 +93,32 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/public/src/_my-manage-topics.html" />
-        <option value="$PROJECT_DIR$/public/src/my-manage-topics.html" />
         <option value="$PROJECT_DIR$/public/src/my-manage-messages.html" />
         <option value="$PROJECT_DIR$/firebase.json" />
         <option value="$PROJECT_DIR$/functions/package.json" />
         <option value="$PROJECT_DIR$/functions/index.js" />
         <option value="$PROJECT_DIR$/public/README.md" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/public/src/my-support-request.html" />
-        <option value="$PROJECT_DIR$/public/src/my-manage-requests.html" />
-        <option value="$PROJECT_DIR$/public/bower.json" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/public/src/my-manage-subscriptions.html" />
         <option value="$PROJECT_DIR$/public/src/my-manage-profiles.html" />
         <option value="$PROJECT_DIR$/public/src/my-admin-profiles.html" />
         <option value="$PROJECT_DIR$/public/src/my-leader-profile.html" />
-        <option value="$PROJECT_DIR$/public/src/my-user-profile.html" />
         <option value="$PROJECT_DIR$/public/src/my-email-access.html" />
         <option value="$PROJECT_DIR$/public/src/my-super-admin.html" />
         <option value="$PROJECT_DIR$/public/src/visibility-controller.html" />
         <option value="$PROJECT_DIR$/public/src/redux-store.html" />
+        <option value="$PROJECT_DIR$/public/src/my-manage-subscribers.html" />
+        <option value="$PROJECT_DIR$/public/src/my-about.html" />
+        <option value="$PROJECT_DIR$/public/src/my-user-profile.html" />
+        <option value="$PROJECT_DIR$/public/src/my-read-faq.html" />
+        <option value="$PROJECT_DIR$/public/src/my-manage-requests.html" />
+        <option value="$PROJECT_DIR$/public/src/my-subscriber-groups.html" />
+        <option value="$PROJECT_DIR$/public/src/my-support-request.html" />
         <option value="$PROJECT_DIR$/public/src/my-app.html" />
+        <option value="$PROJECT_DIR$/public/bower.json" />
+        <option value="$PROJECT_DIR$/public/src/db-dropdown-menu.html" />
+        <option value="$PROJECT_DIR$/public/src/my-manage-topics.html" />
       </list>
     </option>
   </component>
@@ -133,10 +143,10 @@
     <handled-path value="$PROJECT_DIR$/functions/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="26" />
-    <option name="y" value="23" />
-    <option name="width" value="1886" />
-    <option name="height" value="1153" />
+    <option name="x" value="25" />
+    <option name="y" value="323" />
+    <option name="width" value="1415" />
+    <option name="height" value="877" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -156,7 +166,7 @@
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -170,25 +180,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="AndroidView" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="pullmodel.com" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pullmodel.com" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pullmodel.com" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pullmodel.com" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <expand>
@@ -210,7 +204,29 @@
               <item name="Root" type="cbb8eebc:String" user="Root" />
               <item name="pullmodel.com" type="cbb8eebc:String" user="pullmodel.com" />
               <item name="public" type="cbb8eebc:String" user="public" />
-              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="bower_components" type="cbb8eebc:String" user="bower_components" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="pullmodel.com" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pullmodel.com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pullmodel.com" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pullmodel.com" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pullmodel.com" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pullmodel.com" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -227,6 +243,9 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/docs" />
     </key>
@@ -347,19 +366,20 @@
       <workItem from="1517257120345" duration="7240000" />
       <workItem from="1517490024249" duration="6762000" />
       <workItem from="1517624160867" duration="3351000" />
-      <workItem from="1517655769110" duration="434000" />
+      <workItem from="1517655769110" duration="8320000" />
+      <workItem from="1517929928874" duration="8734000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56432000" />
+    <option name="totallyTimeSpent" value="73052000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="26" y="23" width="1886" height="1153" extended-state="0" />
-    <editor active="true" />
+    <frame x="25" y="323" width="1415" height="877" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -370,8 +390,9 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20878525" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28404954" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -383,7 +404,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -474,27 +494,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/src/_my-manage-topics.html" />
     <entry file="file://$PROJECT_DIR$/public/src/my-message-content.html" />
-    <entry file="file://$PROJECT_DIR$/public/src/my-manage-messages.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="138" column="39" lean-forward="true" selection-start-line="138" selection-start-column="39" selection-end-line="138" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.firebaserc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="3" lean-forward="true" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/firebase.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/demo/index.html" />
     <entry file="file://$PROJECT_DIR$/public/images/favicon.png">
       <provider selected="true" editor-type-id="images">
@@ -548,27 +547,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-support-request.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="84" column="48" lean-forward="false" selection-start-line="84" selection-start-column="48" selection-end-line="84" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-manage-requests.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="17" column="7" lean-forward="true" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-manage-topics.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1640">
-          <caret line="193" column="42" lean-forward="true" selection-start-line="193" selection-start-column="42" selection-end-line="193" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/bower_components/vaadin-valo-styles/index.html" />
     <entry file="file://$PROJECT_DIR$/public/test/index.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -582,13 +560,6 @@
         <state relative-caret-position="537">
           <caret line="104" column="12" lean-forward="false" selection-start-line="104" selection-start-column="12" selection-end-line="104" selection-end-column="12" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-manage-subscriptions.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="38" column="10" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="38" selection-end-column="10" />
         </state>
       </provider>
     </entry>
@@ -613,34 +584,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/bower.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="56" lean-forward="false" selection-start-line="26" selection-start-column="52" selection-end-line="28" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-subscriber-groups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" column="73" lean-forward="true" selection-start-line="42" selection-start-column="73" selection-end-line="42" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-email-access.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="79" lean-forward="false" selection-start-line="26" selection-start-column="79" selection-end-line="26" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/src/my-user-profile.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="10" lean-forward="true" selection-start-line="26" selection-start-column="10" selection-end-line="26" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-email-access.html" />
     <entry file="file://$PROJECT_DIR$/public/src/redux-store.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="730">
@@ -662,10 +606,123 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-about.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="31" column="27" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-manage-subscribers.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="90" lean-forward="false" selection-start-line="24" selection-start-column="90" selection-end-line="24" selection-end-column="90" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-subscriber-groups.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="69" lean-forward="false" selection-start-line="24" selection-start-column="69" selection-end-line="24" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-support-request.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="97" lean-forward="false" selection-start-line="27" selection-start-column="97" selection-end-line="27" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-manage-requests.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="39" lean-forward="false" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-user-profile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="118" lean-forward="false" selection-start-line="24" selection-start-column="22" selection-end-line="25" selection-end-column="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-read-faq.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="24" column="87" lean-forward="false" selection-start-line="24" selection-start-column="87" selection-end-line="24" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/bower_components/paper-dropdown-menu/test/paper-dropdown-menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1770">
+          <caret line="118" column="19" lean-forward="true" selection-start-line="118" selection-start-column="19" selection-end-line="118" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/db-dropdown-menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="82" lean-forward="true" selection-start-line="4" selection-start-column="82" selection-end-line="6" selection-end-column="82" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-manage-subscriptions.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="24" column="22" lean-forward="true" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-manage-topics.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="33" column="40" lean-forward="false" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/src/my-app.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="579">
-          <caret line="182" column="101" lean-forward="false" selection-start-line="182" selection-start-column="101" selection-end-line="182" selection-end-column="101" />
+        <state relative-caret-position="330">
+          <caret line="22" column="77" lean-forward="true" selection-start-line="21" selection-start-column="87" selection-end-line="22" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/src/my-manage-messages.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="533">
+          <caret line="48" column="25" lean-forward="true" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="58" lean-forward="true" selection-start-line="14" selection-start-column="40" selection-end-line="15" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.firebaserc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="3" lean-forward="true" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/firebase.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
