@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/iron-label/iron-label.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="db-combo-box.html">
 
 <dom-module id="manage-topics">
   <template>
@@ -38,10 +39,10 @@
       <div class="card">
         <iron-form id="addupdate">
           <form method="get" action="/">
-            <!--<db-dropdown-menu id="topicType" field='name'-->
-                          <!--placeholder='Select option from dropdown button at right.'-->
-                          <!--dbpath="/topicType" combolabel="Select Topic Type"-->
-                          <!--error-message="Please select a Topic Type" on-change="isThisWeb"></db-dropdown-menu>-->
+            <db-combo-box id="topicType" field='name'
+                          placeholder='Select option from dropdown button at right.'
+                          dbpath="/topicType" combolabel="Select Topic Type"
+                          error-message="Please select a Topic Type" on-change="isThisWeb"></db-combo-box>
             <input id="isWeb" hidden></input>
             <iron-autogrow-textarea id="name"
                                     placeholder="enter name here"></iron-autogrow-textarea>
