@@ -261,14 +261,14 @@
         }
 
         if (this.$.hasWeb.hidden == false) {
-          postData.aHeadline = this.$.aHeadline.value ? this.$.aHeadline.value : "",
-            postData.aPre = this.$.aPre.value ? this.$.aPre.value : "",
-            postData.aVideo = this.$.aVideo.value ? this.$.aVideo.value : "",
-            postData.aPost = this.$.aPost.value ? this.$.aPost.value : "",
-            postData.bHeadline = this.$.bHeadline.value ? this.$.bHeadline.value : "",
-            postData.bPre = this.$.bPre.value ? this.$.bPre.value : "",
-            postData.bVideo = this.$.bVideo.value ? this.$.bVideo.value : "",
-            postData.bPost = this.$.bPost.value ? this.$.bPost.value : "",
+          postData.aHeadline = this.$.aHeadline.value ? encodeURIComponent(this.$.aHeadline.value) : "",
+            postData.aPre = this.$.aPre.value ? encodeURIComponent(this.$.aPre.value) : "",
+            postData.aVideo = this.$.aVideo.value ? encodeURIComponent(this.$.aVideo.value) : "",
+            postData.aPost = this.$.aPost.value ? encodeURIComponent(this.$.aPost.value) : "",
+            postData.bHeadline = this.$.bHeadline.value ? encodeURIComponent(this.$.bHeadline.value) : "",
+            postData.bPre = this.$.bPre.value ? encodeURIComponent(this.$.bPre.value) : "",
+            postData.bVideo = this.$.bVideo.value ? encodeURIComponent(this.$.bVideo.value) : "",
+            postData.bPost = this.$.bPost.value ? encodeURIComponent(this.$.bPost.value) : "",
             postData.leadCaptureLink = leadLink
         }
         let updates = {}
