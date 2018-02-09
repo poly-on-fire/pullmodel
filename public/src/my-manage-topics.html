@@ -102,14 +102,9 @@
           <ul id="topics-list">
             <template is="dom-repeat" items="[[topics]]" as="topic">
               <li>
-                <p class="content">
-                  <span><b>[[topic.name]]</b></span>
-                  <br>
-                  <span><b>Lead Capture Page: </b><br><a href="[[topic.leadCaptureLink]]"
-                                                         target="_blank"> View page </a><small><br>Page will not be deployed for at least 5 minutes after creating.</small></span>
-                  <!--<br>-->
-                  <!--<span><b>Sales Link: </b>[[topic.salesLink]]</span>-->
-                </p>
+                <span><b>[[topic.name]]</b></span><br>
+                <span><a href="[[topic.leadCaptureLink]]" target="_blank"> View page  </a><small>(after 5 minutes)</small></span>
+                </span>
                 <paper-icon-button raised topic="[[topic]]" on-tap="remove"
                                    icon="my-icons:close"></paper-icon-button>
               </li>
@@ -119,44 +114,6 @@
       </div>
     </div>
 
-    <!-- <div class="card">
-  <db-combo-box id="topicType" field='name'
-                placeholder='Select topic type'
-                dbpath="/topicType" combolabel="Select Topic Type" required
-                error-message="Please select a Topic Type" on-change="isThisWeb"></db-combo-box> -->
-    </div>
-    <!-- <div class="card">
-      <input id="key" type="text" name="key" hidden/>
-      <form action="/" method="get" id="addupdate">
-        <paper-input id="name" label="Name:" required placeholder="Type topic here "></paper-input>
-        <iron-label>
-          Description:
-          <iron-autogrow-textarea id="description" placeholder="Type description here" required></iron-autogrow-textarea>
-        </iron-label>
-        <br>
-        <button id="add" on-click="add" type="button">Add</button>
-        <button id="update" on-click="update" type="button" hidden>Update</button>
-        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
-      </form>
-  </div> -->
-    <!-- <div class="card">
-      <table style="width:100%; border: 1px solid black; padding: 15px;" >
-        <tr>
-          <th>Delete</th>
-          <th>Update</th>
-          <th>Topic</th>
-          <th>Description</th>
-        </tr>
-        <template is="dom-repeat" items="[[topics]]" as="topic">
-          <tr>
-            <td><paper-icon-button raised topic="[[topic]]" on-tap="remove" icon="my-icons:close">Delete</paper-icon-button></td>
-            <td><paper-icon-button raised topic="[[topic]]" on-tap="display" icon="my-icons:chevron-right">Update</paper-icon-button></td>
-            <td>[[topic.name]]</td>
-            <td>[[topic.description]]</td>
-          </tr>
-        </template>
-      </table>
-    </div> -->
   </template>
 
   <script>

@@ -44,8 +44,8 @@
           <br>
           <iron-label>
             Day:
-            <iron-input id='day' allowed-pattern="[0-9]">
-              <input pattern="\d{5}">
+            <iron-input id='day' allowed-pattern="[0-9]"  bind-value="{{dayValue}}">
+              <input pattern="\d{5}" value="{{value::input}}">
             </iron-input>
           </iron-label>
           <br>
@@ -70,12 +70,10 @@
     <div class="card">
       <table style="width:100%; border: 1px solid black; padding: 15px;">
         <tr>
-          <th>Delete</th>
-          <th>Update</th>
           <th>Name</th>
           <th>Description</th>
         </tr>
-        <template is="dom-repeat" items="[[messages]]" as="message">
+        <template is="dom-repeat" items="[[emailMetas]]" as="message">
           <tr>
             <td>
               <paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close">
@@ -87,8 +85,8 @@
                                  icon="my-icons:chevron-right">Update
               </paper-icon-button>
             </td>
-            <td>[[message.name]]</td>
-            <td>[[message.description]]</td>
+            <td>[[message.subjectExtract]]</td>
+            <td>[[message.contentExtract]]</td>
           </tr>
         </template>
       </table>
@@ -110,6 +108,9 @@
           role: {
             type: Object,
             statePath: 'role'
+          },
+          dayValue: {
+            type: Number
           }
         }
       }
@@ -148,23 +149,26 @@
           emailBody: this.$.emailBody.value,
           subject: this.$.subject.value,
         };
-        emailMetaObject.contentExtract = this.bodyExtract(emailContent);
-        emailMetaObject.subject = this.$.subject.value;
+        emailMetaObject.contentExtract = encodeURIComponent(this.bodyExtract(emailContent));
+        emailMetaObject.subject = encodeURIComponent(this.$.subject.value);
         emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
         emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
-        emailMetaObject.day = parseInt(this.$.day.value);
+        emailMetaObject.day = parseInt(this.dayValue);
         let emailMetaUpdates = {};
         emailMetaUpdates["/" + emailKey] = emailMetaObject;
         this.$.queryUserEmailMeta.ref.update(emailMetaUpdates);
         let emailContentUpdates = {};
         emailContentUpdates["/" + emailKey] = emailContent;
         this.$.queryUserEmailContent.ref.update(emailContentUpdates);
-        this.$.topic.value = null;
         this.$.key.hidden = true;
         this.$.update.hidden = true;
         this.$.add.hidden = false;
         this.$.updateTitle.hidden = true;
         this.$.addTitle.hidden = false;
+        this.$.topic.value = null;
+        this.$.subject.value = null;
+        this.$.emailBody.value = null;
+        this.dayValue = 0;
         return;
       }
 
