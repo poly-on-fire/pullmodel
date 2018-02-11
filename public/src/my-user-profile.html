@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 
@@ -21,7 +22,6 @@
       <div class="circle">Profile</div>
     </div>
 
-
     <div class="card">
       <p>Note to self:<br> if there is not a user email then this all needs to be disabled until that is provided.</p>
       <h2>Your Rank</h2>
@@ -31,19 +31,23 @@
         <li>Leader if you wish to publish information to others re: your own topics</li>
       </ul>
       <p><em>Changing yourself to leader will allow you to create material, but no messages will go out unless/until you
-      have been approved by a site admin.</em></p>
+        have been approved by a site admin.</em></p>
       <h2>Extra Notifications:</h2>
       <p>All messages on this site are delivered by email.</p>
-      <p>But some of us never even check our email! What if we would prefer text messages or Facebook Messenger instead?.</p>
-      <p>We can't offer an instead, because a message might be too big for a text message, for example. <strong>But</strong> we can send you a text or Facebook Message when we drop you an email that you might wish to check.</p>
+      <p>But some of us never even check our email! What if we would prefer text messages or Facebook Messenger
+        instead?.</p>
+      <p>We can't offer an instead, because a message might be too big for a text message, for example.
+        <strong>But</strong> we can send you a text or Facebook Message when we drop you an email that you might wish to
+        check.</p>
       <p>If you prefer to receive Facebook Messages, follow this tutorial: link
-      <a href="here">here</a></p>
+        <a href="here">here</a></p>
       <p>If you prefer to receive text messages, input your phone number here: box here</p>
       <input>here</input>
       <h2>Alternate/Preferred Email</h2>
       <p>If your social login provided us with an email, it should be shown here:</p>
       <p>here</p>
-      <p>But if it's not showing, or if you'd rather receive your messages to a different email, please input that email below</p>
+      <p>But if it's not showing, or if you'd rather receive your messages to a different email, please input that email
+        below</p>
       <input>here</input>
       <h2>Leader Reply-to email address</h2>
       <p>If you're a leader-publisher, you'll need to provide a reply-to email for your messages.</p>
@@ -56,30 +60,30 @@
       </ul>
     </div>
     <!--<div class="card">-->
-      <!--<h3 id="addTitle">Add Profile</h3>-->
-      <!--<h3 id="updateTitle" hidden>Update Profile</h3>-->
-      <!--<input id="key" type="text" name="key" hidden/>-->
-      <!--<form action="/" method="get" id="addupdate">-->
-        <!--Name:<input id="name" type="text" name="name"><br>-->
-        <!--Description:<input id="description" type="text" name="description"><br>-->
-        <!--<button id="add" on-click="add" type="button">Add</button>-->
-        <!--<button id="update" on-click="update" type="button" hidden>Update</button>-->
-        <!--<button id="clear" on-click="clear" type="button">Clear/Cancel</button>-->
-      <!--</form>-->
+    <!--<h3 id="addTitle">Add Profile</h3>-->
+    <!--<h3 id="updateTitle" hidden>Update Profile</h3>-->
+    <!--<input id="key" type="text" name="key" hidden/>-->
+    <!--<form action="/" method="get" id="addupdate">-->
+    <!--Name:<input id="name" type="text" name="name"><br>-->
+    <!--Description:<input id="description" type="text" name="description"><br>-->
+    <!--<button id="add" on-click="add" type="button">Add</button>-->
+    <!--<button id="update" on-click="update" type="button" hidden>Update</button>-->
+    <!--<button id="clear" on-click="clear" type="button">Clear/Cancel</button>-->
+    <!--</form>-->
     <!--</div>-->
     <!--<div class="card">-->
-      <!--<ul id="profiles-list">-->
-        <!--<template is="dom-repeat" items="[[profiles]]" as="profile">-->
-          <!--<li>-->
-                  <!--<span>-->
-                    <!--<paper-icon-button raised profile="[[profile]]" on-tap="remove"-->
-                                       <!--icon="my-icons:close">Delete</paper-icon-button>-->
-                    <!--<paper-icon-button raised profile="[[profile]]" on-tap="display" icon="my-icons:chevron-right">Update</paper-icon-button>-->
-                    <!--[[profile.name]] - [[profile.description]]-->
-                  <!--</span>-->
-          <!--</li>-->
-        <!--</template>-->
-      <!--</ul>-->
+    <!--<ul id="profiles-list">-->
+    <!--<template is="dom-repeat" items="[[profiles]]" as="profile">-->
+    <!--<li>-->
+    <!--<span>-->
+    <!--<paper-icon-button raised profile="[[profile]]" on-tap="remove"-->
+    <!--icon="my-icons:close">Delete</paper-icon-button>-->
+    <!--<paper-icon-button raised profile="[[profile]]" on-tap="display" icon="my-icons:chevron-right">Update</paper-icon-button>-->
+    <!--[[profile.name]] - [[profile.description]]-->
+    <!--</span>-->
+    <!--</li>-->
+    <!--</template>-->
+    <!--</ul>-->
     <!--</div>-->
   </template>
 
@@ -100,6 +104,11 @@
             statePath: 'role'
           }
         }
+      }
+
+      vdate() {
+        console.log("AAAAA");
+        this.$.form1.validate();
       }
 
       resetForm() {

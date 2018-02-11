@@ -26,10 +26,17 @@
     "iron-form": "PolymerElements/iron-form#~2.1.0",
     "iron-cookie": "wincinderith/iron-cookie#^2.0.2",
     "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
-    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.2"
+    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.2",
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.4.2",
+    "paper-item": "PolymerElements/paper-item#~2.0.0",
+    "paper-listbox": "PolymerElements/paper-listbox#~2.0.0",
+    "paper-spinner": "PolymerElements/paper-spinner#~2.0.0"
   },
   "resolutions": {
-    "polymer": "^2.0.0"
+    "polymer": "^2.0.0",
+    "iron-flex-layout": "^2.0.0",
+    "iron-a11y-keys-behavior": "^2.0.0",
+    "webcomponentsjs": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
