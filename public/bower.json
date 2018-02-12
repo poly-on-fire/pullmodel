@@ -26,7 +26,7 @@
     "iron-form": "PolymerElements/iron-form#~2.1.0",
     "iron-cookie": "wincinderith/iron-cookie#^2.0.2",
     "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
-    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.2",
+    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.3",
     "paper-checkbox": "PolymerElements/paper-checkbox#~1.4.2",
     "paper-item": "PolymerElements/paper-item#~2.0.0",
     "paper-listbox": "PolymerElements/paper-listbox#~2.0.0",
