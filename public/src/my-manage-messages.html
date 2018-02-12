@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -19,10 +19,20 @@
         display: block;
         padding: 10px;
       }
+
+      paper-input {
+        background: #f0f0f0;
+      }
+
+      paper-textarea {
+        background: #f0f0f0;
+      }
     </style>
     <firebase-query id="queryTopicName" path="/users/[[user.uid]]/topicName">
     </firebase-query>
-    <firebase-query id="queryUserEmailMeta" path="/users/[[user.uid]]/emailMeta" data="{{emailMetas}}">
+    <firebase-query id="queryUserEmailMeta" path="/users/[[user.uid]]/emailMeta" order-by-child='keyDay'
+                    start-at='[[topicKey]]000' end-at='[[topicKey]]999'
+                    data="{{emailMetas}}">
     </firebase-query>
     <firebase-query id="queryUserEmailContent" path="/users/[[user.uid]]/emailContent"
                     data="{{userEmailContent}}">
@@ -31,66 +41,53 @@
     </firebase-query>
     <div class="card">
       <div class="circle">Message</div>
+
+      <paper-icon-button raised message="[[message]]"
+                         icon="my-icons:chevron-right">Update
+      </paper-icon-button>
     </div>
     <div class="card">
-      <h3 id="addTitle">Add Message</h3>
-      <h3 id="updateTitle" hidden>Update Message</h3>
-      <input id="key" type="text" name="key" hidden/>
-      <iron-form id="addupdate">
-        <form action="/" method="get">
-          <br>
-          <db-combo-box id="topic"
-                        placeholder='Select topic' field='name'
-                        dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
-                        error-message="Please select a Topic" required
-                        on-change="topicSelected"></db-combo-box>
-          <br>
-          <div id="hasTopic" hidden>
-            <iron-label>
-              Day:<br>
-              <iron-input id='day' allowed-pattern="[0-9]" bind-value="{{dayValue}}" on-change="daySelected" required>
-                <input pattern="\d{5}" value="{{value::input}}">
-              </iron-input>
-            </iron-label>
-            <div id="hasDay" hidden>
-              <br>
-              <iron-label>
-                Subject:<br>
-                <iron-autogrow-textarea id="subject" placeholder="Type subject here" value="{{subjectValue}}"
-                                        required></iron-autogrow-textarea>
-              </iron-label>
-              <div id="hasSubject" hidden>
-                <br>
-                <iron-label>
-                  Body:<br>
-                  <iron-autogrow-textarea id="emailBody" placeholder="Type body here"
-                                          required></iron-autogrow-textarea>
-                </iron-label>
-                <br>
-              </div>
-              <button id="add" on-click="add" type="button">Add</button>
-              <button id="update" on-click="update" type="button" hidden>Update</button>
-              <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
-            </div>
-          </div>
-        </form>
-      </iron-form>
+      <db-combo-box id="topic"
+                    placeholder='Select topic' field='name'
+                    dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
+                    error-message="Please select a Topic" required
+                    on-change="topicSelected"></db-combo-box>
+      <h2>[[topicName]]</h2>
     </div>
-    <div class="card">
-      <ul>
-        <template is="dom-repeat" items="[[emailMetas]]" as="message">
-          <li>
-            <paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close">
-              Delete
-            </paper-icon-button>
-            <paper-icon-button raised message="[[message]]" on-tap="display"
-                               icon="my-icons:chevron-right">Update
-            </paper-icon-button>
-            [[message.subjectExtract]]
-            <small><br>[[message.contentExtract]]</small>
-          </li>
-        </template>
-      </ul>
+    <div id=validatable class="card" hidden>
+      <h3 id="addTitle">Add Outgoing Email Message </h3>
+      <div class="card">
+        <h3 id="updateTitle" hidden>Update Message</h3>
+        <input id="key" type="text" name="key" hidden/>
+        <iron-form id="addupdate">
+          <form action="/" method="get">
+            <paper-input id='day' allowed-pattern="[0-9]" value="{{dayValue}}" on-change="daySelected" required
+                         always-float-label label="Which day does this go out on? (example: 3)">
+              <input pattern="\d{5}" value="{{value::input}}">
+            </paper-input>
+            <paper-input id="subject" label="Email Subject:"
+                         required always-float-label></paper-input>
+            <paper-textarea id="emailBody" label="Email Body:"
+                            required always-float-label></paper-textarea>
+            <paper-button id="add" on-click="add" type="button">Add</paper-button>
+            <paper-button id="update" on-click="update" type="button" hidden>Update</paper-button>
+            <paper-button id="clear" on-click="clear" type="button">Clear/Cancel</paper-button>
+          </form>
+        </iron-form>
+      </div>
+      <div class="card">
+          <template is="dom-repeat" items="[[emailMetas]]" as="message">
+              <paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close">
+                Delete
+              </paper-icon-button>
+              <paper-icon-button raised message="[[message]]" on-tap="display"
+                                 icon="my-icons:chevron-right">Update
+              </paper-icon-button>
+            <h4>Day [[message.day]] [[message.subjectExtract]]</h4>
+
+              <small><br>[[message.contentExtract]]</small>
+          </template>
+      </div>
     </div>
 
   </template>
@@ -117,9 +114,17 @@
           subjectValue: {
             type: String,
             observer: "subjectSelected"
+          },
+          topicKey: {
+            type: String,
+            observer: "topicSelected"
+          },
+          topicName: {
+            type: String
           }
         }
       }
+
       resetForm() {
         this.$.name.value = null;
         this.$.description.value = null;
@@ -156,11 +161,12 @@
             emailBody: this.$.emailBody.value,
             subject: this.$.subject.value,
           };
-          emailMetaObject.contentExtract = encodeURIComponent(this.bodyExtract(emailContent));
+          emailMetaObject.contentExtract = this.bodyExtract(emailContent);
           emailMetaObject.subject = encodeURIComponent(this.$.subject.value);
           emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
           emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
           emailMetaObject.day = parseInt(this.dayValue);
+          emailMetaObject.keyDay = this.topicKey + this.padDayto3();
           let emailMetaUpdates = {};
           emailMetaUpdates["/" + emailKey] = emailMetaObject;
           this.$.queryUserEmailMeta.ref.update(emailMetaUpdates);
@@ -172,12 +178,10 @@
           this.$.add.hidden = false;
           this.$.updateTitle.hidden = true;
           this.$.addTitle.hidden = false;
-          this.$.topic.value = null;
           this.$.subject.value = null;
           this.$.emailBody.value = null;
           this.dayValue = null;
-        } else {
-          console.log("FORM NOT VALID");
+          this.topicSelected();
         }
         return;
       }
@@ -191,6 +195,12 @@
           topicKey: topicKey
         };
         return emailMetaObject;
+      }
+
+      padDayto3(){
+        let dayNumber = this.dayValue;
+        dayNumber = dayNumber.padStart(3, "0");
+        return dayNumber;
       }
 
       topicKeyLookup(topicName) {
@@ -237,27 +247,13 @@
 
       topicSelected() {
         if (this.$.topic.value) {
-          this.$.hasTopic.hidden = false;
-          this.$.day.autofocus;
+          this.$.validatable.hidden = false;
+          let aTopicKey = this.$.topic.value;
+          this.topicName = aTopicKey.replace(/(~\||\|~)/gm, " - ");
+          this.topicKey = aTopicKey.substring(aTopicKey.indexOf("~|") + 2, aTopicKey.length);
         } else {
-          this.$.hasTopic.hidden = true;
-        }
-      }
-
-      daySelected() {
-        if (this.dayValue) {
-          this.$.hasDay.hidden = false;
-          this.$.subject.autofocus;
-        } else {
-          this.$.hasDay.hidden = true;
-        }
-      }
-
-      subjectSelected() {
-        if (this.$.subject.value) {
-          this.$.hasSubject.hidden = false;
-        } else {
-          this.$.hasSubject.hidden = true;
+          this.$.validatable.hidden = true;
+          this.topicKey = null;
         }
       }
 
