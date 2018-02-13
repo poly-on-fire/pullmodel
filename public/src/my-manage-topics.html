@@ -2,12 +2,14 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
-<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="db-combo-box.html">
@@ -18,6 +20,14 @@
       :host {
         display: block;
         padding: 10px;
+      }
+
+      paper-input {
+        background: #f0f0f0;
+      }
+
+      paper-textarea {
+        background: #f0f0f0;
       }
     </style>
 
@@ -44,46 +54,33 @@
                           dbpath="/topicType" combolabel="Select Topic Type"
                           error-message="Please select a Topic Type" on-change="isThisWeb"></db-combo-box>
             <input id="isWeb" hidden></input>
-            <iron-autogrow-textarea id="name"
-                                    placeholder="enter name here"></iron-autogrow-textarea>
-            <p>Description:</p>
-            <iron-autogrow-textarea id="description"
-                                    placeholder="Notes to self (if any) - What is this topic about?"></iron-autogrow-textarea>
+            <!--<paper-input id="" label=""-->
+            <!--required always-float-label></paper-input>-->
+            <!--<paper-textarea id="" label=""-->
+            <!--required always-float-label></paper-textarea>-->
+            <paper-input id="name" label="Topic Name"
+                         required always-float-label></paper-input>
+            <paper-textarea id="description" label="Description(optional) - What is this topic about?"
+                            required always-float-label></paper-textarea>
             <div id="hasWeb" class="card" hidden>
               <p>Lead Capture Page:</p>
-              <iron-autogrow-textarea id="aHeadline" placeholder="Headline" required
-                                      error-message="Please provide headline text"
-                                      hidden></iron-autogrow-textarea>
-              <br>
-              <iron-autogrow-textarea id="aPre" placeholder="Paragraph above video" required
-                                      error-message="Please provide pre-video text"
-                                      hidden></iron-autogrow-textarea>
-              <br>
-              <iron-autogrow-textarea id="aVideo" placeholder="Youtube link" required
-                                      error-message="Please provide video link"
-                                      hidden></iron-autogrow-textarea>
-              <br>
-              <iron-autogrow-textarea id="aPost" placeholder="Paragraph below video" required
-                                      error-message="Please provide post-video text"
-                                      hidden></iron-autogrow-textarea>
-              <br>
+              <paper-input id="aHeadline" label="Headline"
+                           required always-float-label hidden></paper-input>
+              <paper-textarea id="aPre" label="Paragraph above video"
+                              required always-float-label hidden></paper-textarea>
+              <paper-input id="aVideo" label="Youtube link"
+                           required always-float-label hidden></paper-input>
+              <paper-textarea id="aPost" label="Paragraph below video"
+                              required always-float-label hidden></paper-textarea>
               <p>Sales Page:</p>
-              <iron-autogrow-textarea id="bHeadline" placeholder="Headline" required
-                                      error-message="Please provide headline text"
-                                      hidden></iron-autogrow-textarea>
-              <br>
-              <iron-autogrow-textarea id="bPre" placeholder="Paragraph above video" required
-                                      error-message="Please provide pre-video text"
-                                      hidden></iron-autogrow-textarea>
-              <br>
-              <iron-autogrow-textarea id="bVideo" placeholder="Youtube link" required
-                                      error-message="Please provide video link"
-                                      hidden></iron-autogrow-textarea>
-              <br>
-              <iron-autogrow-textarea id="bPost" placeholder="Paragraph below video" required
-                                      error-message="Please provide post-video text"
-                                      hidden></iron-autogrow-textarea>
-              <br>
+              <paper-input id="bHeadline" label="Headline"
+                           required always-float-label hidden></paper-input>
+              <paper-textarea id="bPre" label="Paragraph above video"
+                              required always-float-label hidden></paper-textarea>
+              <paper-input id="bVideo" label="Youtube link"
+                           required always-float-label hidden></paper-input>
+              <paper-textarea id="bPost" label="Paragraph below video"
+                              required always-float-label hidden></paper-textarea>
             </div>
             <input id="key" type="text" name="key" hidden/>
             <div id="formControls">
@@ -190,7 +187,7 @@
       }
 
       hasLeadCapture(val) {
-        if (typeof val !== undefined && val !== "undefined" && val !== "null" && val && (val.includes("dual"))) {
+        if (typeof val !== undefined && val !== "undefined" && val !== "null" && val && (val.includes("Dual"))) {
           return true;
         } else {
           return false;
@@ -203,65 +200,68 @@
       }
 
       add() {
-        let timestamp = Date.now();
-        var newTopicKey = this.$.queryTopics.ref.push().key;
-        let friendlyName = this._friendlyName(newTopicKey);
-        let leadLink = null;
-        if (this.hasLeadCapture(this.$.topicType.value)) {
-          leadLink = "https://clouddancer.info/z" + newTopicKey + "c.html";
+        let myForm = this.$.addupdate;
+        if (myForm.validate()) {
+          let timestamp = Date.now();
+          var newTopicKey = this.$.queryTopics.ref.push().key;
+          let friendlyName = this._friendlyName(newTopicKey);
+          let leadLink = null;
+          if (this.hasLeadCapture(this.$.topicType.value)) {
+            leadLink = "https://clouddancer.info/z" + newTopicKey + "c.html";
+          }
+          let postData = {
+            topicType: this.$.topicType.value,
+            name: friendlyName,
+            description: this.$.description.value ? this.$.description.value : "",
+            timestamp: timestamp
+          }
+
+          if (this.$.hasWeb.hidden == false) {
+            postData.aHeadline = this.$.aHeadline.value ? encodeURIComponent(this.$.aHeadline.value) : "",
+              postData.aPre = this.$.aPre.value ? encodeURIComponent(this.$.aPre.value) : "",
+              postData.aVideo = this.$.aVideo.value ? encodeURIComponent(this.$.aVideo.value) : "",
+              postData.aPost = this.$.aPost.value ? encodeURIComponent(this.$.aPost.value) : "",
+              postData.bHeadline = this.$.bHeadline.value ? encodeURIComponent(this.$.bHeadline.value) : "",
+              postData.bPre = this.$.bPre.value ? encodeURIComponent(this.$.bPre.value) : "",
+              postData.bVideo = this.$.bVideo.value ? encodeURIComponent(this.$.bVideo.value) : "",
+              postData.bPost = this.$.bPost.value ? encodeURIComponent(this.$.bPost.value) : "",
+              postData.leadCaptureLink = leadLink
+          }
+          let updates = {}
+          updates["/" + newTopicKey] = postData;
+          this.$.queryTopics.ref.update(updates);
+
+          let topicLookupData = {
+            sponsorKey: this.user.uid,
+            sponsorName: this.user.displayName
+          };
+          let topicLookupUpdates = {};
+          topicLookupUpdates["/" + newTopicKey] = topicLookupData;
+          this.$.queryTopicLookup.ref.update(topicLookupUpdates);
+
+          let crossRefData = {
+            topicKey: newTopicKey
+          };
+          let crossRefUpdates = {};
+          crossRefUpdates["/" + friendlyName] = crossRefData;
+          this.$.queryTopicName.ref.update(crossRefUpdates);
+
+          this.$.name.value = null;
+          this.$.description.value = null;
+          this.$.aHeadline.value = null;
+          this.$.aPre.value = null;
+          this.$.aVideo.value = null;
+          this.$.aPost.value = null;
+          this.$.bHeadline.value = null;
+          this.$.bPre.value = null;
+          this.$.bVideo.value = null;
+          this.$.bPost.value = null;
+          this.$.key.hidden = true;
+          this.$.update.hidden = true;
+          this.$.add.hidden = false;
+          this.$.updateTitle.hidden = true;
+          this.$.addTitle.hidden = false;
         }
-        let postData = {
-          topicType: this.$.topicType.value,
-          name: friendlyName,
-          description: this.$.description.value ? this.$.description.value : "",
-          timestamp: timestamp
-        }
-
-        if (this.$.hasWeb.hidden == false) {
-          postData.aHeadline = this.$.aHeadline.value ? encodeURIComponent(this.$.aHeadline.value) : "",
-            postData.aPre = this.$.aPre.value ? encodeURIComponent(this.$.aPre.value) : "",
-            postData.aVideo = this.$.aVideo.value ? encodeURIComponent(this.$.aVideo.value) : "",
-            postData.aPost = this.$.aPost.value ? encodeURIComponent(this.$.aPost.value) : "",
-            postData.bHeadline = this.$.bHeadline.value ? encodeURIComponent(this.$.bHeadline.value) : "",
-            postData.bPre = this.$.bPre.value ? encodeURIComponent(this.$.bPre.value) : "",
-            postData.bVideo = this.$.bVideo.value ? encodeURIComponent(this.$.bVideo.value) : "",
-            postData.bPost = this.$.bPost.value ? encodeURIComponent(this.$.bPost.value) : "",
-            postData.leadCaptureLink = leadLink
-        }
-        let updates = {}
-        updates["/" + newTopicKey] = postData;
-        this.$.queryTopics.ref.update(updates);
-
-        let topicLookupData = {
-          sponsorKey: this.user.uid,
-          sponsorName: this.user.displayName
-        };
-        let topicLookupUpdates = {};
-        topicLookupUpdates["/" + newTopicKey] = topicLookupData;
-        this.$.queryTopicLookup.ref.update(topicLookupUpdates);
-
-        let crossRefData = {
-          topicKey: newTopicKey
-        };
-        let crossRefUpdates = {};
-        crossRefUpdates["/" + friendlyName] = crossRefData;
-        this.$.queryTopicName.ref.update(crossRefUpdates);
-
-        this.$.name.value = null;
-        this.$.description.value = null;
-        this.$.aHeadline.value = null;
-        this.$.aPre.value = null;
-        this.$.aVideo.value = null;
-        this.$.aPost.value = null;
-        this.$.bHeadline.value = null;
-        this.$.bPre.value = null;
-        this.$.bVideo.value = null;
-        this.$.bPost.value = null;
-        this.$.key.hidden = true;
-        this.$.update.hidden = true;
-        this.$.add.hidden = false;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
         return;
       }
 

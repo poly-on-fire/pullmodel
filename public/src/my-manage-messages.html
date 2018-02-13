@@ -55,8 +55,8 @@
       <h2>[[topicName]]</h2>
     </div>
     <div id=validatable class="card" hidden>
-      <h3 id="addTitle">Add Outgoing Email Message </h3>
       <div class="card">
+        <h4 id="addTitle">Add Outgoing Email Message </h4>
         <h3 id="updateTitle" hidden>Update Message</h3>
         <input id="key" type="text" name="key" hidden/>
         <iron-form id="addupdate">
@@ -76,17 +76,14 @@
         </iron-form>
       </div>
       <div class="card">
-          <template is="dom-repeat" items="[[emailMetas]]" as="message">
-              <paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close">
-                Delete
-              </paper-icon-button>
-              <paper-icon-button raised message="[[message]]" on-tap="display"
-                                 icon="my-icons:chevron-right">Update
-              </paper-icon-button>
-            <h4>Day [[message.day]] [[message.subjectExtract]]</h4>
-
-              <small><br>[[message.contentExtract]]</small>
-          </template>
+        <template is="dom-repeat" items="[[emailMetas]]" as="message">
+          <span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>
+          <!--<paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close"></paper-icon-button>-->
+          <!--<paper-icon-button raised message="[[message]]" on-tap="display"-->
+                             <!--icon="my-icons:chevron-right"></paper-icon-button>-->
+          <span><small><br>[[message.contentExtract]]</small></span>
+          <hr>
+        </template>
       </div>
     </div>
 
@@ -197,7 +194,7 @@
         return emailMetaObject;
       }
 
-      padDayto3(){
+      padDayto3() {
         let dayNumber = this.dayValue;
         dayNumber = dayNumber.padStart(3, "0");
         return dayNumber;
