@@ -31,6 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="my-user-profile.html">
 <link rel="lazy-import" href="my-manage-faq.html">
 <link rel="lazy-import" href="my-manage-messages.html">
+<link rel="lazy-import" href="my-topic-groups.html">
 <link rel="lazy-import" href="my-admin-profiles.html">
 <link rel="lazy-import" href="my-manage-requests.html">
 <link rel="lazy-import" href="my-manage-subscribers.html">
@@ -194,6 +195,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <!-- should be g reset to d for vaadin inspection-->
               <div hidden$=[[!role.show.d]]><a name="manage-messages" href="[[rootPath]]manage-messages">
                 Messages You Publish</a></div>
+              <div hidden$=[[!role.show.d]]><a name="topic-groups" href="[[rootPath]]topic-groups">
+                Group Subscribes</a></div>
               <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
                 Groups</a></div>
               <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe Groups Passively</a>
@@ -241,6 +244,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <message-meta name="message-meta" user=[[user]]></message-meta>
             <message-content name="message-content" user=[[user]]></message-content>
             <manage-messages name="manage-messages" user=[[user]]></manage-messages>
+            <topic-groups name="topic-groups" user=[[user]]></topic-groups>
             <subscriber-groups name="subscriber-groups" user=[[user]]></subscriber-groups>
             <manage-subscribers name="manage-subscribers" user=[[user]]></manage-subscribers>
             <manage-subscriptions name="manage-subscriptions" user=[[user]]></manage-subscriptions>

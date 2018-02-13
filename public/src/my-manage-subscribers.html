@@ -26,14 +26,13 @@
       <p><strong>Danger!</strong>
         <small>This form could allow you to do creepy things!</small>
       </p>
-      <p>
-        <small>By inputing email addresses into this form, you are representing that the persons being input have
+      <p class="micro-red">
+        By inputing email addresses into this form, you are representing that the persons being input have
           already
           agreed to receive your messages, but that you are doing the work of enrolling them.
           <br>
           If you choose to abuse this privilige and subscribe people which you are not already corresponding with, your
           leader/publisher positions may be revoked.
-        </small>
       </p>
     </div>
     <div class="card">
@@ -132,7 +131,7 @@
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
           let postData = {
-            group: this.$.group.value,
+            group: this.$.group.value.value,
             subscribers: this.$.subscribers.value ? this.$.subscribers.value : "",
             timestamp: Date.now()
           };

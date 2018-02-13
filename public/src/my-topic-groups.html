@@ -11,7 +11,7 @@
 <link rel="import" href="my-icons.html">
 <link rel="import" href="db-combo-box.html">
 
-<dom-module id="manage-messages">
+<dom-module id="topic-groups">
   <template>
     <style include="shared-styles">
       :host {
@@ -31,7 +31,7 @@
     <firebase-query id="queryTopic" path="/users/[[user.uid]]/topic" data="{{Topic}}">
     </firebase-query>
     <div class="card">
-      <div class="circle">Message</div>
+      <div class="circle">TopicGroups</div>
 
       <paper-icon-button raised message="[[message]]"
                          icon="my-icons:chevron-right">Update
@@ -47,40 +47,35 @@
     </div>
     <div id=validatable class="card" hidden>
       <div class="card">
-        <h4 id="addTitle">Add Outgoing Email Message </h4>
+        <h4 id="addTitle">Add Subscriber Group to this Topic</h4>
         <h3 id="updateTitle" hidden>Update Message</h3>
         <input id="key" type="text" name="key" hidden/>
         <iron-form id="addupdate">
           <form action="/" method="get">
-            <paper-input id='day' allowed-pattern="[0-9]" value="{{dayValue}}" on-change="daySelected" required
-                         always-float-label label="Which day does this go out on? (example: 3)">
-              <input pattern="\d{5}" value="{{value::input}}">
-            </paper-input>
-            <paper-input id="subject" label="Email Subject:"
-                         required always-float-label></paper-input>
-            <paper-textarea id="emailBody" label="Email Body:"
-                            required always-float-label></paper-textarea>
-            <paper-button id="add" on-click="add" type="button">Add</paper-button>
-            <paper-button id="update" on-click="update" type="button" hidden>Update</paper-button>
-            <paper-button id="clear" on-click="clear" type="button">Clear/Cancel</paper-button>
+            <db-combo-box id="group"
+                          placeholder='Select topic' field='name'
+                          dbpath="/users/[[user.uid]]/subscriberGroup" combolabel="Select Group"
+                          error-message="Please select a Subscriber Group" required
+                          on-change="groupSelected" value="[[value]]" key="[[groupKey]]"></db-combo-box>
+            <paper-button id="add" on-click="add" type="button" hidden>Add</paper-button>
           </form>
         </iron-form>
       </div>
-      <div class="card">
-        <template is="dom-repeat" items="[[emailMetas]]" as="message">
-          <span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>
-          <span><small><br>[[message.contentExtract]]</small></span>
-          <hr>
-        </template>
-      </div>
+      <!--<div class="card">-->
+        <!--<template is="dom-repeat" items="[[emailMetas]]" as="message">-->
+          <!--<span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>-->
+          <!--<span><small><br>[[message.contentExtract]]</small></span>-->
+          <!--<hr>-->
+        <!--</template>-->
+      <!--</div>-->
     </div>
 
   </template>
 
   <script>
-    class ManageMessages extends Polymer.Element {
+    class TopicGroups extends Polymer.Element {
       static get is() {
-        return 'manage-messages';
+        return 'topic-groups';
       }
 
       static get properties() {
@@ -110,63 +105,37 @@
         }
       }
 
-      resetForm() {
-        this.$.name.value = null;
-        this.$.description.value = null;
-      }
-
-      update(e) {
-        let descrip = this.$.description.value ? this.$.description.value : "";
-        let key = this.$.key.value;
-        let messageQueryRef = this.$.queryMessages.ref.child(key);
-        let postData = {
-          name: this.$.name.value,
-          description: descrip,
-          timestamp: Date.now()
-        }
-        messageQueryRef.ref.update(postData);
-        this.$.name.value = null;
-        this.$.description.value = null;
-
-        this.$.key.hidden = true;
-        this.$.add.hidden = false;
-        this.$.update.hidden = true;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
-        this.$.addupdate.reset()
-        return;
-      }
-
       add() {
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
-          let emailKey = this.$.queryUserEmailContent.ref.push().key
-          let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
-          let emailContent = {
-            emailBody: this.$.emailBody.value,
-            subject: this.$.subject.value,
-          };
-          emailMetaObject.contentExtract = this.bodyExtract(emailContent);
-          emailMetaObject.subject = encodeURIComponent(this.$.subject.value);
-          emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
-          emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
-          emailMetaObject.day = parseInt(this.dayValue);
-          emailMetaObject.keyDay = this.topicKey + this.padDayto3();
-          let emailMetaUpdates = {};
-          emailMetaUpdates["/" + emailKey] = emailMetaObject;
-          this.$.queryUserEmailMeta.ref.update(emailMetaUpdates);
-          let emailContentUpdates = {};
-          emailContentUpdates["/" + emailKey] = emailContent;
-          this.$.queryUserEmailContent.ref.update(emailContentUpdates);
-          this.$.key.hidden = true;
-          this.$.update.hidden = true;
-          this.$.add.hidden = false;
-          this.$.updateTitle.hidden = true;
-          this.$.addTitle.hidden = false;
-          this.$.subject.value = null;
-          this.$.emailBody.value = null;
-          this.dayValue = null;
-          this.topicSelected();
+          console.log("hi")
+          // let emailKey = this.$.queryUserEmailContent.ref.push().key
+          // let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
+          // let emailContent = {
+          //   emailBody: this.$.emailBody.value,
+          //   subject: this.$.subject.value,
+          // };
+          // emailMetaObject.contentExtract = this.bodyExtract(emailContent);
+          // emailMetaObject.subject = encodeURIComponent(this.$.subject.value);
+          // emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
+          // emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
+          // emailMetaObject.day = parseInt(this.dayValue);
+          // emailMetaObject.keyDay = this.topicKey + this.padDayto3();
+          // let emailMetaUpdates = {};
+          // emailMetaUpdates["/" + emailKey] = emailMetaObject;
+          // this.$.queryUserEmailMeta.ref.update(emailMetaUpdates);
+          // let emailContentUpdates = {};
+          // emailContentUpdates["/" + emailKey] = emailContent;
+          // this.$.queryUserEmailContent.ref.update(emailContentUpdates);
+          // this.$.key.hidden = true;
+          // this.$.update.hidden = true;
+          // this.$.add.hidden = false;
+          // this.$.updateTitle.hidden = true;
+          // this.$.addTitle.hidden = false;
+          // this.$.subject.value = null;
+          // this.$.emailBody.value = null;
+          // this.dayValue = null;
+          // this.topicSelected();
         }
         return;
       }
@@ -206,32 +175,10 @@
         return aTopic;
       }
 
-      bodyExtract(emailContent) {
-        let extract = emailContent.emailBody.replace(/(\r\n|\n|\r)/gm, "");
-        extract = extract.substring(0, 100)
-        return extract;
-      }
-
-      emailSubjectExtract(subjectInput) {
-        let subject = subjectInput;
-        subject = subject.toUpperCase();
-        if (subject.length > 40) {
-          subject = subject.substring(0, 40);
-        }
-        return subject;
-      }
-
-      topicExtract(topicName) {
-        let date = topicName.substring(0, 10);
-        let extractTopic = topicName.substring(21, topicName.length)
-        if (extractTopic.startsWith("nex")) {
-          extractTopic = extractTopic.substring(3, extractTopic.length);
-        }
-        return date + " " + extractTopic;
-      }
 
       topicSelected() {
         if (this.$.topic.value) {
+          console.log("HEY\nKEY\n" + this.$.topic.key + ' \nVALUE:\n' + this.$.topic.value);
           this.$.validatable.hidden = false;
           let aTopicKey = this.$.topic.value;
           this.topicName = aTopicKey.replace(/(~\||\|~)/gm, " - ");
@@ -239,6 +186,13 @@
         } else {
           this.$.validatable.hidden = true;
           this.topicKey = null;
+        }
+      }
+      groupSelected(){
+        if (this.$.group.value) {
+          this.$.add.hidden = false;
+        } else {
+          this.$.add.hidden = true;
         }
       }
 
@@ -277,11 +231,11 @@
 
     window
       .customElements
-      .define(ManageMessages
+      .define(TopicGroups
 
           .is
         ,
-        ManageMessages
+        TopicGroups
       )
     ;
   </script>

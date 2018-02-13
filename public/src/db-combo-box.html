@@ -17,7 +17,7 @@
     <firebase-document disabled id="firebaseDoc" path="[[dbpath]]" data="{{dbvalues}}">
     </firebase-document>
     <vaadin-combo-box id="comboBox" label="[[combolabel]]" items="[[_values]]" value="{{value}}" required=[[required]]
-                      error-message=[[errorMessage]] placeholder=[[placeholder]]></vaadin-combo-box>
+                      error-message=[[errorMessage]] placeholder=[[placeholder]] on-change="onSelect"></vaadin-combo-box>
   </template>
 
   <script>
@@ -60,7 +60,14 @@
           _values: {
             type: Array
           },
+          _keyValues: {
+            type: Array
+          },
           value: {
+            type: String,
+            notify: true
+          },
+          key: {
             type: String,
             notify: true
           },
@@ -77,26 +84,51 @@
       }
 
       dbValuesChanged() {
-        var field = this.field;
+        let field = this.field;
         if (!!field) {
           field = this.field
         }
-        var dbobject = this.dbvalues;
-        var keys = [];
+        let dbobject = this.dbvalues;
+        let keys = [];
+        let keyValues = [];
         if (!field) {
-          for (var key in dbobject) {
+          for (let key in dbobject) {
             keys.push(key);
           }
         } else {
-          for (var key in dbobject) {
-            var fieldData = dbobject[key];
+          for (let key in dbobject) {
+            let fieldData = dbobject[key];
             keys.push(dbobject[key][field]);
+            keyValues.push(this.keyValueObject(key, dbobject[key][field]));
           }
         }
         this._values = keys;
+        this._keyValues = keyValues;
+      }
+
+      keyValueObject(key, value) {
+        let obj = {
+          key: key,
+          value: value
+        }
+        return obj;
+      }
+
+      onSelect(){
+        // console.log("SELECT "+ this.value + '\nKV\n'+ JSON.stringify(this._keyValues)+ '\nV\n'+ JSON.stringify(this._keyValues[this.value]));
+        // console.log(JSON.stringify(this._keyValues.indexOfObject("value", this.value)));
+        let i = this._keyValues.indexOfObject("value", this.value);
+        this.key = this._keyValues[i].key;
+        // console.log("BINGO\n"+ this.key);
       }
     }
 
+    Array.prototype.indexOfObject = function(property, value) {
+      for (var i = 0, len = this.length; i < len; i++) {
+        if (this[i][property] === value) return i;
+      }
+      return -1;
+    }
     window.customElements.define(DbComboBox.is, DbComboBox);
   </script>
 </dom-module>
