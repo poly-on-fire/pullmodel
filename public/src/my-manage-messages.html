@@ -5,7 +5,6 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="shared-styles.html">
@@ -78,9 +77,6 @@
       <div class="card">
         <template is="dom-repeat" items="[[emailMetas]]" as="message">
           <span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>
-          <!--<paper-icon-button raised message="[[message]]" on-tap="remove" icon="my-icons:close"></paper-icon-button>-->
-          <!--<paper-icon-button raised message="[[message]]" on-tap="display"-->
-                             <!--icon="my-icons:chevron-right"></paper-icon-button>-->
           <span><small><br>[[message.contentExtract]]</small></span>
           <hr>
         </template>

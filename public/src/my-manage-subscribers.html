@@ -3,11 +3,13 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="db-combo-box.html">
 
 <dom-module id="manage-subscribers">
   <template>
@@ -21,50 +23,53 @@
     </firebase-query>
     <div class="card">
       <div class="circle">PassiveSubscribers</div>
-      <p>Danger! This form could allow you to do creepy things! Don't be a creep!</p>
-      <p>By inputing email addresses into this form, you are representing that the persons being input have already agreed to receive your messages, but that you are doing the work of enrolling them.</p>
-      <p>If you choose to abuse this privilige and subscribe people without their consent, please expect your leader/publisher positions to be revoked.</p>
+      <p><strong>Danger!</strong>
+        <small>This form could allow you to do creepy things!</small>
+      </p>
+      <p>
+        <small>By inputing email addresses into this form, you are representing that the persons being input have
+          already
+          agreed to receive your messages, but that you are doing the work of enrolling them.
+          <br>
+          If you choose to abuse this privilige and subscribe people which you are not already corresponding with, your
+          leader/publisher positions may be revoked.
+        </small>
+      </p>
     </div>
     <div class="card">
       <h3 id="addTitle">Add Passive Subscribers</h3>
-      <h3 id="updateTitle" hidden>Update Subscriber</h3>
-      <input id="key" type="text" name="key" hidden/>
-      <form action="/" method="get" id="addupdate">
-        <paper-input id="name" label="Name:" required placeholder="Type name here "></paper-input>
-        <iron-label>
-          Description:
-          <iron-autogrow-textarea id="description" placeholder="Type description here"
-                                  required></iron-autogrow-textarea>
-        </iron-label>
-        <br>
-        <button id="add" on-click="add" type="button">Add</button>
-        <button id="update" on-click="update" type="button" hidden>Update</button>
-        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
-      </form>
+      <db-combo-box id="group"
+                    placeholder='Select group' field='name'
+                    dbpath="/users/[[user.uid]]/subscriberGroup" combolabel="Select Group"
+                    error-message="Please select a Group" required
+                    on-change="groupSelected"></db-combo-box>
+      <div id="hasGroup" hidden>
+        <h3 id="updateTitle" hidden>Update Subscriber</h3>
+        <input id="key" type="text" name="key" hidden/>
+
+        <iron-form id="addupdate">
+          <form action="/" method="get">
+            <paper-textarea id="subscribers"
+                            label="Subscribers, in comma delimited, email formatted per separate instructions"
+                            always-float-label required></paper-textarea>
+            <paper-button raised id="add" on-tap="add">Add</paper-button>
+            <paper-button raised id="update" on-tap="update" hidden>Update</paper-button>
+            <paper-button raised id="clear" on-tap="clear">Cancel/Clear</paper-button>
+          </form>
+        </iron-form>
+      </div>
     </div>
     <div class="card">
-      <table style="width:100%; border: 1px solid black; padding: 15px;">
-        <tr>
-          <th>Delete</th>
-          <th>Update</th>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
-        <template is="dom-repeat" items="[[subscribers]]" as="subscriber">
-          <tr>
-            <td>
-              <paper-icon-button raised subscriber="[[subscriber]]" on-tap="remove" icon="my-icons:close">Delete
-              </paper-icon-button>
-            </td>
-            <td>
-              <paper-icon-button raised subscriber="[[subscriber]]" on-tap="display" icon="my-icons:chevron-right">
-                Update
-              </paper-icon-button>
-            </td>
-            <td>[[subscriber.name]]</td>
-            <td>[[subscriber.description]]</td>
-          </tr>
-        </template>
+      <template is="dom-repeat" items="[[subscribers]]" as="subscriber">
+        <paper-icon-button raised subscriber="[[subscriber]]" on-tap="remove" icon="my-icons:close">Delete
+        </paper-icon-button>
+        <paper-icon-button raised subscriber="[[subscriber]]" on-tap="display" icon="my-icons:chevron-right">
+          Update
+        </paper-icon-button>
+        <strong>[[subscriber.group]]</strong><br>
+        <small>[[subscriber.subscribers]]</small>
+        <hr>
+      </template>
       </table>
     </div>
   </template>
@@ -85,6 +90,14 @@
             type: Object,
             statePath: 'role'
           }
+        }
+      }
+
+      groupSelected() {
+        if (this.$.group.value) {
+          this.$.hasGroup.hidden = false;
+        } else {
+          this.$.hasGroup.hidden = true;
         }
       }
 
@@ -116,22 +129,25 @@
       }
 
       add() {
-        var postData = {
-          name: this.$.name.value,
-          description: this.$.description.value ? this.$.description.value : "",
-          timestamp: Date.now()
+        let myForm = this.$.addupdate;
+        if (myForm.validate()) {
+          let postData = {
+            group: this.$.group.value,
+            subscribers: this.$.subscribers.value ? this.$.subscribers.value : "",
+            timestamp: Date.now()
+          };
+          let newSubscriberKey = this.$.querySubscribers.ref.push().key;
+          let updates = {};
+          updates["/" + newSubscriberKey] = postData;
+          this.$.querySubscribers.ref.update(updates);
+          this.$.group.value = null;
+          this.$.subscribers.value = null;
+          this.$.key.hidden = true;
+          this.$.update.hidden = true;
+          this.$.add.hidden = false;
+          this.$.updateTitle.hidden = true;
+          this.$.addTitle.hidden = false;
         }
-        var newSubscriberKey = this.$.querySubscribers.ref.push().key
-        var updates = {}
-        updates["/" + newSubscriberKey] = postData;
-        this.$.querySubscribers.ref.update(updates);
-        this.$.name.value = null;
-        this.$.description.value = null;
-        this.$.key.hidden = true;
-        this.$.update.hidden = true;
-        this.$.add.hidden = false;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
         return;
       }
 

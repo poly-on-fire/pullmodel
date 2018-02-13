@@ -3,9 +3,10 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 
@@ -15,6 +16,14 @@
       :host {
         display: block;
         padding: 10px;
+      }
+
+      paper-input {
+        background: #f0f0f0;
+      }
+
+      paper-textarea {
+        background: #f0f0f0;
       }
     </style>
     <firebase-query id="querySubscriberGroups" path="/users/[[user.uid]]/subscriberGroup" data="{{subscriberGroups}}">
@@ -28,44 +37,30 @@
       <h3 id="addTitle">Add a Subscriber Group:</h3>
       <h3 id="updateTitle" hidden>Update SubscriberGroup</h3>
       <input id="key" type="text" name="key" hidden/>
-      <form action="/" method="get" id="addupdate">
-        <paper-input id="name" label="Name:" required placeholder="Type name here "></paper-input>
-        <iron-label>
-          Description:
-          <iron-autogrow-textarea id="description" placeholder="Type description here"
-                                  required></iron-autogrow-textarea>
-        </iron-label>
-        <br>
-        <button id="add" on-click="add" type="button">Add</button>
-        <button id="update" on-click="update" type="button" hidden>Update</button>
-        <button id="clear" on-click="clear" type="button">Clear/Cancel</button>
-      </form>
+
+      <iron-form id="addupdate">
+        <form action="/" method="get">
+          <paper-input id="name" label="Name:" required always-float-label></paper-input>
+          <paper-textarea id="description" label="Description (optional)"
+                           always-float-label></paper-textarea>
+          <paper-button raised id="add" on-tap="add">Add</paper-button>
+          <paper-button raised id="update" on-tap="update" hidden>Update</paper-button>
+          <paper-button raised id="clear" on-tap="clear">Cancel/Clear</paper-button>
+        </form>
+      </iron-form>
     </div>
     <div class="card">
-      <table style="width:100%; border: 1px solid black; padding: 15px;">
-        <tr>
-          <th>Delete</th>
-          <th>Update</th>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
-        <template is="dom-repeat" items="[[subscriberGroups]]" as="subscriberGroup">
-          <tr>
-            <td>
-              <paper-icon-button raised subscribergroup="[[subscriberGroup]]" on-tap="remove" icon="my-icons:close">
-                Delete
-              </paper-icon-button>
-            </td>
-            <td>
-              <paper-icon-button raised subscribergroup="[[subscriberGroup]]" on-tap="display"
-                                 icon="my-icons:chevron-right">Update
-              </paper-icon-button>
-            </td>
-            <td>[[subscriberGroup.name]]</td>
-            <td>[[subscriberGroup.description]]</td>
-          </tr>
-        </template>
-      </table>
+      <template is="dom-repeat" items="[[subscriberGroups]]" as="subscriberGroup">
+        <span>
+        <paper-icon-button raised subscribergroup="[[subscriberGroup]]" on-tap="remove" icon="my-icons:close">
+        </paper-icon-button>
+        <paper-icon-button raised subscribergroup="[[subscriberGroup]]" on-tap="display"
+                           icon="my-icons:chevron-right">
+        </paper-icon-button>
+          <strong> [[subscriberGroup.name]]</strong>&nbsp;&nbsp;&nbsp;<small>[[subscriberGroup.description]]</small>
+        </span>
+        <hr>
+      </template>
     </div>
   </template>
 
@@ -112,22 +107,25 @@
       }
 
       add() {
-        var postData = {
-          name: this.$.name.value,
-          description: this.$.description.value ? this.$.description.value : "",
-          timestamp: Date.now()
+        let myForm = this.$.addupdate;
+        if (myForm.validate()) {
+          var postData = {
+            name: this.$.name.value,
+            description: this.$.description.value ? this.$.description.value : "",
+            timestamp: Date.now()
+          }
+          var newSubscriberGroupKey = this.$.querySubscriberGroups.ref.push().key
+          var updates = {}
+          updates["/" + newSubscriberGroupKey] = postData;
+          this.$.querySubscriberGroups.ref.update(updates);
+          this.$.name.value = null;
+          this.$.description.value = null;
+          this.$.key.hidden = true;
+          this.$.update.hidden = true;
+          this.$.add.hidden = false;
+          this.$.updateTitle.hidden = true;
+          this.$.addTitle.hidden = false;
         }
-        var newSubscriberGroupKey = this.$.querySubscriberGroups.ref.push().key
-        var updates = {}
-        updates["/" + newSubscriberGroupKey] = postData;
-        this.$.querySubscriberGroups.ref.update(updates);
-        this.$.name.value = null;
-        this.$.description.value = null;
-        this.$.key.hidden = true;
-        this.$.update.hidden = true;
-        this.$.add.hidden = false;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
         return;
       }
 
