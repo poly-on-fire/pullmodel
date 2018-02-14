@@ -19,14 +19,8 @@
         padding: 10px;
       }
     </style>
-    <firebase-query id="queryTopicName" path="/users/[[user.uid]]/topicName">
-    </firebase-query>
-    <firebase-query id="queryUserEmailMeta" path="/users/[[user.uid]]/emailMeta" order-by-child='keyDay'
-                    start-at='[[topicKey]]000' end-at='[[topicKey]]999'
-                    data="{{emailMetas}}">
-    </firebase-query>
-    <firebase-query id="queryUserEmailContent" path="/users/[[user.uid]]/emailContent"
-                    data="{{userEmailContent}}">
+    <firebase-query id="queryUserSubscriberGroups" path="/users/[[user.uid]]/subscriberGroup"
+                    data="{{subscriberGroups}}">
     </firebase-query>
     <firebase-query id="queryTopic" path="/users/[[user.uid]]/topic" data="{{Topic}}">
     </firebase-query>
@@ -61,14 +55,15 @@
           </form>
         </iron-form>
       </div>
-      <!--<div class="card">-->
-        <!--<template is="dom-repeat" items="[[emailMetas]]" as="message">-->
-          <!--<span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>-->
-          <!--<span><small><br>[[message.contentExtract]]</small></span>-->
-          <!--<hr>-->
-        <!--</template>-->
-      <!--</div>-->
-    </div>
+      <div class="card">
+        <ul>
+          <template is="dom-repeat" items="[[_subscriberGroupNames]]" as="subscriberGroupName">
+            <li>
+              <span>[[subscriberGroupName]]</span>
+            </li>
+          </template>
+        </ul>
+      </div>
 
   </template>
 
@@ -97,10 +92,19 @@
           },
           topicKey: {
             type: String,
-            observer: "topicSelected"
+            observer: "_populateSubscriberGroups"
           },
           topicName: {
             type: String
+          },
+          _topicRef: {
+            type: Object
+          },
+          _subscriberGroupsIds: {
+            type: Array
+          },
+          _subscriberGroupNames: {
+            type: Array
           }
         }
       }
@@ -108,62 +112,84 @@
       add() {
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
-          console.log("hi")
-          // let emailKey = this.$.queryUserEmailContent.ref.push().key
-          // let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
-          // let emailContent = {
-          //   emailBody: this.$.emailBody.value,
-          //   subject: this.$.subject.value,
-          // };
-          // emailMetaObject.contentExtract = this.bodyExtract(emailContent);
-          // emailMetaObject.subject = encodeURIComponent(this.$.subject.value);
-          // emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
-          // emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
-          // emailMetaObject.day = parseInt(this.dayValue);
-          // emailMetaObject.keyDay = this.topicKey + this.padDayto3();
-          // let emailMetaUpdates = {};
-          // emailMetaUpdates["/" + emailKey] = emailMetaObject;
-          // this.$.queryUserEmailMeta.ref.update(emailMetaUpdates);
-          // let emailContentUpdates = {};
-          // emailContentUpdates["/" + emailKey] = emailContent;
-          // this.$.queryUserEmailContent.ref.update(emailContentUpdates);
-          // this.$.key.hidden = true;
-          // this.$.update.hidden = true;
-          // this.$.add.hidden = false;
-          // this.$.updateTitle.hidden = true;
-          // this.$.addTitle.hidden = false;
-          // this.$.subject.value = null;
-          // this.$.emailBody.value = null;
-          // this.dayValue = null;
-          // this.topicSelected();
+          let groupId = this.$.group.key;
+          if (!this._subscriberGroupsIds.includes(groupId)) {
+            this._subscriberGroupsIds.push(groupId);
+            let topicUpdate = {};
+            topicUpdate['/subscriberGroups'] = this._subscriberGroupsIds;
+            this._topicRef.update(topicUpdate);
+            this._nameSubscriberGroups();
+          }
+          this.$.group.value = null;
+          this.$.group.key = null;
         }
         return;
       }
 
-      emailMetaObjectCreate(topicName) {
-        let topicKey = this.topicKeyLookup(topicName);
-        let topic = this.topicLookup(topicKey);
-        let emailMetaObject = {
-          topicType: topic.topicType,
-          topicName: topicName,
-          topicKey: topicKey
-        };
-        return emailMetaObject;
+      topicSelected() {
+        this._subscriberGroupsIds = [];
+        this._subscriberGroupNames = [];
+        if (this.$.topic.value) {
+          this.$.validatable.hidden = false;
+          let aTopicKey = this.$.topic.value;
+          this.topicName = aTopicKey.replace(/(~\||\|~)/gm, " - ");
+          this.topicKey = aTopicKey.substring(aTopicKey.indexOf("~|") + 2, aTopicKey.length);
+        } else {
+          this.$.validatable.hidden = true;
+          this.topicKey = null;
+          this._topicRef = null;
+        }
       }
 
-      padDayto3() {
-        let dayNumber = this.dayValue;
-        dayNumber = dayNumber.padStart(3, "0");
-        return dayNumber;
+      _populateSubscriberGroups() {
+        if (this.topicKey) {
+          this._setSubscriberGroups();
+        }
       }
 
-      topicKeyLookup(topicName) {
+      _setSubscriberGroups() {
+        let topicId = this.$.topic.key;
+        this._topicRef = this.$.queryTopic.ref.child(topicId);
         let aTopic;
-        let topicNameQueryRef = this.$.queryTopicName.ref.child(topicName);
-        topicNameQueryRef.on('value', function (snapshot) {
+        this._topicRef.on('value', function (snapshot) {
           aTopic = snapshot.val();
         });
-        return aTopic.topicKey;
+        if (aTopic && aTopic.subscriberGroups) {
+          this._subscriberGroupsIds = aTopic.subscriberGroups;
+        } else {
+          this._subscriberGroupsIds = [];
+        }
+        this._nameSubscriberGroups();
+      }
+
+      _nameSubscriberGroups() {
+        let i;
+        let aSubscriberGroup;
+        let aSubscriberGroupId;
+        let aSubscriberGroupName;
+        let subscriberGroupQueryRef;
+        for (i = 0; i < this._subscriberGroupsIds.length; i++) {
+          aSubscriberGroupId = this._subscriberGroupsIds[i];
+          subscriberGroupQueryRef = this.$.queryUserSubscriberGroups.ref.child(aSubscriberGroupId);
+          subscriberGroupQueryRef.on('value', function (snapshot) {
+            aSubscriberGroup = snapshot.val();
+          });
+          aSubscriberGroupName = aSubscriberGroup.name;
+          this._pushSubscriberGroup(aSubscriberGroupName);
+        }
+        // gymnastics required to make array function as observable
+        let tmpArray = this._subscriberGroupNames;
+        this.set('_subscriberGroupNames', []);
+        this.set('_subscriberGroupNames', tmpArray);
+      }
+
+      _pushSubscriberGroup(aSubscriberGroupName) {
+        if (!this._subscriberGroupNames) {
+          this._subscriberGroupNames = []
+        }
+        if (!this._subscriberGroupNames.includes(aSubscriberGroupName)) {
+          this._subscriberGroupNames.push(aSubscriberGroupName);
+        }
       }
 
       topicLookup(topicKey) {
@@ -175,20 +201,7 @@
         return aTopic;
       }
 
-
-      topicSelected() {
-        if (this.$.topic.value) {
-          console.log("HEY\nKEY\n" + this.$.topic.key + ' \nVALUE:\n' + this.$.topic.value);
-          this.$.validatable.hidden = false;
-          let aTopicKey = this.$.topic.value;
-          this.topicName = aTopicKey.replace(/(~\||\|~)/gm, " - ");
-          this.topicKey = aTopicKey.substring(aTopicKey.indexOf("~|") + 2, aTopicKey.length);
-        } else {
-          this.$.validatable.hidden = true;
-          this.topicKey = null;
-        }
-      }
-      groupSelected(){
+      groupSelected() {
         if (this.$.group.value) {
           this.$.add.hidden = false;
         } else {
@@ -196,37 +209,6 @@
         }
       }
 
-      clear() {
-        this.$.addupdate.reset();
-        this.$.name.value = null;
-        this.$.description.value = null;
-        this.$.add.hidden = false;
-        this.$.update.hidden = true;
-        this.$.addTitle.hidden = false;
-        this.$.updateTitle.hidden = true;
-        return;
-      }
-
-      display(e) {
-        let key = e.currentTarget.message.$key;
-        let messageQueryRef = this.$.queryMessages.ref.child(key);
-        let aMessage = null;
-        messageQueryRef.on('value', function (snapshot) {
-          aMessage = snapshot.val();
-        });
-        this.$.key.value = key;
-        this.$.name.value = aMessage.name;
-        this.$.description.value = aMessage.description;
-        this.$.add.hidden = true;
-        this.$.update.hidden = false;
-        this.$.addTitle.hidden = true;
-        this.$.updateTitle.hidden = false;
-      }
-
-      remove(e) {
-        let key = e.currentTarget.message.$key;
-        this.$.queryMessages.ref.child(key).remove();
-      }
     }
 
     window

@@ -114,12 +114,14 @@
         return obj;
       }
 
-      onSelect(){
-        // console.log("SELECT "+ this.value + '\nKV\n'+ JSON.stringify(this._keyValues)+ '\nV\n'+ JSON.stringify(this._keyValues[this.value]));
-        // console.log(JSON.stringify(this._keyValues.indexOfObject("value", this.value)));
-        let i = this._keyValues.indexOfObject("value", this.value);
-        this.key = this._keyValues[i].key;
-        // console.log("BINGO\n"+ this.key);
+      onSelect() {
+        if (this.value) {
+          // console.log("SELECT " + this.value + '\nKV\n' + JSON.stringify(this._keyValues) + '\nV\n' + JSON.stringify(this._keyValues[this.value]));
+          // console.log(JSON.stringify(this._keyValues.indexOfObject("value", this.value)));
+          let i = this._keyValues.indexOfObject("value", this.value);
+          this.key = this._keyValues[i].key;
+          // console.log("BINGO\n"+ this.key);}
+        }
       }
     }
 
