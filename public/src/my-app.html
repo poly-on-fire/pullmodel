@@ -26,6 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-cookie/iron-cookie.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="visibility-controller.html">
 <link rel="lazy-import" href="my-about.html">
@@ -133,23 +134,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </li>
         </ul>
         <p>Please enter your email address to gain access to social login:</p>
-        <!--TODO replace validation with proper paper input validation -->
-        <paper-input id="emailSubmit" label='Email Address:'
-                     always-float-label required  email="email"></paper-input>
-        <!--<input id="emailSubmit" type="text" email="email"><br>-->
-        <button on-click="myFunction">Submit</button>
+
+        <iron-form id="submitEmailForm">
+          <form action="/" method="get">
+            <paper-input id="emailSubmit" label='Email Address:'
+                         always-float-label required auto-validate
+                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
+            <paper-button raised on-tap="_checkEmail">Submit</paper-button>
+          </form>
+        </iron-form>
       </div>
     </div>
 
     <div hidden$="[[user]]">
       <div class="card" hidden$=[[!role.show.b]]>
-        <p>If you're returning but from another device, please make sure you login from the same provider! <br>In other words don't log in with Twitter on one device and Facebook from another, and expect your preferences to be maintained!</p>
+        <p>If you're returning but from another device, please make sure you login from the same provider! <br>In other
+          words don't log in with Twitter on one device and Facebook from another, and expect your preferences to be
+          maintained!</p>
         <h1>&nbsp;Signing in to pullModel.com:</h1>
         <paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>
         <p>Facebook login may your best choice, if you're a typical Facebook user.</p>
         <p>PullModel offers Facebook messaging as an option, if you are a user of Facebook Messenger.</p>
         <hr>
-        <p>Or, login with a Google or Twitter sign in.<br>Twitter logins sometimes time-out, github will probably fail, but you're welcome to test it.</p>
+        <p>Or, login with a Google or Twitter sign in.<br>Twitter logins sometimes time-out, github will probably fail,
+          but you're welcome to test it.</p>
         <paper-button raised on-tap="googlelogin" hidden$="[[user]]"><img src="../images/google.png"/></paper-button>
         <paper-button raised on-tap="twitterlogin" hidden$="[[user]]"><img src="../images/twitter.png"/></paper-button>
         <paper-button raised on-tap="githublogin" hidden$="[[user]]"><img src="../images/github.png"/></paper-button>
@@ -191,7 +199,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div hidden$=[[!role.show.d]]><a name="user-profile" href="[[rootPath]]user-profile">My Profile</a>
               </div>
               <!-- should be e reset to d for vaadin inspection-->
-              <div hidden$=[[!role.show.d]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My Subscriptions</a>
+              <div hidden$=[[!role.show.d]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My
+                Subscriptions</a>
               </div>
               <!-- should be g reset to d for vaadin inspection-->
               <div hidden$=[[!role.show.d]]><a name="manage-topics" href="[[rootPath]]manage-topics">
@@ -203,7 +212,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 Group Subscribes</a></div>
               <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
                 Groups</a></div>
-              <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe Groups Passively</a>
+              <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe
+                Groups Passively</a>
               </div>
               <div hidden$=[[!role.show.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
                 Requests</a></div>
@@ -380,26 +390,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      myFunction() {
-        let email = this.$.emailSubmit.value;
-        if (!email) {
-          alert("Please furnish an email address!");
-          return;
-        }
-
-        if (this.validateEmail(email)) {
+      _checkEmail() {
+        if (this.$.submitEmailForm.validate()) {
           this.dispatch(VisibilityController.actions.showUnknown());
-        } else {
-          alert("'" + email + "' is an invalid email address!");
         }
+        return;
       }
 
-      validateEmail(email) {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-          return (true)
-        }
-        return (false)
-      }
     }
 
     window.customElements.define(MyApp.is, MyApp);

@@ -37,7 +37,8 @@
         <iron-form id="alternativeEmailForm">
           <form action="/" method="get">
             <paper-input id="altEmail" label='Email Address:'
-                         always-float-label required></paper-input>
+                         always-float-label required auto-validate
+                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
             <paper-button raised id="updateAlternativeEmail" on-tap="_updateAlEmail">Update</paper-button>
           </form>
         </iron-form>
@@ -57,41 +58,43 @@
       <p hidden$=[[!isFBLogin]]>You may elect to receive this notification in either SMS (text message) or in Facebook
         Messenger, or both.</p>
       <p hidden$=[[isFBLogin]]>You would receive this notification as an SMS, or standard text message.</p>
-        <div class="wide-card">
-          <h4>Text Message</h4>
-          <paper-toggle-button id="yesSms" on-change="toggleSmsNumber" value='off'>Phone
-          </paper-toggle-button>
-          <div id="smsForm" hidden>
-            <iron-form id="updateSmsForm">
-              <form action="/" method="get">
-                <paper-input id="smsNumber" label='The number you would like us to text you at:'
-                             always-float-label required></paper-input>
-                <paper-button raised id="update" on-tap="_updateSmsNumber">Update</paper-button>
-              </form>
-            </iron-form>
-          </div>
+      <div class="wide-card">
+        <h4>Text Message</h4>
+        <paper-toggle-button id="yesSms" on-change="toggleSmsNumber" value='off'>Phone
+        </paper-toggle-button>
+        <div id="smsForm" hidden>
+          <iron-form id="updateSmsForm">
+            <form action="/" method="get">
+              <paper-input id="smsNumber" label='The number you would like us to text you at:'
+                           always-float-label required auto-validate
+                           pattern="^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$"
+              ></paper-input>
+              <paper-button raised id="update" on-tap="_updateSmsNumber">Update</paper-button>
+            </form>
+          </iron-form>
         </div>
-        <div class="wide-card" hidden$=[[!isFBLogin]]>
-          <h4>Facebook Messenger</h4>
-          <paper-toggle-button id="yesFBM" on-change="toggleFBM" value='off'>Show</paper-toggle-button>
-          <div id="fbInstructions" hidden>
-            <h4>Facebook Messenger Instructions</h4>
-            <ul>
-              <li>Go this site: <a href="https://www.facebook.com/pullmodel/" target="_blank">facebook/pullmodel</a>
-              </li>
-              <li>Click on the 'Send Message' button</li>
-              <li>Paste this as the message: <br><strong>[[user.uid]]</strong><br> Nothing else, just this.</li>
-              <li>If it is successful, you will receive this automated message:
-                <strong>Pete Carapetyan has been subscribed to receive messages from pullmodel.com</strong></li>
-              <li>If it fails to reply with this exact message, please feel free to type a cranky note to us into this
-                same
-                facebook messenger, letting us know what happened. Allow plenty of time, this is a manual feature for
-                us.
-                It's also bran new, so we sort of don't have all the kinks worked out, yet.
-              </li>
-            </ul>
-          </div>
+      </div>
+      <div class="wide-card" hidden$=[[!isFBLogin]]>
+        <h4>Facebook Messenger</h4>
+        <paper-toggle-button id="yesFBM" on-change="toggleFBM" value='off'>Show</paper-toggle-button>
+        <div id="fbInstructions" hidden>
+          <h4>Facebook Messenger Instructions</h4>
+          <ul>
+            <li>Go this site: <a href="https://www.facebook.com/pullmodel/" target="_blank">facebook/pullmodel</a>
+            </li>
+            <li>Click on the 'Send Message' button</li>
+            <li>Paste this as the message: <br><strong>[[user.uid]]</strong><br> Nothing else, just this.</li>
+            <li>If it is successful, you will receive this automated message:
+              <strong>Pete Carapetyan has been subscribed to receive messages from pullmodel.com</strong></li>
+            <li>If it fails to reply with this exact message, please feel free to type a cranky note to us into this
+              same
+              facebook messenger, letting us know what happened. Allow plenty of time, this is a manual feature for
+              us.
+              It's also bran new, so we sort of don't have all the kinks worked out, yet.
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
     <div class="wide-card">
       <h2>Promotion to Publisher:</h2>
@@ -151,7 +154,8 @@
             <paper-input id="replyEmail" label='Reply Email Address:'
                          always-float-label
                          placeholder="Please insert the email address that your outgoing emails would reply to."
-                         required></paper-input>
+                         required auto-validate
+                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
             <paper-button raised id="replyEmailUpdate" on-tap="_updateReplyEmail">Update</paper-button>
           </form>
         </iron-form>
@@ -160,7 +164,6 @@
 
     <p>Note to self:<br> if there is not a user email then this all needs to be disabled until that is provided.
     </p>
-
 
     <paper-dialog id="delPhone">
       <h2>Delete Phone Number?</h2>
@@ -231,18 +234,20 @@
         }
       }
 
-      _updateSmsNumber(){
-        if(this.$.updateSmsForm.validate()){
+      _updateSmsNumber() {
+        if (this.$.updateSmsForm.validate()) {
           this._persistProfile();
         }
       }
-      _updateAlEmail(){
-        if(this.$.alternativeEmailForm.validate()){
+
+      _updateAlEmail() {
+        if (this.$.alternativeEmailForm.validate()) {
           this._persistProfile();
         }
       }
-      _updateReplyEmail(){
-        if(this.$.promoteForm.validate()){
+
+      _updateReplyEmail() {
+        if (this.$.promoteForm.validate()) {
           this._persistProfile();
         }
       }
@@ -254,7 +259,7 @@
         }
         if (!!this._isPromotion()) {
           this.profile.promotion = true;
-        }else{
+        } else {
           this.profile.promotion = false;
         }
         if (!!this.$.replyEmail.value) {
@@ -272,19 +277,19 @@
         if (!!this.user
           && typeof this.profile !== 'undefined'
           && this.profile != null) {
-          if(!!this.profile.altEmail) {
+          if (!!this.profile.altEmail) {
             this.$.altEmail.value = this.profile.altEmail;
             this.$.altEmailYes.checked = true;
             this.$.altEmailYes.value = "on";
             this.$.altEmailForm.hidden = false;
           }
-          if(!!this.profile.smsNumber) {
+          if (!!this.profile.smsNumber) {
             this.$.smsNumber.value = this.profile.smsNumber;
             this.$.yesSms.checked = true;
             this.$.yesSms.value = "on";
             this.$.smsForm.hidden = false;
           }
-          if(!!this.profile.replyEmail) {
+          if (!!this.profile.replyEmail) {
             this.$.replyEmail.value = this.profile.replyEmail;
             this.$.promoteYes.checked = true;
             this.$.promoteYes.value = "on";
@@ -307,20 +312,20 @@
           this.$.yesSms.value = "on";
           this.$.smsForm.hidden = false;
         } else {
-          if(!!this.$.smsNumber.value) {
+          if (!!this.$.smsNumber.value) {
             this.$.delPhone.open();
-          }else{
+          } else {
             this.$.yesSms.value = "off";
             this.$.smsForm.hidden = true;
           }
         }
       }
 
-      _keepPhone(){
+      _keepPhone() {
         this.$.yesSms.checked = true;
       }
 
-      _deletePhone(){
+      _deletePhone() {
         this.$.smsNumber.value = undefined;
         this.$.yesSms.value = "off";
         this.$.smsForm.hidden = true;
@@ -342,46 +347,45 @@
           this.$.altEmailYes.value = "on";
           this.$.altEmailForm.hidden = false;
         } else {
-          if(!!this.$.altEmail.value) {
+          if (!!this.$.altEmail.value) {
             this.$.delAltEmail.open();
-          }else{
+          } else {
             this.$.altEmailYes.value = "off";
             this.$.altEmailForm.hidden = true;
           }
         }
       }
 
-      _keepAltEmail(){
+      _keepAltEmail() {
         this.$.altEmailYes.checked = true;
       }
 
-      _deleteAltEmail(){
+      _deleteAltEmail() {
         this.$.altEmail.value = undefined;
         this.$.altEmailYes.value = "off";
         this.$.altEmailForm.hidden = true;
         this._persistProfile();
       }
 
-
       togglePromotion() {
         if (this.$.promoteYes.value == "off") {
           this.$.promoteYes.value = "on";
           this.$.promotion.hidden = false;
         } else {
-          if(!!this.$.replyEmail.value) {
+          if (!!this.$.replyEmail.value) {
             this.$.delReplyEmail.open();
-          }else{
+          } else {
             this.$.promoteYes.value = "off";
             this.$.promotion.hidden = true;
           }
         }
       }
 
-      _keepReplyEmail(){
+      _keepReplyEmail() {
         this.$.promoteYes.checked = true;
       }
 
-      _deleteReplyEmail(){
+      _deleteReplyEmail() {
         this.$.replyEmail.value = undefined;
         this.$.promoteYes.value = "off";
         this.$.promotion.hidden = true;

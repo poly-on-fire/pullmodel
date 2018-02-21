@@ -23,8 +23,6 @@
       }
     </style>
 
-    <user-profile id="cdProfile" fresh="{{fresh}}" invited="{{invited}}" pending="{{pending}}" nuskin="{{nuskin}}"
-                  dist="{{dist}}" admin="{{admin}}"></user-profile>
     <firebase-auth id="auth" user="{{user}}" on-error="handleError">
     </firebase-auth>
     <firebase-query id="queryTopics" path="/users/[[user.uid]]/topic" data="{{topics}}">
