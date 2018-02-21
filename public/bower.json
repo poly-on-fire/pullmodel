@@ -29,7 +29,9 @@
     "polymer-redux": "^1.0.1",
     "redux": "https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js",
     "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
-    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.3"
+    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.3",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"

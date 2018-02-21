@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html"/>
 <link rel="import" href="../bower_components/iron-cookie/iron-cookie.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="visibility-controller.html">
 <link rel="lazy-import" href="my-about.html">
@@ -132,7 +133,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </li>
         </ul>
         <p>Please enter your email address to gain access to social login:</p>
-        <input id="emailSubmit" type="text" email="email"><br>
+        <!--TODO replace validation with proper paper input validation -->
+        <paper-input id="emailSubmit" label='Email Address:'
+                     always-float-label required  email="email"></paper-input>
+        <!--<input id="emailSubmit" type="text" email="email"><br>-->
         <button on-click="myFunction">Submit</button>
       </div>
     </div>

@@ -1,8 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html"/>
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
@@ -12,79 +16,182 @@
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
       }
     </style>
-    <firebase-query id="queryProfiles" path="/users/[[user.uid]]/profile" data="{{profiles}}">
-    </firebase-query>
-    <div class="card">
+    <firebase-document id="queryProfiles" path="/users/[[user.uid]]/profile" data="{{profile}}">
+    </firebase-document>
+    <div class="wide-card">
+      <h2>&nbsp;</h2>
       <div class="circle">Profile</div>
+      <h2>[[user.displayName]]</h2>
     </div>
 
-    <div class="card">
-      <p>Note to self:<br> if there is not a user email then this all needs to be disabled until that is provided.</p>
-      <h2>Your Rank</h2>
-      <p>Select your desired rank on this site:</p>
-      <ul>
-        <li>Subscriber (default) if you wish to subscribe to one or more topics.</li>
-        <li>Leader if you wish to publish information to others re: your own topics</li>
-      </ul>
-      <p><em>Changing yourself to leader will allow you to create material, but no messages will go out unless/until you
-        have been approved by a site admin.</em></p>
-      <h2>Extra Notifications:</h2>
-      <p>All messages on this site are delivered by email.</p>
-      <p>But some of us never even check our email! What if we would prefer text messages or Facebook Messenger
-        instead?.</p>
-      <p>We can't offer an instead, because a message might be too big for a text message, for example.
-        <strong>But</strong> we can send you a text or Facebook Message when we drop you an email that you might wish to
-        check.</p>
-      <p>If you prefer to receive Facebook Messages, follow this tutorial: link
-        <a href="here">here</a></p>
-      <p>If you prefer to receive text messages, input your phone number here: box here</p>
-      <input>here</input>
-      <h2>Alternate/Preferred Email</h2>
-      <p>If your social login provided us with an email, it should be shown here:</p>
-      <p>here</p>
-      <p>But if it's not showing, or if you'd rather receive your messages to a different email, please input that email
-        below</p>
-      <input>here</input>
-      <h2>Leader Reply-to email address</h2>
-      <p>If you're a leader-publisher, you'll need to provide a reply-to email for your messages.</p>
-      <input>here</input>
-      <h2>adminish:</h2>
-      <ul>
-        <li>Expand topics from those originally subscribed to</li>
-        <li>Maybe some other functionality as becomes needed later?</li>
-        <li></li>
-      </ul>
+    <div class="wide-card">
+      <h2>Alternate Email?</h2>
+      <p>This is the email associated with your login:<br> <strong>[[user.email]]</strong></p>
+      <p>If you would prefer to receive your messages at an alternative address...</p>
+      <paper-toggle-button id="altEmailYes" on-change="toggleAltEmail" value='off'>Alternative Email
+      </paper-toggle-button>
+      <div id="altEmailForm" hidden>
+        <iron-form id="alternativeEmailForm">
+          <form action="/" method="get">
+            <paper-input id="altEmail" label='Email Address:'
+                         always-float-label required></paper-input>
+            <paper-button raised id="updateAlternativeEmail" on-tap="_updateAlEmail">Update</paper-button>
+          </form>
+        </iron-form>
+      </div>
     </div>
-    <!--<div class="card">-->
-    <!--<h3 id="addTitle">Add Profile</h3>-->
-    <!--<h3 id="updateTitle" hidden>Update Profile</h3>-->
-    <!--<input id="key" type="text" name="key" hidden/>-->
-    <!--<form action="/" method="get" id="addupdate">-->
-    <!--Name:<input id="name" type="text" name="name"><br>-->
-    <!--Description:<input id="description" type="text" name="description"><br>-->
-    <!--<button id="add" on-click="add" type="button">Add</button>-->
-    <!--<button id="update" on-click="update" type="button" hidden>Update</button>-->
-    <!--<button id="clear" on-click="clear" type="button">Clear/Cancel</button>-->
-    <!--</form>-->
-    <!--</div>-->
-    <!--<div class="card">-->
-    <!--<ul id="profiles-list">-->
-    <!--<template is="dom-repeat" items="[[profiles]]" as="profile">-->
-    <!--<li>-->
-    <!--<span>-->
-    <!--<paper-icon-button raised profile="[[profile]]" on-tap="remove"-->
-    <!--icon="my-icons:close">Delete</paper-icon-button>-->
-    <!--<paper-icon-button raised profile="[[profile]]" on-tap="display" icon="my-icons:chevron-right">Update</paper-icon-button>-->
-    <!--[[profile.name]] - [[profile.description]]-->
-    <!--</span>-->
-    <!--</li>-->
-    <!--</template>-->
-    <!--</ul>-->
-    <!--</div>-->
+    <div class="wide-card">
+      <h2>Messaging:</h2>
+      <p>
+        This feature is <strong>ONLY</strong> for people who don't check their email,
+        but instead rely on messaging for their day-to-day communications
+        <br>
+        <br>
+        All content from pullModel.com will still be in email form, but the extra notification message informs you that
+        content
+        you subscribed to was sent <strong>to your email box.</strong>
+      </p>
+      <p hidden$=[[!isFBLogin]]>You may elect to receive this notification in either SMS (text message) or in Facebook
+        Messenger, or both.</p>
+      <p hidden$=[[isFBLogin]]>You would receive this notification as an SMS, or standard text message.</p>
+        <div class="wide-card">
+          <h4>Text Message</h4>
+          <paper-toggle-button id="yesSms" on-change="toggleSmsNumber" value='off'>Phone
+          </paper-toggle-button>
+          <div id="smsForm" hidden>
+            <iron-form id="updateSmsForm">
+              <form action="/" method="get">
+                <paper-input id="smsNumber" label='The number you would like us to text you at:'
+                             always-float-label required></paper-input>
+                <paper-button raised id="update" on-tap="_updateSmsNumber">Update</paper-button>
+              </form>
+            </iron-form>
+          </div>
+        </div>
+        <div class="wide-card" hidden$=[[!isFBLogin]]>
+          <h4>Facebook Messenger</h4>
+          <paper-toggle-button id="yesFBM" on-change="toggleFBM" value='off'>Show</paper-toggle-button>
+          <div id="fbInstructions" hidden>
+            <h4>Facebook Messenger Instructions</h4>
+            <ul>
+              <li>Go this site: <a href="https://www.facebook.com/pullmodel/" target="_blank">facebook/pullmodel</a>
+              </li>
+              <li>Click on the 'Send Message' button</li>
+              <li>Paste this as the message: <br><strong>[[user.uid]]</strong><br> Nothing else, just this.</li>
+              <li>If it is successful, you will receive this automated message:
+                <strong>Pete Carapetyan has been subscribed to receive messages from pullmodel.com</strong></li>
+              <li>If it fails to reply with this exact message, please feel free to type a cranky note to us into this
+                same
+                facebook messenger, letting us know what happened. Allow plenty of time, this is a manual feature for
+                us.
+                It's also bran new, so we sort of don't have all the kinks worked out, yet.
+              </li>
+            </ul>
+          </div>
+        </div>
+    </div>
+    <div class="wide-card">
+      <h2>Promotion to Publisher:</h2>
+      <p>
+        This should be <strong>less</strong> information than you would need to understand this fully, but here goes.
+        Read carefully!
+        <br><br>
+        Any pullmodel subscriber could be allowed to become a publisher, sending out their own scheduled messages on
+        their own topics to
+        their own subscribers.
+        <strong>But</strong> this is like a license to spam, so we are ridiculously selective about who we might allow
+        this right.
+        <br><br>
+        Fear not! If declined, you can always get an account on any of several great vendors to accomplish the same
+        thing,
+        with much more complete, if not also more expensive, services than you would have here. Such a <strong>vendor
+        list</strong> might include:
+      <ul>
+        <li>AWeber</li>
+        <li>Click Funnels</li>
+        <li>Socket Labs</li>
+        <li>or even your own installation of this <a href="https://github.com/poly-on-fire/pullmodel" target="_blank">pullmodel
+          software</a> on your own servers! But don't, it's easier just to use AWeber or ...
+        </li>
+      </ul>
+      <br>
+      If you still seek promotion to be a publisher from this site, here is how it works:
+      <ul>
+        <li>Toggle the request button, below.</li>
+        <li>By doing this, it assumed that we already know each other. If not, you're probably not a candidate for
+          promotion.
+        </li>
+        <li>Even before approval, this site is immediately usable as a publisher to prepare topics and messages,
+          <strong>except it won't ever actually send </strong> anything unless and until we approve your promotion,
+          manually.
+          You still might find this feature useful - such as, for evaluating the open source codebase, for example.
+        </li>
+        <li>You may immediately compose content, even publish the video web pages that are created with certain
+          topics.
+        </li>
+        <li>After some small or larger amount of email conversation, you may or may not be promoted to have send
+          rights.
+        </li>
+        <li>Once granted send rights, you are actually a publisher of emails, via this site.</li>
+        <li>There is no implied or inferred contract of any type, except you agree by clicking promote to hold pullmodel
+          and it's owner from any and all consequences of your actions as publisher.
+          We may revoke send or even site usage rights, at any time, and/or for any reason.
+        </li>
+      </ul>
+      </p>
+
+      <paper-toggle-button id="promoteYes" on-change="togglePromotion" value='off'>Request Promotion to Publisher
+      </paper-toggle-button>
+      <div id="promotion" hidden>
+        <iron-form id="promoteForm">
+          <form action="/" method="get">
+            <paper-input id="replyEmail" label='Reply Email Address:'
+                         always-float-label
+                         placeholder="Please insert the email address that your outgoing emails would reply to."
+                         required></paper-input>
+            <paper-button raised id="replyEmailUpdate" on-tap="_updateReplyEmail">Update</paper-button>
+          </form>
+        </iron-form>
+      </div>
+    </div>
+
+    <p>Note to self:<br> if there is not a user email then this all needs to be disabled until that is provided.
+    </p>
+
+
+    <paper-dialog id="delPhone">
+      <h2>Delete Phone Number?</h2>
+      <p>
+        Are you sure you want to delete phone number?
+      </p>
+      <div class="buttons">
+        <paper-button dialog-dismiss on-tap='_deletePhone'>Yes, please delete</paper-button>
+        <paper-button dialog-confirm autofocus on-tap='_keepPhone'>No! Go back!</paper-button>
+      </div>
+    </paper-dialog>
+    <paper-dialog id="delAltEmail">
+      <h2>Delete Alt Email?</h2>
+      <p>
+        Are you sure you want to delete alt email address?
+      </p>
+      <div class="buttons">
+        <paper-button dialog-dismiss on-tap='_deleteAltEmail'>Yes, please delete</paper-button>
+        <paper-button dialog-confirm autofocus on-tap='_keepAltEmail'>No! Go back!</paper-button>
+      </div>
+    </paper-dialog>
+    <paper-dialog id="delReplyEmail">
+      <h2>Delete Reply-Email?</h2>
+      <p>
+        Are you sure you want to delete the reply-email address?
+      </p>
+      <div class="buttons">
+        <paper-button dialog-dismiss on-tap='_deleteReplyEmail'>Yes, please delete</paper-button>
+        <paper-button dialog-confirm autofocus on-tap='_keepReplyEmail'>No! Go back!</paper-button>
+      </div>
+    </paper-dialog>
   </template>
 
   <script>
@@ -102,93 +209,185 @@
           role: {
             type: Object,
             statePath: 'role'
+          },
+          isFBLogin: {
+            type: Boolean,
+            value: false
+          },
+          profile: {
+            type: Object,
+            observer: '_onProfile'
           }
         }
       }
 
-      vdate() {
-        console.log("AAAAA");
-        this.$.form1.validate();
-      }
-
-      resetForm() {
-        this.$.name.value = null;
-        this.$.description.value = null;
-      }
-
-      update(e) {
-        var descrip = this.$.description.value ? this.$.description.value : "";
-        var key = this.$.key.value;
-        var profileQueryRef = this.$.queryProfiles.ref.child(key);
-        var postData = {
-          name: this.$.name.value,
-          description: descrip,
-          timestamp: Date.now()
+      _onUser() {
+        if (!!this.user && !!this.user.providerData[0]) {
+          let provider = this.user.providerData[0].providerId;
+          if (provider.includes('facebook')) {
+            this.isFBLogin = true;
+          }
+          this._onProfile();
         }
-        profileQueryRef.ref.update(postData);
-        this.$.name.value = null;
-        this.$.description.value = null;
-
-        this.$.key.hidden = true;
-        this.$.add.hidden = false;
-        this.$.update.hidden = true;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
-        this.$.addupdate.reset()
-        return;
       }
 
-      add() {
-        var postData = {
-          name: this.$.name.value,
-          description: this.$.description.value ? this.$.description.value : "",
-          timestamp: Date.now()
+      _updateSmsNumber(){
+        if(this.$.updateSmsForm.validate()){
+          this._persistProfile();
         }
-        var newProfileKey = this.$.queryProfiles.ref.push().key
-        var updates = {}
-        updates["/" + newProfileKey] = postData;
-        this.$.queryProfiles.ref.update(updates);
-        this.$.name.value = null;
-        this.$.description.value = null;
-        this.$.key.hidden = true;
-        this.$.update.hidden = true;
-        this.$.add.hidden = false;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
-        return;
+      }
+      _updateAlEmail(){
+        if(this.$.alternativeEmailForm.validate()){
+          this._persistProfile();
+        }
+      }
+      _updateReplyEmail(){
+        if(this.$.promoteForm.validate()){
+          this._persistProfile();
+        }
       }
 
-      clear() {
-        this.$.addupdate.reset();
-        this.$.name.value = null;
-        this.$.description.value = null;
-        this.$.add.hidden = false;
-        this.$.update.hidden = true;
-        this.$.addTitle.hidden = false;
-        this.$.updateTitle.hidden = true;
-        return;
+      _persistProfile() {
+        this.profile = {};
+        if (!!this.$.altEmail.value) {
+          this.profile.altEmail = this.$.altEmail.value;
+        }
+        if (!!this._isPromotion()) {
+          this.profile.promotion = true;
+        }else{
+          this.profile.promotion = false;
+        }
+        if (!!this.$.replyEmail.value) {
+          this.profile.replyEmail = this.$.replyEmail.value;
+        }
+        if (!!this.$.smsNumber.value) {
+          this.profile.smsNumber = this.$.smsNumber.value;
+        }
+        let profileQueryRef = this.$.queryProfiles.ref;
+        profileQueryRef.set(this.profile);
+
       }
 
-      display(e) {
-        var key = e.currentTarget.profile.$key;
-        var profileQueryRef = this.$.queryProfiles.ref.child(key);
-        var aProfile = null;
-        profileQueryRef.on('value', function (snapshot) {
-          aProfile = snapshot.val();
-        });
-        this.$.key.value = key;
-        this.$.name.value = aProfile.name;
-        this.$.description.value = aProfile.description;
-        this.$.add.hidden = true;
-        this.$.update.hidden = false;
-        this.$.addTitle.hidden = true;
-        this.$.updateTitle.hidden = false;
+      _onProfile() {
+        if (!!this.user
+          && typeof this.profile !== 'undefined'
+          && this.profile != null) {
+          if(!!this.profile.altEmail) {
+            this.$.altEmail.value = this.profile.altEmail;
+            this.$.altEmailYes.checked = true;
+            this.$.altEmailYes.value = "on";
+            this.$.altEmailForm.hidden = false;
+          }
+          if(!!this.profile.smsNumber) {
+            this.$.smsNumber.value = this.profile.smsNumber;
+            this.$.yesSms.checked = true;
+            this.$.yesSms.value = "on";
+            this.$.smsForm.hidden = false;
+          }
+          if(!!this.profile.replyEmail) {
+            this.$.replyEmail.value = this.profile.replyEmail;
+            this.$.promoteYes.checked = true;
+            this.$.promoteYes.value = "on";
+            this.$.promotion.hidden = false;
+          }
+        }
       }
 
-      remove(e) {
-        var key = e.currentTarget.profile.$key;
-        this.$.queryProfiles.ref.child(key).remove();
+      _isPromotion() {
+        if (this.$.promoteYes.value == "on") {
+          return true;
+        } else {
+          return false;
+        }
       }
+
+      toggleSmsNumber() {
+
+        if (this.$.yesSms.value == "off") {
+          this.$.yesSms.value = "on";
+          this.$.smsForm.hidden = false;
+        } else {
+          if(!!this.$.smsNumber.value) {
+            this.$.delPhone.open();
+          }else{
+            this.$.yesSms.value = "off";
+            this.$.smsForm.hidden = true;
+          }
+        }
+      }
+
+      _keepPhone(){
+        this.$.yesSms.checked = true;
+      }
+
+      _deletePhone(){
+        this.$.smsNumber.value = undefined;
+        this.$.yesSms.value = "off";
+        this.$.smsForm.hidden = true;
+        this._persistProfile();
+      }
+
+      toggleFBM() {
+        if (this.$.yesFBM.value == "off") {
+          this.$.yesFBM.value = "on";
+          this.$.fbInstructions.hidden = false;
+        } else {
+          this.$.yesFBM.value = "off";
+          this.$.fbInstructions.hidden = true;
+        }
+      }
+
+      toggleAltEmail() {
+        if (this.$.altEmailYes.value == "off") {
+          this.$.altEmailYes.value = "on";
+          this.$.altEmailForm.hidden = false;
+        } else {
+          if(!!this.$.altEmail.value) {
+            this.$.delAltEmail.open();
+          }else{
+            this.$.altEmailYes.value = "off";
+            this.$.altEmailForm.hidden = true;
+          }
+        }
+      }
+
+      _keepAltEmail(){
+        this.$.altEmailYes.checked = true;
+      }
+
+      _deleteAltEmail(){
+        this.$.altEmail.value = undefined;
+        this.$.altEmailYes.value = "off";
+        this.$.altEmailForm.hidden = true;
+        this._persistProfile();
+      }
+
+
+      togglePromotion() {
+        if (this.$.promoteYes.value == "off") {
+          this.$.promoteYes.value = "on";
+          this.$.promotion.hidden = false;
+        } else {
+          if(!!this.$.replyEmail.value) {
+            this.$.delReplyEmail.open();
+          }else{
+            this.$.promoteYes.value = "off";
+            this.$.promotion.hidden = true;
+          }
+        }
+      }
+
+      _keepReplyEmail(){
+        this.$.promoteYes.checked = true;
+      }
+
+      _deleteReplyEmail(){
+        this.$.replyEmail.value = undefined;
+        this.$.promoteYes.value = "off";
+        this.$.promotion.hidden = true;
+        this._persistProfile();
+      }
+
     }
 
     window.customElements.define(UserProfile.is, UserProfile);
