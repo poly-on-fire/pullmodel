@@ -53,7 +53,7 @@
                             always-float-label required></paper-textarea>
             <paper-button raised id="add" on-tap="add">Add</paper-button>
             <paper-button raised id="update" on-tap="update" hidden>Update</paper-button>
-            <paper-button raised id="clear" on-tap="clear">Cancel/Clear</paper-button>
+            <!--<paper-button raised id="clear" on-tap="clear">Cancel/Clear</paper-button>-->
           </form>
         </iron-form>
       </div>
@@ -131,7 +131,7 @@
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
           let postData = {
-            group: this.$.group.value.value,
+            group: this.$.group.value,
             subscribers: this.$.subscribers.value ? this.$.subscribers.value : "",
             timestamp: Date.now()
           };
