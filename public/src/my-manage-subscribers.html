@@ -7,9 +7,9 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
-<link rel="import" href="db-combo-box.html">
 
 <dom-module id="manage-subscribers">
   <template>
@@ -37,11 +37,11 @@
     </div>
     <div class="card">
       <h3 id="addTitle">Add Passive Subscribers</h3>
-      <db-combo-box id="group"
+      <poly-on-fire-rtdb-selector id="group"
                     placeholder='Select group' field='name'
                     dbpath="/users/[[user.uid]]/subscriberGroup" combolabel="Select Group"
                     error-message="Please select a Group" required
-                    on-change="groupSelected"></db-combo-box>
+                    on-change="groupSelected"></poly-on-fire-rtdb-selector>
       <div id="hasGroup" hidden>
         <h3 id="updateTitle" hidden>Update Subscriber</h3>
         <input id="key" type="text" name="key" hidden/>

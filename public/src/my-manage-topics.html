@@ -10,9 +10,9 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
-<link rel="import" href="db-combo-box.html">
 
 <dom-module id="manage-topics">
   <template>
@@ -39,10 +39,10 @@
       <div class="card">
         <iron-form id="addupdate">
           <form method="get" action="/">
-            <db-combo-box id="topicType" field='name'
+            <poly-on-fire-rtdb-selector id="topicType" field='name'
                           placeholder='Select option from dropdown button at right.'
                           dbpath="/topicType" combolabel="Select Topic Type"
-                          error-message="Please select a Topic Type" on-change="isThisWeb"></db-combo-box>
+                          error-message="Please select a Topic Type" on-change="isThisWeb"></poly-on-fire-rtdb-selector>
             <input id="isWeb" hidden></input>
             <!--<paper-input id="" label=""-->
             <!--required always-float-label></paper-input>-->

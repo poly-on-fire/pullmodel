@@ -7,9 +7,9 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
-<link rel="import" href="db-combo-box.html">
 
 <dom-module id="manage-messages">
   <template>
@@ -38,11 +38,11 @@
       </paper-icon-button>
     </div>
     <div class="card">
-      <db-combo-box id="topic"
+      <poly-on-fire-rtdb-selector id="topic"
                     placeholder='Select topic' field='name'
                     dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
                     error-message="Please select a Topic" required
-                    on-change="topicSelected"></db-combo-box>
+                    on-change="topicSelected"></poly-on-fire-rtdb-selector>
       <h2>[[topicName]]</h2>
     </div>
     <div id=validatable class="card" hidden>

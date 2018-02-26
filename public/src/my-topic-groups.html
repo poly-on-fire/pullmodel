@@ -7,9 +7,9 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
-<link rel="import" href="db-combo-box.html">
 
 <dom-module id="topic-groups">
   <template>
@@ -32,11 +32,11 @@
       </paper-icon-button>
     </div>
     <div class="card">
-      <db-combo-box id="topic"
+      <poly-on-fire-rtdb-selector id="topic"
                     placeholder='Select topic' field='name'
                     dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
                     error-message="Please select a Topic" required
-                    on-change="topicSelected"></db-combo-box>
+                    on-change="topicSelected"></poly-on-fire-rtdb-selector>
       <h2>[[topicName]]</h2>
     </div>
     <div id=validatable class="card" hidden>
@@ -46,11 +46,12 @@
         <input id="key" type="text" name="key" hidden/>
         <iron-form id="addupdate">
           <form action="/" method="get">
-            <db-combo-box id="group"
+            //poly-on-fire-rtdb-selector
+            <poly-on-fire-rtdb-selector id="group"
                           placeholder='Select group' field='name'
                           dbpath="/users/[[user.uid]]/subscriberGroup" combolabel="Select Group"
                           error-message="Please select a Subscriber Group" required
-                          on-change="groupSelected" value="[[value]]" key="[[groupKey]]"></db-combo-box>
+                          on-change="groupSelected" value="[[value]]" key="[[groupKey]]"></poly-on-fire-rtdb-selector>
             <paper-button id="add" on-click="add" type="button" hidden>Add</paper-button>
           </form>
         </iron-form>
