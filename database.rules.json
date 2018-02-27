@@ -20,7 +20,7 @@
     },
     "faq": {
 			".write": "auth !== null",
-			".read": "auth !== null"
+			".read": true
     },
     "topicType": {
 			".write": "auth !== null",

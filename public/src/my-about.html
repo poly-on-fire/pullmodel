@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 
@@ -22,42 +23,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div hidden$="[[!user]]">
-      <div class="card" hidden$=[[!role.show.d]]>
-        <div class="circle">1</div>
-        <h1>Don't be Pushed! <em>Pull:</em></h1>
-        <p>Why did we ever allow others to push or broadcast commercial or educational messages into our space without ever being requested? <br> <br>Because, up to now, we never had a choice.<br> This site helps us experiment with alternatives of our own choosing.</p>
-
-        <p>This site delivers learning material in smaller chunks, timed on subsequent days, for better absorbtion. You might find this most helpful with certain types of information that go into our brains better over a period of days and weeks - where we can incorporate them into our routine and muscle memory.</p>
-        <p>Are you glazing over when presented with unfamiliar material? <br>Short exposures, repeated days apart and varied,
-          make it easier to pick up fresh ideas.</p>
-        <br>
-        <p><em>You</em>, and not others, should be able to select what you pull in to your learning inbox. </p>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <p>A high tech farmer might think of <strong>PullModel</strong> as drip irrigation - only, for your <strong>mind</strong>.</p>
-        <p>You won't find a lot of articles on the web about using Drip Irrigation for the Human Mind. That's too bad,
-          because you may find it more pleasant and effective than being shoveled broadcast information that
-          we've all become accustomed to.</p>
-
-      </div>
+    <!--<div hidden$="[[!user]]">-->
+    <div class="card">
+      <p>Lost? Looking for help, fast?</p>
+      <a href="[[rootPath]]help-options" tabindex="-1">
+        <paper-button raised>Show me my options!</paper-button>
+      </a>
     </div>
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>What is Push vs <em>Pull:</em> ?</h1>
+      <p>We know most formal information as "Push", no matter if it's education, political, marketing/advertising or
+        otherwise. Others <strong>bombard</strong> us with information, whether we want it or not.</p>
+      <p>"Pull" isn't something we have thought much about. That's when <strong>we only get the information we
+        seek.</strong> This is mostly an undefined space, so far.</p>
+      <p>This site explores what would happen if we seek to engage "Pull" on a more formal basis, especially as far as
+        choosing what information we subscribe to.</p>
+      <p>This site delivers learning material in smaller chunks, timed on subsequent days, for better absorbtion. You
+        might find this most helpful with certain types of information that go into our brains better over a period of
+        days and weeks - where we can incorporate them into our routine and muscle memory.</p>
+      <p>Are you glazing over when presented with unfamiliar material? <br>Short exposures, repeated days apart and
+        varied,
+        make it easier to pick up fresh ideas.</p>
+      <br>
+      <p><em>You</em>, and not others, should be able to select what you pull in to your learning inbox. </p>
+
+    </div>
+    <!--</div>-->
   </template>
 
   <script>
-    class MyAbout extends ReduxMixin(Polymer.Element) {
-      static get is() {
+    class MyAbout extends ReduxMixin
+
+    (Polymer.Element)
+    {
+      static
+      get
+      is()
+      {
         return 'my-about';
       }
 
-      static get properties() {
+      static
+      get
+      properties()
+      {
         return {
           role: {
             type: Object,

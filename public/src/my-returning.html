@@ -1,0 +1,62 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-returning">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <!--<div hidden$="[[!user]]">-->
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>Returning User, from Another Device?</h1>
+      <p>If you've already successfully logged in from another device - but not this one - type in the same email address
+      here to find your information and log in:</p>
+      <iron-form id="submitEmailForm">
+        <form action="/" method="get">
+          <paper-input id="emailSubmit" label='Email Address:'
+                       always-float-label required auto-validate
+                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
+          <paper-button raised on-tap="_checkEmail">Submit</paper-button>
+        </form>
+      </iron-form>
+    </div>
+    <!--</div>-->
+  </template>
+
+  <script>
+    class MyReturning extends ReduxMixin
+
+    (Polymer.Element)
+    {
+      static
+      get
+      is()
+      {
+        return 'my-returning';
+      }
+
+      static
+      get
+      properties()
+      {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+    }
+
+    window.customElements.define(MyReturning.is, MyReturning);
+  </script>
+</dom-module>

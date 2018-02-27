@@ -1,0 +1,81 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-help-options">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <!--<div hidden$="[[!user]]">-->
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>Help Options</h1>
+      <div class="card">
+        <p>Returning to PullModel but from another device?</p>
+        <a href="[[rootPath]]returning" tabindex="-1">
+          <paper-button raised>RETURNING</paper-button>
+        </a>
+      </div>
+      <div class="card">
+        <p>You think you might like to subscribe to an example topic, and to explore how this site works?</p>
+        <a href="[[rootPath]]trial" tabindex="-1">
+          <paper-button raised>TRIAL</paper-button>
+        </a>
+      </div>
+      <div class="card">
+        <p>Someone subscribed you passively to a topic, from their own email list?</p>
+        <a href="[[rootPath]]unsubscribe" tabindex="-1">
+          <paper-button raised>UNSUBSCRIBE</paper-button>
+        </a>
+      </div>
+      <div class="card">
+        <p>Spammed or abused? Someone should know about this!</p>
+        <a href="[[rootPath]]abuse" tabindex="-1">
+          <paper-button raised>ABUSE</paper-button>
+        </a>
+      </div>
+      <div class="card">
+        <p>Return to home</p>
+        <a href="[[rootPath]]about" tabindex="-1">
+          <paper-button raised>HOME</paper-button>
+        </a>
+      </div>
+    </div>
+    <!--</div>-->
+  </template>
+
+  <script>
+    class MyHelpOptions extends ReduxMixin
+
+    (Polymer.Element)
+    {
+      static
+      get
+      is()
+      {
+        return 'my-help-options';
+      }
+
+      static
+      get
+      properties()
+      {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+    }
+
+    window.customElements.define(MyHelpOptions.is, MyHelpOptions);
+  </script>
+</dom-module>

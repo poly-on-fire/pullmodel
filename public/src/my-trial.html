@@ -1,0 +1,60 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-trial">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <!--<div hidden$="[[!user]]">-->
+      <div class="card">
+        <div class="circle">1</div>
+        <h1>To Request Your Own Trial Subscription</h1>
+        <p>This subscribes you to an example topic. You would have full access to the subscriber functionality of this
+          site, even the ability to promote yourself to a (non-sending) publisher. </p>
+        <p>You would receive 3 example email
+        messages in the 3 days subsequent to this </p>
+
+        <iron-form id="submitEmailForm">
+          <form action="/" method="get">
+            <paper-input id="emailSubmit" label='Email Address:'
+                         always-float-label required auto-validate
+                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
+            <paper-input id="properName" label='Proper Name (like Bill Smith)'
+                         always-float-label required auto-validate
+                         pattern="^(?:[\u00c0-\u01ffa-zA-Z'-]){2,}(?:\s[\u00c0-\u01ffa-zA-Z'-]{2,})+$"></paper-input>
+            <paper-button raised on-tap="_checkEmail">Submit</paper-button>
+          </form>
+        </iron-form>
+      </div>
+    <!--</div>-->
+  </template>
+
+  <script>
+    class MyTrial extends ReduxMixin(Polymer.Element) {
+      static get is() {
+        return 'my-trial';
+      }
+
+      static get properties() {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+    }
+
+    window.customElements.define(MyTrial.is, MyTrial);
+  </script>
+</dom-module>

@@ -1,0 +1,57 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-unsubscribe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <!--<div hidden$="[[!user]]">-->
+      <div class="card">
+        <div class="circle">1</div>
+        <h1>Unsubscribe Me!</h1>
+        <p>A PullModel publisher can passively subscribe anyone from his own email list, as he/she is (allegedly) already
+        in conversation with that person anyway. PullModel, in this case, is just an extension of his own personal email client.</p>
+        <p>If you would like to block such emails, and make him/her stick to personal emails, place your email address in
+        the form below and we'll keep you blocked - by him/her, or anybody!.</p>
+        <p>We will also let him/her know that you've blocked his messages from PullModel.</p>
+        <iron-form id="submitEmailForm">
+          <form action="/" method="get">
+            <paper-input id="emailSubmit" label='Email Address:'
+                         always-float-label required auto-validate
+                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
+            <paper-button raised on-tap="_checkEmail">Submit</paper-button>
+          </form>
+        </iron-form>
+      </div>
+    <!--</div>-->
+  </template>
+
+  <script>
+    class MyUnsubscribe extends ReduxMixin(Polymer.Element) {
+      static get is() {
+        return 'my-unsubscribe';
+      }
+
+      static get properties() {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+    }
+
+    window.customElements.define(MyUnsubscribe.is, MyUnsubscribe);
+  </script>
+</dom-module>

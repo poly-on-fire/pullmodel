@@ -1,0 +1,101 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html"/>
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-logins">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <firebase-auth id="googleAuth" user="{{user}}" provider="google" on-error="handleError">
+    </firebase-auth>
+    <firebase-auth id="fbAuth" user="{{user}}" provider="facebook" on-error="handleError">
+    </firebase-auth>
+    <firebase-auth id="twitterAuth" user="{{user}}" provider="twitter" on-error="handleError">
+    </firebase-auth>
+    <firebase-auth id="githubAuth" user="{{user}}" provider="github" on-error="handleError">
+    </firebase-auth>
+    <iron-cookie id="cookie" name="cookie" value="{{cookieValue}}" uri-safe></iron-cookie>
+    <visibility-controller user=[[user]]></visibility-controller>
+    <!--<div hidden$="[[!user]]">-->
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>&nbsp;Signing in to pullModel.com:</h1>
+      <div hidden$="[[user]]">
+        <div class="card">
+          <paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>
+          <p>Facebook login may your best choice, if you're a typical Facebook user.</p>
+          <p>PullModel offers Facebook messaging as an option, if you are a user of Facebook Messenger.</p>
+          <hr>
+          <p>Or, login with a Google or Twitter sign in.<br><small>Twitter logins sometimes time-out, try again.</small></p>
+          <paper-button raised on-tap="googlelogin" hidden$="[[user]]"><img src="../images/google.png"/></paper-button>
+          <paper-button raised on-tap="twitterlogin" hidden$="[[user]]"><img src="../images/twitter.png"/>
+          </paper-button>
+          <!--<paper-button raised on-tap="githublogin" hidden$="[[user]]"><img src="../images/github.png"/></paper-button>-->
+          <h1>Why do we use social media logins?</h1>
+          <p>Social media companies handle login security much better than we ever could!</p>
+          <p>So we let them do the heavy lifting, they give us a unique ID for you - to make sure we recognize you when
+            you come back.</p>
+          <p>Once you pick your option, you won't be offered any of the other choices.</p>
+        </div>
+      </div>
+    </div>
+    <!--</div>-->
+  </template>
+
+  <script>
+    class MyLogins extends ReduxMixin
+
+    (Polymer.Element)
+    {
+      static
+      get
+      is()
+      {
+        return 'my-logins';
+      }
+
+      static
+      get
+      properties()
+      {
+        return {
+          role: {
+            type: Object,
+            statePath: 'role'
+          }
+        }
+      }
+
+      googlelogin()
+      {
+        return this.$.googleAuth.signInWithPopup();
+      }
+
+      fblogin()
+      {
+        return this.$.fbAuth.signInWithPopup();
+      }
+
+      twitterlogin()
+      {
+        return this.$.twitterAuth.signInWithPopup();
+      }
+
+      githublogin()
+      {
+        return this.$.githubAuth.signInWithPopup();
+      }
+    }
+
+    window.customElements.define(MyLogins.is, MyLogins);
+  </script>
+</dom-module>

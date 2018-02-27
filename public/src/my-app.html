@@ -47,6 +47,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
+<link rel="lazy-import" href="my-abuse.html">
+<link rel="lazy-import" href="my-help-options.html">
+<link rel="lazy-import" href="my-logins.html">
+<link rel="lazy-import" href="my-returning.html">
+<link rel="lazy-import" href="my-trial.html">
+<link rel="lazy-import" href="my-unsubscribe.html">
 
 <dom-module id="my-app">
   <template>
@@ -116,167 +122,191 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-cookie id="cookie" name="cookie" value="{{cookieValue}}" uri-safe></iron-cookie>
     <visibility-controller user=[[user]]></visibility-controller>
 
-    <div hidden$="[[!role.show.a]]">
-      <div class="card" hidden$="[[user]]">
-        <p>Access to pullModel.com is limited to invitations or:</p>
-        <ul>
-          <li>
-            You had already been invited but had logged in from another device.
-          </li>
-          <li>
-            You received an email from this domain and wish to unsubscribe.
-          </li>
-          <li>
-            You wish to report abuse or spam to our admins.
-          </li>
-          <li>
-            You had heard about or seen this app - such as on github - and wanted to self-invite, to take a tour.
-          </li>
-        </ul>
-        <p>Please enter your email address to gain access to social login:</p>
+    <!--<div hidden$="[[!role.show.a]]">-->
+    <!--<div class="card" hidden$="[[user]]">-->
+    <!--<p>Access to pullModel.com is limited to invitations or:</p>-->
+    <!--<ul>-->
+    <!--<li>-->
+    <!--You had already been invited but had logged in from another device.-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--You received an email from this domain and wish to unsubscribe.-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--You wish to report abuse or spam to our admins.-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--You had heard about or seen this app - such as on github - and wanted to self-invite, to take a tour.-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--<p>Please enter your email address to gain access to social login:</p>-->
 
-        <iron-form id="submitEmailForm">
-          <form action="/" method="get">
-            <paper-input id="emailSubmit" label='Email Address:'
-                         always-float-label required auto-validate
-                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
-            <paper-button raised on-tap="_checkEmail">Submit</paper-button>
-          </form>
-        </iron-form>
-      </div>
-    </div>
+    <!--<iron-form id="submitEmailForm">-->
+    <!--<form action="/" method="get">-->
+    <!--<paper-input id="emailSubmit" label='Email Address:'-->
+    <!--always-float-label required auto-validate-->
+    <!--pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>-->
+    <!--<paper-button raised on-tap="_checkEmail">Submit</paper-button>-->
+    <!--</form>-->
+    <!--</iron-form>-->
+    <!--</div>-->
+    <!--</div>-->
 
-    <div hidden$="[[user]]">
-      <div class="card" hidden$=[[!role.show.b]]>
-        <p>If you're returning but from another device, please make sure you login from the same provider! <br>In other
-          words don't log in with Twitter on one device and Facebook from another, and expect your preferences to be
-          maintained!</p>
-        <h1>&nbsp;Signing in to pullModel.com:</h1>
-        <paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>
-        <p>Facebook login may your best choice, if you're a typical Facebook user.</p>
-        <p>PullModel offers Facebook messaging as an option, if you are a user of Facebook Messenger.</p>
-        <hr>
-        <p>Or, login with a Google or Twitter sign in.<br>Twitter logins sometimes time-out, github will probably fail,
-          but you're welcome to test it.</p>
-        <paper-button raised on-tap="googlelogin" hidden$="[[user]]"><img src="../images/google.png"/></paper-button>
-        <paper-button raised on-tap="twitterlogin" hidden$="[[user]]"><img src="../images/twitter.png"/></paper-button>
-        <paper-button raised on-tap="githublogin" hidden$="[[user]]"><img src="../images/github.png"/></paper-button>
-        <h1>Why do we use social media logins?</h1>
-        <p>Social media companies handle login security much better than we ever could!</p>
-        <p>So we let them do the heavy lifting, they give us a unique ID for you - to make sure we recognize you when
-          you come back.</p>
-        <p>Once you pick your option, you'll need to stick with it, on this site.</p>
-      </div>
-    </div>
+    <!--<div hidden$="[[user]]">-->
+    <!--<div class="card" hidden$=[[!role.show.b]]>-->
+    <!--<p>If you're returning but from another device, please make sure you login from the same provider! <br>In other-->
+    <!--words don't log in with Twitter on one device and Facebook from another, and expect your preferences to be-->
+    <!--maintained!</p>-->
+    <!--<h1>&nbsp;Signing in to pullModel.com:</h1>-->
+    <!--<paper-button raised on-tap="fblogin" hidden$="[[user]]"><img src="../images/fb.png"/></paper-button>-->
+    <!--<p>Facebook login may your best choice, if you're a typical Facebook user.</p>-->
+    <!--<p>PullModel offers Facebook messaging as an option, if you are a user of Facebook Messenger.</p>-->
+    <!--<hr>-->
+    <!--<p>Or, login with a Google or Twitter sign in.<br>Twitter logins sometimes time-out, github will probably fail,-->
+    <!--but you're welcome to test it.</p>-->
+    <!--<paper-button raised on-tap="googlelogin" hidden$="[[user]]"><img src="../images/google.png"/></paper-button>-->
+    <!--<paper-button raised on-tap="twitterlogin" hidden$="[[user]]"><img src="../images/twitter.png"/></paper-button>-->
+    <!--<paper-button raised on-tap="githublogin" hidden$="[[user]]"><img src="../images/github.png"/></paper-button>-->
+    <!--<h1>Why do we use social media logins?</h1>-->
+    <!--<p>Social media companies handle login security much better than we ever could!</p>-->
+    <!--<p>So we let them do the heavy lifting, they give us a unique ID for you - to make sure we recognize you when-->
+    <!--you come back.</p>-->
+    <!--<p>Once you pick your option, you'll need to stick with it, on this site.</p>-->
+    <!--</div>-->
+    <!--</div>-->
 
     <!-- .... else display the app as it was written before auth required -
     This is somewhat clumsy and brutish, but good enough for a demo app -->
-    <div hidden$="[[!user]]">
-      <app-location
-              route="{{route}}"
-              query-params="{{queryParams}}"
-              url-space-regex="^[[rootPath]]">
-      </app-location>
+    <!--<div hidden$="[[!user]]">-->
+    <app-location
+            route="{{route}}"
+            query-params="{{queryParams}}"
+            url-space-regex="^[[rootPath]]">
+    </app-location>
 
-      <app-route
-              route="{{route}}"
-              pattern="[[rootPath]]:page"
-              data="{{routeData}}"
-              tail="{{subroute}}">
-      </app-route>
+    <app-route
+            route="{{route}}"
+            pattern="[[rootPath]]:page"
+            data="{{routeData}}"
+            tail="{{subroute}}">
+    </app-route>
 
-      <app-drawer-layout fullbleed narrow="{{narrow}}">
-        <!-- Drawer content -->
-        <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-          <div style="height: 100%; overflow: auto;"><!--scrolling-->
-            <app-toolbar>Menu</app-toolbar>
-            <iron-selector hidden$="[[!user]]" selected="[[page]]" attr-for-selected="name" class="drawer-list"
-                           role="navigation">
-              <div hidden$=[[!role.show.d]]><a name="about" href="[[rootPath]]about">About</a></div>
-              <div hidden$=[[!role.show.d]]><a name="read-faq" href="[[rootPath]]read-faq">FAQ</a></div>
-              <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
-                Support</a></div>
-              <div hidden$=[[!role.show.d]]><a name="user-profile" href="[[rootPath]]user-profile">My Profile</a>
-              </div>
-              <!-- should be e reset to d for vaadin inspection-->
-              <div hidden$=[[!role.show.d]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My
-                Subscriptions</a>
-              </div>
-              <!-- should be g reset to d for vaadin inspection-->
-              <div hidden$=[[!role.show.d]]><a name="manage-topics" href="[[rootPath]]manage-topics">
-                Topics You Message About</a></div>
-              <!-- should be g reset to d for vaadin inspection-->
-              <div hidden$=[[!role.show.d]]><a name="manage-messages" href="[[rootPath]]manage-messages">
-                Messages You Publish</a></div>
-              <div hidden$=[[!role.show.d]]><a name="topic-groups" href="[[rootPath]]topic-groups">
-                Group Subscribes</a></div>
-              <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
-                Groups</a></div>
-              <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe
-                Groups Passively</a>
-              </div>
-              <div hidden$=[[!role.show.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
-                Requests</a></div>
-              <div hidden$=[[!role.show.h]]><a name="admin-profiles" href="[[rootPath]]admin-profiles">Admin the
-                Profiles</a></div>
-              <div hidden$=[[!role.show.h]]><a name="manage-faq" href="[[rootPath]]manage-faq">Admin the FAQ</a></div>
-              <div hidden$=[[!role.show.j]]><a name="security-groups"
-                                               href="[[rootPath]]security-groups">security-groups</a></div>
-              <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
-              <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
-            </iron-selector>
-            <div hidden$="[[!user]]">
-              <span hidden$="[[!user]]">&nbsp;&nbsp;<paper-button raised on-tap="logout">Sign Out</paper-button></span>
+    <app-drawer-layout fullbleed narrow="{{narrow}}">
+      <!-- Drawer content -->
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+        <div style="height: 100%; overflow: auto;"><!--scrolling-->
+          <app-toolbar>Menu</app-toolbar>
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list"
+                         role="navigation">
+            <a name="about" href="[[rootPath]]about">About</a>
+            <a name="read-faq" href="[[rootPath]]read-faq">FAQ</a>
+            <div hidden$="[[user]]">
+              <hr>
+              <a name="abuse" href="[[rootPath]]abuse">Report Abuse</a>
+              <a name="help-options" href="[[rootPath]]help-options">Get Help Options</a>
+              <a name="logins" href="[[rootPath]]logins">Social Logins</a>
+              <a name="returning" href="[[rootPath]]returning">Returning From Another Device</a>
+              <a name="trial" href="[[rootPath]]trial">Request a Trial</a>
+              <a name="unsubscribe" href="[[rootPath]]unsubscribe">Unsubscribe Me</a>
             </div>
+            <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
+              Support</a></div>
+            <div hidden$=[[!role.show.d]]><a name="user-profile" href="[[rootPath]]user-profile">My Profile</a>
+            </div>
+            <!-- should be e reset to d for vaadin inspection-->
+            <div hidden$=[[!role.show.d]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My
+              Subscriptions</a>
+            </div>
+            <!-- should be g reset to d for vaadin inspection-->
+            <div hidden$=[[!role.show.d]]><a name="manage-topics" href="[[rootPath]]manage-topics">
+              Topics You Message About</a></div>
+            <!-- should be g reset to d for vaadin inspection-->
+            <div hidden$=[[!role.show.d]]><a name="manage-messages" href="[[rootPath]]manage-messages">
+              Messages You Publish</a></div>
+            <div hidden$=[[!role.show.d]]><a name="topic-groups" href="[[rootPath]]topic-groups">
+              Group Subscribes</a></div>
+            <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
+              Groups</a></div>
+            <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe
+              Groups Passively</a>
+            </div>
+            <div hidden$=[[!role.show.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
+              Requests</a></div>
+            <div hidden$=[[!role.show.h]]><a name="admin-profiles" href="[[rootPath]]admin-profiles">Admin the
+              Profiles</a></div>
+            <div hidden$=[[!role.show.h]]><a name="manage-faq" href="[[rootPath]]manage-faq">Admin the FAQ</a></div>
+            <div hidden$=[[!role.show.j]]><a name="security-groups"
+                                             href="[[rootPath]]security-groups">security-groups</a></div>
+            <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
+            <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
+          </iron-selector>
+          <div hidden$="[[!user]]">
+            <span hidden$="[[!user]]">&nbsp;&nbsp;<paper-button raised on-tap="logout">Sign Out</paper-button></span>
           </div>
-        </app-drawer>
+        </div>
+      </app-drawer>
 
-        <!-- Main content -->
-        <app-header-layout has-scrolling-region>
-          <app-header slot="header" condenses reveals effects="waterfall">
-            <app-toolbar>
-              <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-              <div main-title>pullModel.com</div>
-            </app-toolbar>
-          </app-header>
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+        <app-header slot="header" condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>pullModel.com</div>
+          </app-toolbar>
+        </app-header>
 
-          <iron-pages
-                  selected="[[page]]"
-                  attr-for-selected="name"
-                  fallback-selection="view404"
-                  role="main">
-            <my-about name="about" user=[[user]]></my-about>
-            <super-admin name="super-admin" user=[[user]]></super-admin>
-            <security-groups name="security-groups" user=[[user]]></security-groups>
-            <topic-types name="topic-types" user=[[user]]></topic-types>
-            <admin-profiles name="admin-profiles" user=[[user]]></admin-profiles>
-            <manage-faq name="manage-faq" user=[[user]]></manage-faq>
-            <read-faq name="read-faq" user=[[user]]></read-faq>
-            <manage-requests name="manage-requests" user=[[user]]></manage-requests>
-            <support-request name="support-request" user=[[user]]></support-request>
-            <manage-topics name="manage-topics" user=[[user]]></manage-topics>
-            <message-meta name="message-meta" user=[[user]]></message-meta>
-            <message-content name="message-content" user=[[user]]></message-content>
-            <manage-messages name="manage-messages" user=[[user]]></manage-messages>
-            <topic-groups name="topic-groups" user=[[user]]></topic-groups>
-            <subscriber-groups name="subscriber-groups" user=[[user]]></subscriber-groups>
-            <manage-subscribers name="manage-subscribers" user=[[user]]></manage-subscribers>
-            <manage-subscriptions name="manage-subscriptions" user=[[user]]></manage-subscriptions>
-            <user-profile name="user-profile" user=[[user]]></user-profile>
-            <my-view404 name="view404"></my-view404>
-          </iron-pages>
-        </app-header-layout>
-      </app-drawer-layout>
-    </div>
+        <iron-pages
+                selected="[[page]]"
+                attr-for-selected="name"
+                fallback-selection="view404"
+                role="main">
+          <my-about name="about" user=[[user]]></my-about>
+          <my-abuse name="abuse"></my-abuse>
+          <my-help-options name="help-options"></my-help-options>
+          <my-logins name="logins"></my-logins>
+          <my-returning name="returning"></my-returning>
+          <my-trial name="trial"></my-trial>
+          <my-unsubscribe name="unsubscribe"></my-unsubscribe>
+          <read-faq name="read-faq" user=[[user]]></read-faq>
+          <super-admin name="super-admin" user=[[user]]></super-admin>
+          <security-groups name="security-groups" user=[[user]]></security-groups>
+          <topic-types name="topic-types" user=[[user]]></topic-types>
+          <admin-profiles name="admin-profiles" user=[[user]]></admin-profiles>
+          <manage-faq name="manage-faq" user=[[user]]></manage-faq>
+          <manage-requests name="manage-requests" user=[[user]]></manage-requests>
+          <support-request name="support-request" user=[[user]]></support-request>
+          <manage-topics name="manage-topics" user=[[user]]></manage-topics>
+          <message-meta name="message-meta" user=[[user]]></message-meta>
+          <message-content name="message-content" user=[[user]]></message-content>
+          <manage-messages name="manage-messages" user=[[user]]></manage-messages>
+          <topic-groups name="topic-groups" user=[[user]]></topic-groups>
+          <subscriber-groups name="subscriber-groups" user=[[user]]></subscriber-groups>
+          <manage-subscribers name="manage-subscribers" user=[[user]]></manage-subscribers>
+          <manage-subscriptions name="manage-subscriptions" user=[[user]]></manage-subscriptions>
+          <user-profile name="user-profile" user=[[user]]></user-profile>
+          <my-view404 name="view404"></my-view404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+    <!--</div>-->
   </template>
 
   <script>
-    class MyApp extends ReduxMixin(Polymer.Element) {
-      static get is() {
+    class MyApp extends ReduxMixin
+
+    (Polymer.Element)
+    {
+      static
+      get
+      is()
+      {
         return 'my-app';
       }
 
-      static get properties() {
+      static
+      get
+      properties()
+      {
         return {
           user: Object,
           page: {
@@ -304,7 +334,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
-      _onRole() {
+      _onRole()
+      {
         if (!!this.user) {
           // console.log("\nENTERING MY APP ON ROLE\n"+this.user.uid+'\n'+JSON.stringify(this.role));
           // regardless of what happens milliseconds later, at least the user
@@ -325,33 +356,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      googlelogin() {
-        return this.$.googleAuth.signInWithPopup();
-      }
-
-      fblogin() {
-        return this.$.fbAuth.signInWithPopup();
-      }
-
-      twitterlogin() {
-        return this.$.twitterAuth.signInWithPopup();
-      }
-
-      githublogin() {
-        return this.$.githubAuth.signInWithPopup();
-      }
-
-      logout() {
-        return this.$.fbAuth.signOut();
-      }
-
-      static get observers() {
+      static
+      get
+      observers()
+      {
         return [
           '_routePageChanged(routeData.page)',
         ];
       }
 
-      _routePageChanged(page) {
+      _routePageChanged(page)
+      {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'about' in that case.
         this.page = page || 'about';
@@ -362,7 +377,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      _pageChanged(page) {
+      _pageChanged(page)
+      {
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         Polymer.importHref(
@@ -372,15 +388,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           true);
       }
 
-      _showPage404() {
+      _showPage404()
+      {
         this.page = 'view404';
       }
 
-      connectedCallback() {
+      connectedCallback()
+      {
         super.connectedCallback();
       }
 
-      _paramsChanged(queryParams) {
+      _paramsChanged(queryParams)
+      {
         if (!!queryParams && !!queryParams.email) {
           //something here to submit email to node function
           console.log('\nEMAIL\n' +
@@ -390,11 +409,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      _checkEmail() {
+      _checkEmail()
+      {
         if (this.$.submitEmailForm.validate()) {
           this.dispatch(VisibilityController.actions.showUnknown());
         }
         return;
+      }
+
+      logout()
+      {
+        return this.$.fbAuth.signOut();
       }
 
     }
