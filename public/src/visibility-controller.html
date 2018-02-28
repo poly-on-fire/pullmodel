@@ -142,9 +142,8 @@
       }
 
       _onRole() {
-        // console.log("ENTERING VC.ON ROLE\n"+ JSON.stringify(this.role));
         let role = this.role;
-        if (!!role) {
+        if (!!role && JSON.stringify(role)!='{}') {
           switch (role) {
             case 'anonymous':
               this.dispatch(VisibilityController.actions.showAnonymous());
@@ -180,11 +179,9 @@
               this.dispatch(VisibilityController.actions.showSuperAdmin());
               break;
             default:
-              // console.log('\nLEAVING VC.ON ROLE WITH DEFAULT\n');
-              this.dispatch(VisibilityController.actions.showAnonymous());
+              console.log('\nWOOPS!\nLEAVING VC.ON ROLE WITH DEFAULT\n');
+              thistr.dispatch(VisibilityController.actions.showAnonymous());
           }
-          // }else{
-          //   console.log('\nLEAVING VC.ON ROLE WITHOUT PROCESSING\n');
         }
       }
     }

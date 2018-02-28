@@ -17,29 +17,43 @@
     <div class="card">
       <div class="circle">1</div>
       <h1>Help Options</h1>
-      <div class="card">
-        <p>Returning to PullModel but from another device?</p>
-        <a href="[[rootPath]]returning" tabindex="-1">
-          <paper-button raised>RETURNING</paper-button>
+      <div hidden$=[[!user]] class="card">
+        <p>Request Support</p>
+        <a href="[[rootPath]]manage-requests" tabindex="-1">
+          <paper-button raised>REQUEST SUPPORT</paper-button>
         </a>
       </div>
-      <div class="card">
-        <p>You think you might like to subscribe to an example topic, and to explore how this site works?</p>
-        <a href="[[rootPath]]trial" tabindex="-1">
-          <paper-button raised>TRIAL</paper-button>
+      <div hidden$=[[!role.show.b]] class="card">
+        <p>Log back in</p>
+        <a href="[[rootPath]]logins" tabindex="-1">
+          <paper-button raised>LOG IN PAGE</paper-button>
         </a>
       </div>
-      <div class="card">
-        <p>Someone subscribed you passively to a topic, from their own email list?</p>
-        <a href="[[rootPath]]unsubscribe" tabindex="-1">
-          <paper-button raised>UNSUBSCRIBE</paper-button>
-        </a>
-      </div>
-      <div class="card">
-        <p>Spammed or abused? Someone should know about this!</p>
-        <a href="[[rootPath]]abuse" tabindex="-1">
-          <paper-button raised>ABUSE</paper-button>
-        </a>
+      <div hidden$=[[user]]>
+        <div class="card">
+          <p>Returning to PullModel but from another device?</p>
+          <a href="[[rootPath]]returning" tabindex="-1">
+            <paper-button raised>RETURNING</paper-button>
+          </a>
+        </div>
+        <div class="card">
+          <p>You think you might like to subscribe to an example topic, and to explore how this site works?</p>
+          <a href="[[rootPath]]trial" tabindex="-1">
+            <paper-button raised>TRIAL</paper-button>
+          </a>
+        </div>
+        <div class="card">
+          <p>Someone subscribed you passively to a topic, from their own email list?</p>
+          <a href="[[rootPath]]unsubscribe" tabindex="-1">
+            <paper-button raised>UNSUBSCRIBE</paper-button>
+          </a>
+        </div>
+        <div class="card">
+          <p>Spammed or abused? Someone should know about this!</p>
+          <a href="[[rootPath]]abuse" tabindex="-1">
+            <paper-button raised>ABUSE</paper-button>
+          </a>
+        </div>
       </div>
       <div class="card">
         <p>Return to home</p>
@@ -54,20 +68,16 @@
   <script>
     class MyHelpOptions extends ReduxMixin
 
-    (Polymer.Element)
-    {
-      static
-      get
-      is()
-      {
+    (Polymer.Element) {
+      static get is() {
         return 'my-help-options';
       }
 
-      static
-      get
-      properties()
-      {
+      static get properties() {
         return {
+          user: {
+            type: Object
+          },
           role: {
             type: Object,
             statePath: 'role'

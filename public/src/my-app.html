@@ -207,7 +207,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a name="trial" href="[[rootPath]]trial">Request a Trial</a>
               <a name="unsubscribe" href="[[rootPath]]unsubscribe">Unsubscribe Me</a>
               <a name="abuse" href="[[rootPath]]abuse">Report Abuse</a>
-              <a hidden$=[[!role.show.b]] name="logins" href="[[rootPath]]logins">Social Logins</a>
+              <div hidden$=[[!role.show.b]]>
+                <a name="logins" href="[[rootPath]]logins">Social Logins</a>
+              </div>
             </div>
             <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
               Support</a></div>
@@ -239,10 +241,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                              href="[[rootPath]]security-groups">security-groups</a></div>
             <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
             <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
+            <div hidden$="[[!user]]">
+              <span hidden$="[[!user]]">&nbsp;&nbsp;<paper-button raised on-tap="logout">Sign Out</paper-button></span>
+            </div>
           </iron-selector>
-          <div hidden$="[[!user]]">
-            <span hidden$="[[!user]]">&nbsp;&nbsp;<paper-button raised on-tap="logout">Sign Out</paper-button></span>
-          </div>
         </div>
       </app-drawer>
 
@@ -256,14 +258,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages
+                id="pages"
                 selected="[[page]]"
                 attr-for-selected="name"
                 fallback-selection="view404"
                 role="main">
           <my-about name="about" user=[[user]]></my-about>
           <my-abuse name="abuse"></my-abuse>
-          <my-help-options name="help-options"></my-help-options>
-          <my-logins name="logins"></my-logins>
+          <my-help-options name="help-options" user=[[user]]></my-help-options>
+          <my-logins name="logins" user=[[user]]></my-logins>
           <my-returning name="returning"></my-returning>
           <my-trial name="trial"></my-trial>
           <my-unsubscribe name="unsubscribe"></my-unsubscribe>
@@ -332,9 +335,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // console.log("\nENTERING MY APP ON ROLE\n"+this.user.uid+'\n'+JSON.stringify(this.role));
           // regardless of what happens milliseconds later, at least the user
           // has earned promotion to unknownUser
-          if (!!this.role && !!this.role.show && !this.role.show.d) {
-            this.dispatch(VisibilityController.actions.showUnknownUser());
-          }
+          // if (!!this.role && !!this.role.show && !this.role.show.b) {
+          //   this.dispatch(VisibilityController.actions.showUnknownUser());
+          // }
           // FUTURE TODO in case I want to make the form more responsive than firebase
           // get a temporary role from the cookie?
           // frankly this is probably not worth the effort?
@@ -394,18 +397,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!!queryParams && !!queryParams.emailAddress && !!queryParams.properName && !!queryParams.topicKey) {
           console.log('\nTODO: CHECK FOR VALIDITY OF EACH PARAM ESPECIALLY TOPIC KEY\n');
           this.dispatch(VisibilityController.actions.showInvited());
+          // this.page("logins");
         }
       }
-
-      _checkEmail() {
-        if (this.$.submitEmailForm.validate()) {
-          this.dispatch(VisibilityController.actions.showUnknown());
-        }
-        return;
-      }
+      //
+      // _checkEmail() {
+      //   if (this.$.submitEmailForm.validate()) {
+      //     this.dispatch(VisibilityController.actions.showUnknown());
+      //   }
+      //   return;
+      // }
 
       logout() {
-        return this.$.fbAuth.signOut();
+        var pages = this.$.pages;
+        this.$.fbAuth.signOut();
+        pages.selected = "logins";
+        this.dispatch(VisibilityController.actions.showInvited());
       }
 
     }
