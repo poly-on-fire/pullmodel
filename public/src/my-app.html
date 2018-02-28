@@ -203,11 +203,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div hidden$="[[user]]">
               <hr>
               <a name="help-options" href="[[rootPath]]help-options">Get Help Options</a>
-              <a name="logins" href="[[rootPath]]logins">Social Logins</a>
               <a name="returning" href="[[rootPath]]returning">Returning From Another Device</a>
               <a name="trial" href="[[rootPath]]trial">Request a Trial</a>
               <a name="unsubscribe" href="[[rootPath]]unsubscribe">Unsubscribe Me</a>
               <a name="abuse" href="[[rootPath]]abuse">Report Abuse</a>
+              <a hidden$=[[!role.show.b]] name="logins" href="[[rootPath]]logins">Social Logins</a>
             </div>
             <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
               Support</a></div>
@@ -294,19 +294,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     class MyApp extends ReduxMixin
 
-    (Polymer.Element)
-    {
-      static
-      get
-      is()
-      {
+    (Polymer.Element) {
+      static get is() {
         return 'my-app';
       }
 
-      static
-      get
-      properties()
-      {
+      static get properties() {
         return {
           user: Object,
           page: {
@@ -334,8 +327,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
-      _onRole()
-      {
+      _onRole() {
         if (!!this.user) {
           // console.log("\nENTERING MY APP ON ROLE\n"+this.user.uid+'\n'+JSON.stringify(this.role));
           // regardless of what happens milliseconds later, at least the user
@@ -356,17 +348,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      static
-      get
-      observers()
-      {
+      static get observers() {
         return [
           '_routePageChanged(routeData.page)',
         ];
       }
 
-      _routePageChanged(page)
-      {
+      _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'about' in that case.
         this.page = page || 'about';
@@ -377,8 +365,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      _pageChanged(page)
-      {
+      _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         Polymer.importHref(
@@ -388,18 +375,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           true);
       }
 
-      _showPage404()
-      {
+      _showPage404() {
         this.page = 'view404';
       }
 
-      connectedCallback()
-      {
+      connectedCallback() {
         super.connectedCallback();
       }
 
-      _paramsChanged(queryParams)
-      {
+      _paramsChanged(queryParams) {
         if (!!queryParams && !!queryParams.email) {
           //something here to submit email to node function
           console.log('\nEMAIL\n' +
@@ -407,18 +391,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             JSON.stringify(queryParams.email));
           this.dispatch(VisibilityController.actions.showUnknown());
         }
+        if (!!queryParams && !!queryParams.emailAddress && !!queryParams.properName && !!queryParams.topicKey) {
+          console.log('\nTODO: CHECK FOR VALIDITY OF EACH PARAM ESPECIALLY TOPIC KEY\n');
+          this.dispatch(VisibilityController.actions.showInvited());
+        }
       }
 
-      _checkEmail()
-      {
+      _checkEmail() {
         if (this.$.submitEmailForm.validate()) {
           this.dispatch(VisibilityController.actions.showUnknown());
         }
         return;
       }
 
-      logout()
-      {
+      logout() {
         return this.$.fbAuth.signOut();
       }
 
