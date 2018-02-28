@@ -1,4 +1,3 @@
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
@@ -15,33 +14,38 @@
         padding: 10px;
       }
     </style>
-
+    <firebase-auth
+            id="auth" user="{{user}}" on-error="handleError"></firebase-auth>
+    <firebase-query
+            id="abuseLogQuery" path="/abuseLog"></firebase-query>
     <!--<div hidden$="[[!user]]">-->
-      <div class="card">
-        <div class="circle">1</div>
-        <h1>Report an Abuse</h1>
-        <p>Someone subscribed you passively to a topic, from their own email list?</p>
-        <a href="[[rootPath]]unsubscribe" tabindex="-1">
-          <paper-button raised>UNSUBSCRIBE</paper-button>
-        </a>
-        <h1>Heck No, this is abuse!</h1>
-        <p>If someone abused their publishing priviledges at PullModel, we want to know about it!</p>
-        <iron-form id="submitEmailForm">
-          <form action="/" method="get">
-            <paper-input id="emailSubmit" label='Email address that was affected'
-                         always-float-label required auto-validate
-                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
-            <paper-textarea id="abuseDescription" label='Please describe the incident'
-                            required always-float-label></paper-textarea>
-            <paper-button raised on-tap="_checkEmail">Submit</paper-button>
-          </form>
-        </iron-form>
-      </div>
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>Report an Abuse</h1>
+      <p>Someone subscribed you passively to a topic, from their own email list?</p>
+      <a href="[[rootPath]]unsubscribe" tabindex="-1">
+        <paper-button raised>UNSUBSCRIBE</paper-button>
+      </a>
+      <h1>Heck No, this is abuse!</h1>
+      <p>If someone abused their publishing priviledges at PullModel, we want to know about it!</p>
+      <iron-form id="abuseForm">
+        <form action="/" method="get">
+          <paper-input id="email" label='Email address that was affected'
+                       always-float-label required auto-validate
+                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
+          <paper-textarea id="abuseDescription" label='Please describe the incident'
+                          required always-float-label></paper-textarea>
+          <paper-button raised on-tap="_add">Submit</paper-button>
+        </form>
+      </iron-form>
+    </div>
     <!--</div>-->
   </template>
 
   <script>
-    class MyAbuse extends ReduxMixin(Polymer.Element) {
+    class MyAbuse extends ReduxMixin
+
+    (Polymer.Element) {
       static get is() {
         return 'my-abuse';
       }
@@ -54,8 +58,34 @@
           }
         }
       }
+
+      _add() {
+        if (this.$.abuseForm.validate()) {
+          // this.getJSON('https://api.ipify.org?format=jsonp&callback=?', function (data) {
+          //   console.log(JSON.stringify(data, null, 2));
+          // });
+          var newAbuseLogKey = this.$.abuseLogQuery.ref.push().key
+          var abuseLog = {
+            emailAddress: this.$.email.value,
+            abuseDescription: this.$.abuseDescription.value,
+            timeStamp: Date.now()
+          };
+          var abuseLogUpdates = {};
+          abuseLogUpdates["/" + newAbuseLogKey] = abuseLog;
+          this.$.abuseLogQuery.ref.update(abuseLogUpdates);
+          this.$.abuseForm.reset();
+        }
+      }
     }
 
-    window.customElements.define(MyAbuse.is, MyAbuse);
+    window
+      .customElements
+      .define(MyAbuse
+
+          .is
+        ,
+        MyAbuse
+      )
+    ;
   </script>
 </dom-module>

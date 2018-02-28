@@ -33,6 +33,18 @@
     "topicLookup": {
 			".write": "auth !== null",
 			".read": "auth !== null"
+    },
+    "unsubscribeLog": {
+      ".write": true,
+      ".read": false
+    },
+    "trialLog": {
+      ".write": true,
+      ".read": false
+    },
+    "abuseLog": {
+      ".write": true,
+      ".read": false
     }
   }
 }

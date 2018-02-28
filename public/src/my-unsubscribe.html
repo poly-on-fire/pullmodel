@@ -1,4 +1,3 @@
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -14,40 +13,72 @@
         padding: 10px;
       }
     </style>
-
+    <firebase-auth
+            id="auth" user="{{user}}" on-error="handleError"></firebase-auth>
+    <firebase-query
+            id="emailLogQuery" path="/unsubscribeLog"></firebase-query>
     <!--<div hidden$="[[!user]]">-->
-      <div class="card">
-        <div class="circle">1</div>
-        <h1>Unsubscribe Me!</h1>
-        <p>A PullModel publisher can passively subscribe anyone from his own email list, as he/she is (allegedly) already
-        in conversation with that person anyway. PullModel, in this case, is just an extension of his own personal email client.</p>
-        <p>If you would like to block such emails, and make him/her stick to personal emails, place your email address in
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>Unsubscribe Me!</h1>
+      <p>A PullModel publisher can passively subscribe anyone from his own email list, as he/she is (allegedly) already
+        in conversation with that person anyway. PullModel, in this case, is just an extension of his own personal email
+        client.</p>
+      <p>If you would like to block such emails, and make him/her stick to personal emails, place your email address in
         the form below and we'll keep you blocked - by him/her, or anybody!.</p>
-        <p>We will also let him/her know that you've blocked his messages from PullModel.</p>
-        <iron-form id="submitEmailForm">
-          <form action="/" method="get">
-            <paper-input id="emailSubmit" label='Email Address:'
-                         always-float-label required auto-validate
-                         pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
-            <paper-button raised on-tap="_checkEmail">Submit</paper-button>
-          </form>
-        </iron-form>
-      </div>
+      <p>We will also let him/her know that you've blocked his messages from PullModel.</p>
+      <iron-form id="submitEmailForm">
+        <form action="/" method="get">
+          <paper-input id="email" label='Email Address:'
+                       always-float-label required auto-validate
+                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
+          <paper-button raised on-tap="_add">Submit</paper-button>
+        </form>
+      </iron-form>
+    </div>
     <!--</div>-->
   </template>
 
   <script>
-    class MyUnsubscribe extends ReduxMixin(Polymer.Element) {
-      static get is() {
+    class MyUnsubscribe extends ReduxMixin
+
+    (Polymer.Element)
+    {
+      static
+      get
+      is()
+      {
         return 'my-unsubscribe';
       }
 
-      static get properties() {
+      static
+      get
+      properties()
+      {
         return {
           role: {
             type: Object,
             statePath: 'role'
           }
+        }
+      }
+
+      _add()
+      {
+        if (this.$.submitEmailForm.validate()) {
+          var newEmailLogKey = this.$.emailLogQuery.ref.push().key
+          console.log("HI" + newEmailLogKey);
+          var emailLog = {
+            topicName : "Jo Bob Comes to Market|~2018-01-25~|NqKkvcyVvE",
+            emailAddress : this.$.email.value,
+            properName : "FRED",
+            topicKey : "-L3k0axz5cNqKkvcyVvE",
+            timeStamp : Date.now()
+          };
+          var emailLogUpdates = {};
+          emailLogUpdates["/" + newEmailLogKey] = emailLog;
+          this.$.emailLogQuery.ref.update(emailLogUpdates);
+          this.$.submitEmailForm.reset();
         }
       }
     }
