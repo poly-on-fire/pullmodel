@@ -34,26 +34,28 @@
 
     <div class="card" hidden$=[[!user]]>
       <div class="circle">Topic</div>
-      <h3 id="addTitle">Add a New Topic</h3>
       <h3 id="updateTitle" hidden>Update Topic</h3>
       <div class="card">
         <iron-form id="addupdate">
           <form method="get" action="/">
             <poly-on-fire-rtdb-selector id="topicType" field='name'
-                          placeholder='Select option from dropdown button at right.'
-                          dbpath="/topicType" combolabel="Select Topic Type"
-                          error-message="Please select a Topic Type" on-change="isThisWeb"></poly-on-fire-rtdb-selector>
+                                        placeholder='Select option:'
+                                        dbpath="/topicType" combolabel="Add a Topic:"
+                                        error-message="Please select a Topic Type"
+                                        on-change="isThisWeb"></poly-on-fire-rtdb-selector>
             <input id="isWeb" hidden></input>
             <!--<paper-input id="" label=""-->
             <!--required always-float-label></paper-input>-->
             <!--<paper-textarea id="" label=""-->
             <!--required always-float-label></paper-textarea>-->
-            <paper-input id="name" label="Topic Name"
-                         required always-float-label></paper-input>
-            <paper-textarea id="description" label="Description(optional) - What is this topic about?"
-                            required always-float-label></paper-textarea>
-            <div id="hasWeb" class="card" hidden>
-              <p>Lead Capture Page:</p>
+            <div id="commonFields" hidden>
+              <paper-input id="name" label="Topic Name"
+                           required always-float-label></paper-input>
+              <paper-textarea id="description" label="Description(optional) - What is this topic about?"
+                              required always-float-label></paper-textarea>
+            </div>
+            <div id="hasWebA" class="card" hidden>
+              <p id="aTitle">Lead Capture Page:</p>
               <paper-input id="aHeadline" label="Headline"
                            required always-float-label hidden></paper-input>
               <paper-textarea id="aPre" label="Paragraph above video"
@@ -62,7 +64,9 @@
                            required always-float-label hidden></paper-input>
               <paper-textarea id="aPost" label="Paragraph below video"
                               required always-float-label hidden></paper-textarea>
-              <p>Sales Page:</p>
+            </div>
+            <div id="hasWebB" class="card" hidden>
+              <p id="bTitle">Sales Page:</p>
               <paper-input id="bHeadline" label="Headline"
                            required always-float-label hidden></paper-input>
               <paper-textarea id="bPre" label="Paragraph above video"
@@ -73,17 +77,17 @@
                               required always-float-label hidden></paper-textarea>
             </div>
             <input id="key" type="text" name="key" hidden/>
-            <div id="formControls">
+            <div id="formControls" hidden>
               <paper-button raised id="add" on-tap="add">Add</paper-button>
               <paper-button raised id="update" on-tap="update" hidden>Update</paper-button>
               <paper-button raised id="clear" on-tap="clear">Cancel/Clear</paper-button>
             </div>
           </form>
         </iron-form>
-        <hr>
       </div>
 
-      <h3>My Topics</h3>
+      <h3>My Topics:</h3>
+      <p>Topics which I originated.</p>
       <div class="card">
         <div class="topics">
           <ul id="topics-list">
@@ -129,8 +133,12 @@
       }
 
       isThisWeb() {
-        if (this.hasLeadCapture(this.$.topicType.value)) {
-          this.$.hasWeb.hidden = false;
+        if (this.hasDualWeb(this.$.topicType.value)) {
+          this.$.hasWebA.hidden = false;
+          this.$.hasWebB.hidden = false;
+          this.$.commonFields.hidden = false;
+          this.$.aTitle.innerHTML = 'Engagement Web Page';
+          this.$.bTitle.innerHTML = 'Closer Web Page';
           this.$.aHeadline.hidden = false;
           this.$.aPre.hidden = false;
           this.$.aVideo.hidden = false;
@@ -147,16 +155,41 @@
           this.$.bPre.required = true;
           this.$.bVideo.required = true;
           this.$.bPost.required = true;
-        } else {
-          this.$.hasWeb.hidden = true;
+          this.$.formControls.hidden = false;
+        } else if (this.hasSingleWeb(this.$.topicType.value)) {
+          this.$.commonFields.hidden = false;
+          this.$.hasWebA.hidden = false;
+          this.$.hasWebB.hidden = true;
+          this.$.aTitle.innerHTML = 'Web Page';
           this.$.aHeadline.hidden = false;
           this.$.aPre.hidden = false;
           this.$.aVideo.hidden = false;
           this.$.aPost.hidden = false;
-          this.$.bHeadline.hidden = false;
-          this.$.bPre.hidden = false;
-          this.$.bVideo.hidden = false;
-          this.$.bPost.hidden = false;
+          this.$.bHeadline.hidden = true;
+          this.$.bPre.hidden = true;
+          this.$.bVideo.hidden = true;
+          this.$.bPost.hidden = true;
+          this.$.aHeadline.required = true;
+          this.$.aPre.required = true;
+          this.$.aVideo.required = true;
+          this.$.aPost.required = true;
+          this.$.bHeadline.required = false;
+          this.$.bPre.required = false;
+          this.$.bVideo.required = false;
+          this.$.bPost.required = false;
+          this.$.formControls.hidden = false;
+        } else if (this.hasNoWeb(this.$.topicType.value)) {
+          this.$.commonFields.hidden = false;
+          this.$.hasWebA.hidden = true;
+          this.$.hasWebB.hidden = true;
+          this.$.aHeadline.hidden = true;
+          this.$.aPre.hidden = true;
+          this.$.aVideo.hidden = true;
+          this.$.aPost.hidden = true;
+          this.$.bHeadline.hidden = true;
+          this.$.bPre.hidden = true;
+          this.$.bVideo.hidden = true;
+          this.$.bPost.hidden = true;
           this.$.aHeadline.required = false;
           this.$.aPre.required = false;
           this.$.aVideo.required = false;
@@ -165,19 +198,33 @@
           this.$.bPre.required = false;
           this.$.bVideo.required = false;
           this.$.bPost.required = false;
-          this.$.aHeadline.value = null;
-          this.$.aPre.value = null;
-          this.$.aVideo.value = null;
-          this.$.aPost.value = null;
-          this.$.bHeadline.value = null;
-          this.$.bPre.value = null;
-          this.$.bVideo.value = null;
-          this.$.bPost.value = null;
+          this.$.formControls.hidden = false;
+        } else {
+          this.$.commonFields.hidden = true;
+          this.$.hasWebA.hidden = true;
+          this.$.hasWebB.hidden = true;
+          this.$.formControls.hidden = true;
         }
       }
 
-      hasLeadCapture(val) {
+      hasDualWeb(val) {
         if (typeof val !== undefined && val !== "undefined" && val !== "null" && val && (val.includes("Dual"))) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      hasSingleWeb(val) {
+        if (typeof val !== undefined && val !== "undefined" && val !== "null" && val && (val.includes("Single"))) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      hasNoWeb(val) {
+        if (typeof val !== undefined && val !== "undefined" && val !== "null" && val && (val.includes("No"))) {
           return true;
         } else {
           return false;
@@ -196,7 +243,7 @@
           var newTopicKey = this.$.queryTopics.ref.push().key;
           let friendlyName = this._friendlyName(newTopicKey);
           let leadLink = null;
-          if (this.hasLeadCapture(this.$.topicType.value)) {
+          if (this.hasDualWeb(this.$.topicType.value)) {
             leadLink = "https://clouddancer.info/z" + newTopicKey + "c.html";
           }
           let postData = {
@@ -206,16 +253,21 @@
             timestamp: timestamp
           }
 
-          if (this.$.hasWeb.hidden == false) {
-            postData.aHeadline = this.$.aHeadline.value ? encodeURIComponent(this.$.aHeadline.value) : "",
-              postData.aPre = this.$.aPre.value ? encodeURIComponent(this.$.aPre.value) : "",
-              postData.aVideo = this.$.aVideo.value ? encodeURIComponent(this.$.aVideo.value) : "",
-              postData.aPost = this.$.aPost.value ? encodeURIComponent(this.$.aPost.value) : "",
-              postData.bHeadline = this.$.bHeadline.value ? encodeURIComponent(this.$.bHeadline.value) : "",
-              postData.bPre = this.$.bPre.value ? encodeURIComponent(this.$.bPre.value) : "",
-              postData.bVideo = this.$.bVideo.value ? encodeURIComponent(this.$.bVideo.value) : "",
-              postData.bPost = this.$.bPost.value ? encodeURIComponent(this.$.bPost.value) : "",
+          // postData.aPre = this.$.aPre.value ? encodeURIComponent(this.$.aPre.value) : "",
+          if (this.$.hasWebA.hidden == false) {
+            postData.aHasWeb = true,
+              postData.aHeadline = encodeURIComponent(this.$.aHeadline.value),
+              postData.aPre = encodeURIComponent(this.$.aPre.value),
+              postData.aVideo = encodeURIComponent(this.$.aVideo.value),
+              postData.aPost = encodeURIComponent(this.$.aPost.value),
               postData.leadCaptureLink = leadLink
+          }
+          if (this.$.hasWebB.hidden == false) {
+            postData.bHasWeb = true,
+              postData.bHeadline = encodeURIComponent(this.$.bHeadline.value),
+              postData.bPre = encodeURIComponent(this.$.bPre.value),
+              postData.bVideo = encodeURIComponent(this.$.bVideo.value),
+              postData.bPost = encodeURIComponent(this.$.bPost.value)
           }
           let updates = {}
           updates["/" + newTopicKey] = postData;
@@ -235,7 +287,6 @@
           let crossRefUpdates = {};
           crossRefUpdates["/" + friendlyName] = crossRefData;
           this.$.queryTopicName.ref.update(crossRefUpdates);
-
           this.$.name.value = null;
           this.$.description.value = null;
           this.$.aHeadline.value = null;
@@ -249,8 +300,8 @@
           this.$.key.hidden = true;
           this.$.update.hidden = true;
           this.$.add.hidden = false;
-          this.$.updateTitle.hidden = true;
-          this.$.addTitle.hidden = false;
+          this.$.topicType.value = null;
+          this.isThisWeb();
         }
         return;
       }
@@ -271,63 +322,7 @@
         this.$.key.hidden = true;
         this.$.add.hidden = false;
         this.$.update.hidden = true;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
         this.$.addupdate.reset()
-        return;
-      }
-
-      badd() {
-        if (this.$.addupdate.validate()) {
-          let newTopicsKey = this.$.queryTopics.ref.push().key
-          // var friendlyName = this.friendlyName(newTopicsKey, this.$.category.value, this.$.topicType.value);
-          let leadLink = null;
-          if (this.hasLeadCapture(this.$.topicType.value)) {
-            leadLink = "https://clouddancer.info/z" + newTopicsKey + "c.html";
-          }
-          let topicData = {
-            // category: this.$.category.value,
-            topicType: this.$.topicType.value,
-            // name: friendlyName,
-            leadCaptureLink: leadLink,
-            timestamp: Date.now()
-          };
-          let crossRefData = {
-            topicKey: newTopicsKey
-          };
-          let desc = this.$.description.value;
-          if (typeof desc !== "undefined" && desc !== "undefined" && desc !== "null" && desc) {
-            topicData.description = desc;
-          }
-          if (this.$.hasWeb.hidden == false) {
-            topicData.aHeadline = this.$.aHeadline.value;
-            topicData.aPre = encodeURIComponent(this.$.aPre.value);
-            topicData.aVideo = encodeURIComponent(this.$.aVideo.value);
-            topicData.aPost = encodeURIComponent(this.$.aPost.value);
-            topicData.bHeadline = this.$.bHeadline.value;
-            topicData.bPre = encodeURIComponent(this.$.bPre.value);
-            topicData.bVideo = encodeURIComponent(this.$.bVideo.value);
-            topicData.bPost = encodeURIComponent(this.$.bPost.value);
-          }
-          let topicUpdates = {};
-          topicUpdates["/" + newTopicsKey] = topicData;
-          this.$.queryTopics.ref.update(topicUpdates);
-          // var topicLookupData = {
-          //     sponsorKey: this.user.uid,
-          //     sponsorNsId: window.cdProfile.nsId,
-          //     sponsorName: window.cdProfile.properName
-          // };
-          let topicLookupUpdates = {};
-          topicLookupUpdates["/" + newTopicsKey] = topicLookupData;
-          this.$.queryTopicLookup.ref.update(topicLookupUpdates);
-          let crossRefUpdates = {};
-          crossRefUpdates["/" + friendlyName] = crossRefData;
-          this.$.queryTopicName.ref.update(crossRefUpdates);
-
-          this.$.name.value = null;
-          this.$.description.value = null;
-          this.$.addupdate.reset();
-        }
         return;
       }
 
@@ -364,7 +359,6 @@
         this.$.link.value = aTopic.link;
         this.$.add.hidden = true;
         this.$.update.hidden = false;
-        this.$.addTitle.hidden = true;
         this.$.updateTitle.hidden = false;
       }
 
@@ -401,6 +395,14 @@
       }
     }
 
-    window.customElements.define(ManageTopics.is, ManageTopics);
+    window
+      .customElements
+      .define(ManageTopics
+
+          .is
+        ,
+        ManageTopics
+      )
+    ;
   </script>
 </dom-module>
