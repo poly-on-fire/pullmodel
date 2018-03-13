@@ -14,18 +14,24 @@
       }
     </style>
 
+    <firebase-auth
+            id="auth" user="{{user}}" on-error="handleError"></firebase-auth>
+    <firebase-query
+            id="returningLogQuery" path="/returningLog"></firebase-query>
+
     <!--<div hidden$="[[!user]]">-->
     <div class="card">
       <div class="circle">1</div>
       <h1>Returning User, from Another Device?</h1>
-      <p>If you've already successfully logged in from another device - but not this one - type in the same email address
-      here to find your information and log in:</p>
+      <p>If you've already successfully logged in from another device - but not this one - type in the same email
+        address
+        here to find your information and log in:</p>
       <iron-form id="submitEmailForm">
         <form action="/" method="get">
           <paper-input id="emailSubmit" label='Email Address:'
                        always-float-label required auto-validate
                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></paper-input>
-          <paper-button raised on-tap="_checkEmail">Submit</paper-button>
+          <paper-button raised on-tap="_add">Submit</paper-button>
         </form>
       </iron-form>
     </div>
@@ -35,24 +41,31 @@
   <script>
     class MyReturning extends ReduxMixin
 
-    (Polymer.Element)
-    {
-      static
-      get
-      is()
-      {
+    (Polymer.Element) {
+      static get is() {
         return 'my-returning';
       }
 
-      static
-      get
-      properties()
-      {
+      static get properties() {
         return {
           role: {
             type: Object,
             statePath: 'role'
           }
+        }
+      }
+
+      _add() {
+        if (this.$.submitEmailForm.validate()) {
+          var newReturningLogKey = this.$.returningLogQuery.ref.push().key
+          var returningLog = {
+            emailAddress: this.$.emailSubmit.value,
+            timeStamp: Date.now()
+          };
+          var returningLogUpdates = {};
+          returningLogUpdates["/" + newReturningLogKey] = returningLog;
+          this.$.returningLogQuery.ref.update(returningLogUpdates);
+          this.$.submitEmailForm.reset();
         }
       }
     }

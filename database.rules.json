@@ -42,6 +42,10 @@
       ".write": true,
       ".read": false
     },
+    "returningLog": {
+      ".write": true,
+      ".read": false
+    },
     "abuseLog": {
       ".write": true,
       ".read": false
