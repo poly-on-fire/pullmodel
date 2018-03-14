@@ -38,7 +38,7 @@
       ".write": true,
       ".read": false
     },
-    "trialLog": {
+    "emailLog": {
       ".write": true,
       ".read": false
     },

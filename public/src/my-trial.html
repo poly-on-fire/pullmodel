@@ -17,17 +17,17 @@
     <firebase-auth
             id="auth" user="{{user}}" on-error="handleError"></firebase-auth>
     <firebase-query
-            id="trialLogQuery" path="/trialLog"></firebase-query>
+            id="emailLogQuery" path="/emailLog"></firebase-query>
     <!--<div hidden$="[[!user]]">-->
     <div class="card">
       <div class="circle">1</div>
-      <h1>To Request Your Own Trial Subscription</h1>
+      <h1>To Request Your Own Email Subscription</h1>
       <p>This subscribes you to an example topic. You would have full access to the subscriber functionality of this
         site, even the ability to promote yourself to a (non-sending) publisher. </p>
       <p>You would receive 3 example email
         messages in the 3 days subsequent to this </p>
 
-      <iron-form id="trialForm">
+      <iron-form id="emailForm">
         <form action="/" method="get">
           <paper-input id="email" label='Email Address:'
                        always-float-label required auto-validate
@@ -58,19 +58,19 @@
       }
 
       _add() {
-        if (this.$.trialForm.validate()) {
-          var newTrialLogKey = this.$.trialLogQuery.ref.push().key
-          var trialLog = {
+        if (this.$.emailForm.validate()) {
+          var newEmailLogKey = this.$.emailLogQuery.ref.push().key
+          var emailLog = {
             topicName: "Jo Bob Comes to Market|~2018-01-25~|NqKkvcyVvE",
             emailAddress: this.$.email.value,
             properName: this.$.properName.value,
             topicKey: "-L3k0axz5cNqKkvcyVvE",
             timeStamp: Date.now()
           };
-          var trialLogUpdates = {};
-          trialLogUpdates["/" + newTrialLogKey] = trialLog;
-          this.$.trialLogQuery.ref.update(trialLogUpdates);
-          this.$.trialForm.reset();
+          var emailLogUpdates = {};
+          emailLogUpdates["/" + newEmailLogKey] = emailLog;
+          this.$.emailLogQuery.ref.update(emailLogUpdates);
+          this.$.emailForm.reset();
         }
       }
     }
