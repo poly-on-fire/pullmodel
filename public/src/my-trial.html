@@ -70,7 +70,9 @@
           var emailLogUpdates = {};
           emailLogUpdates["/" + newEmailLogKey] = emailLog;
           this.$.emailLogQuery.ref.update(emailLogUpdates);
-          this.$.emailForm.reset();
+          this.$.email.value = null;
+          this.$.properName.value = null;
+          this.$.emailForm.reset();//does not appear to be working
         }
       }
     }
