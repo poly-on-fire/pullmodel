@@ -10,10 +10,6 @@
         "function": "app"
       },
       {
-        "source": "/dogleg",
-        "function": "app"
-      },
-      {
         "source": "**/!(*.js|*.html|*.css|*.json|*.svg|*.png|*.jpg|*.jpeg)",
         "destination": "/index.html"
       }

@@ -179,8 +179,8 @@
               this.dispatch(VisibilityController.actions.showSuperAdmin());
               break;
             default:
-              console.log('\nWOOPS!\nLEAVING VC.ON ROLE WITH DEFAULT\n');
-              thistr.dispatch(VisibilityController.actions.showAnonymous());
+              // console.log('\nLEAVING VC.ON ROLE WITH DEFAULT\n');
+              this.dispatch(VisibilityController.actions.showAnonymous());
           }
         }
       }

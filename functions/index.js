@@ -27,10 +27,6 @@ app.get('/webhook/', function(req, res){
   }
 });
 
-app.get('/dogleg/', function(req, res){
-    res.send("hi there");
-});
-
 app.post('/webhook/', function(req, res){
   let token = req.query['hub.verify_token'];
   let mode = req.query['hub.mode'];
