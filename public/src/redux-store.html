@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer-redux/polymer-redux.html"/>
 
 <script>
-  const initialState = {role: {show: {'a': true}}};
+  const initialState = {role: {'a': true}};
 
   const reducer = (state, action) => {
     // console.log("\nENTERING REDUCER WITH\n" + JSON.stringify(state) + '\n' + action.type);
@@ -14,90 +14,101 @@
     var returnValue = initialState;
 
     switch (type) {
+      case 'REPLACE':
+        if (!!payload) {
+          returnValue = payload;
+        } else {
+          alert("PLEASE ALERT PETE application error pete@datafundamentals.com");
+        }
+        break;
       case 'SHOW_ANONYMOUS':
         returnValue =
-          {role: {show: {'a': true}}};
+          {role: {'a': true}};
         break;
       case 'SHOW_PASSIVE':
         returnValue =
-          {role: {show: {'b': true}}};
+          {role: {'b': true}};
         break;
       case 'SHOW_UNKNOWN':
         returnValue =
-          {role: {show: {'b': true}}};
+          {role: {'b': true}};
         break;
       case 'SHOW_INVITED':
         returnValue =
-          {role: {show: {'b': true}}};
+          {role: {'b': true}};
         break;
       case 'SHOW_PASSIVE_USER':
         returnValue =
-          {role: {show: {'c': true, 'd': true}}};
+          {role: {'c': true, 'd': true}};
         break;
       case 'SHOW_UNKNOWN_USER':
         returnValue =
-          {role: {show: {'d': true}}};
+          {role: {'d': true}};
         break;
       case 'SHOW_SUBSCRIBER':
         returnValue =
-          {role: {show: {'d': true, 'e': true}}};
+          {role: {'d': true, 'e': true}};
+        break;
+      case 'SHOW_PENDING_LEADER':
+        returnValue =
+          {role: {'d': true, 'e': true, 'f': true}};
         break;
       case 'SHOW_LEADER':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 'g': true}}};
+          {role: {'d': true, 'e': true, 'g': true}};
         break;
       case 'SHOW_ADMIN':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true}}};
+          {role: {'d': true, 'e': true, 'g': true, 'h': true}};
         break;
       case 'SHOW_SUPER_ADMIN':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true, 'j': true, 's': true}}};
+          {role: {'d': true, 'e': true, 'g': true, 'h': true, 'j': true, 's': true}};
         break;
       case 'DISPLAY_ANONYMOUS':
         returnValue =
-          {role: {show: {'a': true, 's': true}}};
+          {role: {'a': true, 's': true}};
         break;
       case 'DISPLAY_PASSIVE':
         returnValue =
-          {role: {show: {'b': true, 's': true}}};
+          {role: {'b': true, 's': true}};
         break;
       case 'DISPLAY_UNKNOWN':
         returnValue =
-          {role: {show: {'b': true, 's': true}}};
+          {role: {'b': true, 's': true}};
         break;
       case 'DISPLAY_INVITED':
         returnValue =
-          {role: {show: {'b': true, 's': true}}};
+          {role: {'b': true, 's': true}};
         break;
       case 'DISPLAY_PASSIVE_USER':
         returnValue =
-          {role: {show: {'c': true, 'd': true, 's': true}}};
+          {role: {'c': true, 'd': true, 's': true}};
         break;
       case 'DISPLAY_UNKNOWN_USER':
         returnValue =
-          {role: {show: {'d': true, 's': true}}};
+          {role: {'d': true, 's': true}};
         break;
       case 'DISPLAY_SUBSCRIBER':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 's': true}}};
+          {role: {'d': true, 'e': true, 's': true}};
         break;
       case 'DISPLAY_LEADER':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 'g': true, 's': true}}};
+          {role: {'d': true, 'e': true, 'g': true, 's': true}};
         break;
       case 'DISPLAY_ADMIN':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true, 's': true}}};
+          {role: {'d': true, 'e': true, 'g': true, 'h': true, 's': true}};
         break;
       case 'DISPLAY_SUPER_ADMIN':
         returnValue =
-          {role: {show: {'d': true, 'e': true, 'g': true, 'h': true, 'j': true, 's': true}}};
+          {role: {'d': true, 'e': true, 'g': true, 'h': true, 'j': true, 's': true}};
         break;
       default:
         returnValue = initialState;
     }
-    // console.log("\nLEAVING REDUCER WITH\n" + JSON.stringify(returnValue));
+    // console.log("\nLEAVING REDUCER WITH RETURN VAL\n" + returnValue + '\n' + JSON.stringify(returnValue) + "\nINPUT OF\n" + payload + "\n" + JSON.stringify(payload));
     return returnValue;
   };
 

@@ -23,7 +23,7 @@
           <paper-button raised>REQUEST SUPPORT</paper-button>
         </a>
       </div>
-      <div hidden$=[[!role.show.b]] class="card">
+      <div hidden$=[[!role.b]] class="card">
         <p>Log back in</p>
         <a href="[[rootPath]]logins" tabindex="-1">
           <paper-button raised>LOG IN PAGE</paper-button>
@@ -66,9 +66,7 @@
   </template>
 
   <script>
-    class MyHelpOptions extends ReduxMixin
-
-    (Polymer.Element) {
+    class MyHelpOptions extends ReduxMixin(Polymer.Element) {
       static get is() {
         return 'my-help-options';
       }

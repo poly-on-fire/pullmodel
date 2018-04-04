@@ -23,11 +23,10 @@
     </firebase-auth>
     <firebase-auth id="githubAuth" user="{{user}}" provider="github" on-error="handleError">
     </firebase-auth>
-    <iron-cookie id="cookie" name="cookie" value="{{cookieValue}}" uri-safe></iron-cookie>
     <visibility-controller user=[[user]]></visibility-controller>
     <div class="card">
       <div class="circle">Login</div>
-      <div hidden$=[[role.show.b]]>
+      <div hidden$=[[role.b]]>
         <div hidden$="[[user]]">
           <p>Login requires an invitation</p>
           <p>If you already had an invitation, re-click on the same link in your email.</p>
@@ -41,7 +40,7 @@
           <p>To log out, click SIGN OUT on bottom of menu.</p>
         </div>
       </div>
-      <div hidden$=[[!role.show.b]]>
+      <div hidden$=[[!role.b]]>
         <h1>&nbsp;Signing in to pullModel.com:</h1>
         <div hidden$="[[user]]">
           <div class="card">
@@ -70,9 +69,7 @@
   </template>
 
   <script>
-    class MyLogins extends ReduxMixin
-
-    (Polymer.Element) {
+    class MyLogins extends ReduxMixin(Polymer.Element) {
       static get is() {
         return 'my-logins';
       }

@@ -2,12 +2,16 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html"/>
+<link rel="import" href="../bower_components/iron-cookie/iron-cookie.html">
 <link rel="import" href="./redux-store.html">
 
 <dom-module id="visibility-controller">
   <template>
-    <firebase-document id="queryVisibility" path="/users/[[user.uid]]/role" data="{{role}}" disabled>
+    <firebase-document id="queryVisibility" path="/users/[[user.uid]]/role" data="{{dbRole}}" disabled>
     </firebase-document>
+    <firebase-document id="loginsDocument" path="/users/[[user.uid]]/logins">
+    </firebase-document>
+    <iron-cookie id="rolecookie" name='role' value="{{cookieValue}}" uri-safe></iron-cookie>
   </template>
 
   <script>
@@ -20,17 +24,38 @@
         return {
           role: {
             type: String,
-            observer: '_onRole'
+            statePath: 'role'
+          },
+          dbRole: {
+            type: String,
+            observer: '_onDbRole'
           },
           user: {
             type: Object,
             observer: '_onUser'
+          },
+          queryParams: {
+            type: Object,
+            observer: '_onParams'
+          },
+          cookieValue: {
+            type: String
+          },
+          accessLogged: {
+            type: Boolean,
+            value: false
           }
         }
       }
 
       static get actions() {
         return {
+          replace(payload) {
+            return {
+              type: 'REPLACE',
+              payload: payload
+            }
+          },
           showAnonymous() {
             return {
               type: 'SHOW_ANONYMOUS'
@@ -134,58 +159,220 @@
         }
       }
 
-      // without this, fires before it is ready
       _onUser() {
+        // without this, fires before it is ready
         if (!!this.user && !!this.user.uid) {
+          this.logAccess();
           this.$.queryVisibility.disabled = false;
+        }
+        this._reconcileConflicting();
+      }
+
+      _onDbRole() {
+        if (!!this.user && !!this.dbRole && !!this.user.uid) {
+          this._reconcileConflicting();
         }
       }
 
-      _onRole() {
-        let role = this.role;
-        if (!!role && JSON.stringify(role)!='{}') {
-          switch (role) {
-            case 'anonymous':
-              this.dispatch(VisibilityController.actions.showAnonymous());
-              break;
-            case 'passive':
-              this.dispatch(VisibilityController.actions.showPassive());
-              break;
-            case 'unknown':
-              this.dispatch(VisibilityController.actions.showUnknown());
-              break;
-            case 'invited':
-              this.dispatch(VisibilityController.actions.showInvited());
-              break;
-            case 'passiveUser':
-              this.dispatch(VisibilityController.actions.showPassiveUser());
-              break;
-            case 'unknownUser':
-              this.dispatch(VisibilityController.actions.showUnknownUser());
-              break;
-            case 'subscriber':
-              this.dispatch(VisibilityController.actions.showSubscriber());
-              break;
-            case 'pendingLeader':
-              this.dispatch(VisibilityController.actions.showPendingLeader());
-              break;
-            case 'leader':
-              this.dispatch(VisibilityController.actions.showLeader());
-              break;
-            case 'admin':
-              this.dispatch(VisibilityController.actions.showAdminTest());
-              break;
-            case 'superAdmin':
-              this.dispatch(VisibilityController.actions.showSuperAdmin());
-              break;
-            default:
-              // console.log('\nLEAVING VC.ON ROLE WITH DEFAULT\n');
-              this.dispatch(VisibilityController.actions.showAnonymous());
+      _onParams(queryParams) {
+        if (this._isValidParams(queryParams) && !this.user) {
+          this._reconcileConflicting();
+        }
+      }
+
+      /*
+        NOTE TO MAINTAINER: This method is potentially the screwiest method in the class because it has to account
+        for every expected and some oddball unexpected combinations of queryParams, user, role, dbRole, cookieValue
+        and gosh knows what else, and then react appropriately. It is especially prone to logic errors due to edge
+        cases that were not anticipated properly, not to mention untested normal stuff that just gets coded wrong.
+        Only conditional logic should appear in this method, that is confusing enough. All other logic should be
+        shuttled off into other functions to keep this ridiculuous conditional code as easy to read as possible
+
+        Another objective was to keep all of the side effects (such as writes to db or cookie) in one place,
+        as it seems to be hard to keep this controller from going all over the place otherwise
+       */
+      _reconcileConflicting() {
+        //if already recognized as a user who has logged in
+        let roleObject = null;
+        if (this._hasDbRole()) {
+          roleObject = {"role": this.dbRole};
+          this.dispatch(VisibilityController.actions.replace(roleObject));
+          this.updateCookie(roleObject);
+        } else if (this._isNotUserWithOutCookie()) {
+          roleObject = {"role": {'a': true}};
+          this.updateCookie(roleObject);
+        } else if (this._isNotUserWithCookie()) {
+          roleObject = JSON.parse(this.cookieValue);
+          if(this._isBcookie(roleObject)){
+            this.dispatch(VisibilityController.actions.replace(roleObject));
+          }else  if (this._isNoUserDrole(roleObject)) {
+            roleObject = {"role": {'b': true}};
+            this.dispatch(VisibilityController.actions.replace(roleObject));
+            this.updateCookie(roleObject);
+          } else if (this._isValidParams(this.queryParams)) {
+            this.dispatch(VisibilityController.actions.showInvited());
+            this.updateCookie(this.role);
+          }
+        } else if (this._shouldUpdgradeToSubscriber()) {
+          this.dispatch(VisibilityController.actions.showSubscriber());
+          this.dbRole = this.role;
+          this.updateCookie(this.role);
+        } else if (this._logoutCondition()) {
+          this.updateCookie(this.role);
+        }
+      }
+
+      _hasDbRole() {
+        if (!!this.user
+          && !!this.user.uid
+          && !!this.dbRole
+          && (!!this.dbRole.d || !!this.dbRole.e)) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+
+      _isNotUserWithCookie() {
+        if (!this.user
+          && !!this.cookieValue) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isNotUserWithOutCookie(){
+        if (!this.user
+          && !this.cookieValue) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isBcookie(roleObject){
+        if (roleObject.role.b) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isNoUserDrole(roleObject){
+        if (roleObject.role.d && !this.user) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isValidParams(queryParams) {
+        if (
+          !!queryParams
+          && this._isValidEmailAddress(queryParams.emailAddress)
+          && this._isValidProperName(queryParams.properName)
+          && this._isValidTopicKey(queryParams.topicKey)
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isValidEmailAddress(emailAddress) {
+        if (!!emailAddress) {
+          //TODO, call regex
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isValidProperName(properName) {
+        if (!!properName) {
+          //TODO, call regex
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _isValidTopicKey(topicKey) {
+        if (!!topicKey) {
+          console.log('\nTODO: PLEASE CHECK FOR VALIDITY OF EACH PARAM ESPECIALLY TOPIC KEY\n');
+          //TODO, call firebase function
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _shouldUpdgradeToSubscriber() {
+        if (!!this.role && !!this.role.b && !!this.user) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      _logoutCondition() {
+        if (!this.user && JSON.parse(this.cookieValue).role.d) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      updateCookie(aRole) {
+        let theRole = null;
+        if (!!aRole.role) {
+          theRole = aRole;
+        } else {
+          theRole = {
+            "role": aRole
           }
         }
+        this.cookieValue = JSON.stringify(theRole);
+      }
+
+      logAccess() {
+        if (!this.accessLogged) {
+          this.accessLogged = true;
+          //TODO figure out why this fires multiple times. Timeout required? I did some debounce thing somewhere but now I can't remember where
+          console.log('\nRECORDING LOGIN WITH TIMESTAMP WHY TWICE DEBOUNCE? ' + this.accessLogged);
+          var postData = {
+            date: this.yyyymmdd(),
+            timestamp: Date.now()
+          }
+          var newProductKey = this.$.loginsDocument.ref.push().key
+          var updates = {}
+          updates["/" + newProductKey] = postData;
+          this.$.loginsDocument.ref.update(updates);
+        }
+        return;
+      }
+
+      yyyymmdd() {
+        let d = new Date(),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
       }
     }
 
-    window.customElements.define(VisibilityController.is, VisibilityController);
+    window
+      .customElements
+      .define(VisibilityController
+
+          .is
+        ,
+        VisibilityController
+      )
+    ;
   </script>
 </dom-module>

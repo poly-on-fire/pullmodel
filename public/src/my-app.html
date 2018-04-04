@@ -23,7 +23,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html"/>
-<link rel="import" href="../bower_components/iron-cookie/iron-cookie.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
@@ -118,10 +117,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-auth>
     <firebase-auth id="githubAuth" user="{{user}}" provider="github" on-error="handleError">
     </firebase-auth>
-    <iron-cookie id="cookie" name="cookie" value="{{cookieValue}}" uri-safe></iron-cookie>
-    <visibility-controller user=[[user]]></visibility-controller>
+    <visibility-controller user=[[user]] query-params=[[queryParams]]></visibility-controller>
 
-    <!--<div hidden$="[[!role.show.a]]">-->
+    <!--<div hidden$="[[!role.a]]">-->
     <!--<div class="card" hidden$="[[user]]">-->
     <!--<p>Access to pullModel.com is limited to invitations or:</p>-->
     <!--<ul>-->
@@ -152,7 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--</div>-->
 
     <!--<div hidden$="[[user]]">-->
-    <!--<div class="card" hidden$=[[!role.show.b]]>-->
+    <!--<div class="card" hidden$=[[!role.b]]>-->
     <!--<p>If you're returning but from another device, please make sure you login from the same provider! <br>In other-->
     <!--words don't log in with Twitter on one device and Facebook from another, and expect your preferences to be-->
     <!--maintained!</p>-->
@@ -206,40 +204,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a name="trial" href="[[rootPath]]trial">Request a Trial</a>
               <a name="unsubscribe" href="[[rootPath]]unsubscribe">Unsubscribe Me</a>
               <a name="abuse" href="[[rootPath]]abuse">Report Abuse</a>
-              <div hidden$=[[!role.show.b]]>
+              <div hidden$=[[!role.b]]>
                 <a name="logins" href="[[rootPath]]logins">Social Logins</a>
               </div>
             </div>
-            <div hidden$=[[!role.show.d]]><a name="support-request" href="[[rootPath]]support-request">Request
+            <div hidden$=[[!role.d]]><a name="support-request" href="[[rootPath]]support-request">Request
               Support</a></div>
-            <div hidden$=[[!role.show.d]]><a name="user-profile" href="[[rootPath]]user-profile">My Profile</a>
+            <div hidden$=[[!role.d]]><a name="user-profile" href="[[rootPath]]user-profile">My Profile</a>
             </div>
             <!-- should be e reset to d for vaadin inspection-->
-            <div hidden$=[[!role.show.d]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My
+            <div hidden$=[[!role.d]]><a name="manage-subscriptions" href="[[rootPath]]manage-subscriptions">My
               Subscriptions</a>
             </div>
             <!-- should be g reset to d for vaadin inspection-->
-            <div hidden$=[[!role.show.d]]><a name="manage-topics" href="[[rootPath]]manage-topics">
+            <div hidden$=[[!role.d]]><a name="manage-topics" href="[[rootPath]]manage-topics">
               Topics You Message About</a></div>
             <!-- should be g reset to d for vaadin inspection-->
-            <div hidden$=[[!role.show.d]]><a name="manage-messages" href="[[rootPath]]manage-messages">
+            <div hidden$=[[!role.d]]><a name="manage-messages" href="[[rootPath]]manage-messages">
               Messages You Publish</a></div>
-            <div hidden$=[[!role.show.d]]><a name="topic-groups" href="[[rootPath]]topic-groups">
+            <div hidden$=[[!role.d]]><a name="topic-groups" href="[[rootPath]]topic-groups">
               Group Subscribes</a></div>
-            <div hidden$=[[!role.show.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
+            <div hidden$=[[!role.g]]><a name="subscriber-groups" href="[[rootPath]]subscriber-groups">Add Passive
               Groups</a></div>
-            <div hidden$=[[!role.show.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe
+            <div hidden$=[[!role.g]]><a name="manage-subscribers" href="[[rootPath]]manage-subscribers">Subscribe
               Groups Passively</a>
             </div>
-            <div hidden$=[[!role.show.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
+            <div hidden$=[[!role.h]]><a name="manage-requests" href="[[rootPath]]manage-requests">Admin Support
               Requests</a></div>
-            <div hidden$=[[!role.show.h]]><a name="admin-profiles" href="[[rootPath]]admin-profiles">Admin the
+            <div hidden$=[[!role.h]]><a name="admin-profiles" href="[[rootPath]]admin-profiles">Admin the
               Profiles</a></div>
-            <div hidden$=[[!role.show.h]]><a name="manage-faq" href="[[rootPath]]manage-faq">Admin the FAQ</a></div>
-            <div hidden$=[[!role.show.j]]><a name="security-groups"
-                                             href="[[rootPath]]security-groups">security-groups</a></div>
-            <div hidden$=[[!role.show.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
-            <div hidden$=[[!role.show.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
+            <div hidden$=[[!role.h]]><a name="manage-faq" href="[[rootPath]]manage-faq">Admin the FAQ</a></div>
+            <div hidden$=[[!role.j]]><a name="security-groups"
+                                        href="[[rootPath]]security-groups">security-groups</a></div>
+            <div hidden$=[[!role.j]]><a name="topic-types" href="[[rootPath]]topic-types">topic-types</a></div>
+            <div hidden$=[[!role.s]]><a name="super-admin" href="[[rootPath]]super-admin">Super Admin</a></div>
             <div hidden$="[[!user]]">
               <span hidden$="[[!user]]">&nbsp;&nbsp;<paper-button raised on-tap="logout">Sign Out</paper-button></span>
             </div>
@@ -294,16 +292,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class MyApp extends ReduxMixin
-
-    (Polymer.Element) {
+    class MyApp extends ReduxMixin(Polymer.Element) {
       static get is() {
         return 'my-app';
       }
 
       static get properties() {
         return {
-          user: Object,
+          user: {
+            type: Object
+          },
           page: {
             type: String,
             reflectToAttribute: true,
@@ -316,38 +314,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           rootPath: String,
           role: {
             type: Object,
-            statePath: 'role',
-            observer: '_onRole'
+            statePath: 'role'
           },
+          // queryParams passed to VisibilityController who deals with it appropriately
           queryParams: {
-            type: Object,
-            observer: '_paramsChanged'
-          },
-          cookieValue: {
-            type: String
+            type: Object
           }
         };
-      }
-
-      _onRole() {
-        if (!!this.user) {
-          // console.log("\nENTERING MY APP ON ROLE\n"+this.user.uid+'\n'+JSON.stringify(this.role));
-          // regardless of what happens milliseconds later, at least the user
-          // has earned promotion to unknownUser
-          // if (!!this.role && !!this.role.show && !this.role.show.b) {
-          //   this.dispatch(VisibilityController.actions.showUnknownUser());
-          // }
-          // FUTURE TODO in case I want to make the form more responsive than firebase
-          // get a temporary role from the cookie?
-          // frankly this is probably not worth the effort?
-          // because firebase will always be fast enough, or if it is slow
-          // then I would not get this far because firebase auth would have been slow
-          //   this.role = JSON.parse(this.$.cookie.value);
-          // }else{
-          //   this.$.cookie.value = JSON.stringify(this.role);
-          // }
-          // console.log("\nUSER\n"+this.user.uid+'\n'+JSON.stringify(this.user.providerData[0].providerId));
-        }
       }
 
       static get observers() {
@@ -385,28 +358,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.connectedCallback();
       }
 
-      _paramsChanged(queryParams) {
-        if (!!queryParams && !!queryParams.email) {
-          //something here to submit email to node function
-          console.log('\nEMAIL\n' +
-            'EMAIL SUBMITTED TO FIREBASE FUNCTION\n' +
-            JSON.stringify(queryParams.email));
-          this.dispatch(VisibilityController.actions.showUnknown());
-        }
-        if (!!queryParams && !!queryParams.emailAddress && !!queryParams.properName && !!queryParams.topicKey) {
-          console.log('\nTODO: CHECK FOR VALIDITY OF EACH PARAM ESPECIALLY TOPIC KEY\n');
-          this.dispatch(VisibilityController.actions.showInvited());
-          // this.page("logins");
-        }
-      }
-      //
-      // _checkEmail() {
-      //   if (this.$.submitEmailForm.validate()) {
-      //     this.dispatch(VisibilityController.actions.showUnknown());
-      //   }
-      //   return;
-      // }
-
       logout() {
         var pages = this.$.pages;
         this.$.fbAuth.signOut();
@@ -416,6 +367,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     }
 
-    window.customElements.define(MyApp.is, MyApp);
+    window
+      .customElements
+      .define(MyApp
+
+          .is
+        ,
+        MyApp
+      )
+    ;
   </script>
 </dom-module>
