@@ -11,6 +11,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-if.html">
+
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 
@@ -52,7 +54,7 @@
               <paper-input id="name" label="Topic Name"
                            required always-float-label></paper-input>
               <paper-textarea id="description" label="Description(optional) - What is this topic about?"
-                               always-float-label></paper-textarea>
+                              always-float-label></paper-textarea>
             </div>
             <div id="hasWebA" class="card" hidden>
               <p id="aTitle">Lead Capture Page:</p>
@@ -94,8 +96,11 @@
             <template is="dom-repeat" items="[[topics]]" as="topic">
               <li>
                 <span><b>[[topic.name]]</b></span><br>
-                <span><a href="[[topic.leadCaptureLink]]" target="_blank"> View page  </a><small>(after 5 minutes)</small></span>
-                </span>
+                <template is="dom-if" if="[[topic.leadCaptureLink]]">
+                  <span>
+                    <a href="[[topic.leadCaptureLink]]" target="_blank"> View page  </a><small>(after 5 minutes)</small></span>
+                  </span>
+                </template>
                 <paper-icon-button raised topic="[[topic]]" on-tap="remove"
                                    icon="my-icons:close"></paper-icon-button>
               </li>
@@ -243,7 +248,7 @@
           var newTopicKey = this.$.queryTopics.ref.push().key;
           let friendlyName = this._friendlyName(newTopicKey);
           let leadLink = null;
-          if (this.hasDualWeb(this.$.topicType.value)) {
+          if (!this.hasNoWeb(this.$.topicType.value)) {
             leadLink = "https://clouddancer.info/z" + newTopicKey + "c.html";
           }
           let postData = {
