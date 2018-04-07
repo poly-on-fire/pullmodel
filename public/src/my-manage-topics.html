@@ -46,10 +46,7 @@
                                         error-message="Please select a Topic Type"
                                         on-change="isThisWeb"></poly-on-fire-rtdb-selector>
             <input id="isWeb" hidden></input>
-            <!--<paper-input id="" label=""-->
-            <!--required always-float-label></paper-input>-->
-            <!--<paper-textarea id="" label=""-->
-            <!--required always-float-label></paper-textarea>-->
+            <input id="typeIndex" hidden></input>
             <div id="commonFields" hidden>
               <paper-input id="name" label="Topic Name"
                            required always-float-label></paper-input>
@@ -161,6 +158,7 @@
           this.$.bVideo.required = true;
           this.$.bPost.required = true;
           this.$.formControls.hidden = false;
+          this.$.typeIndex = 2;
         } else if (this.hasSingleWeb(this.$.topicType.value)) {
           this.$.commonFields.hidden = false;
           this.$.hasWebA.hidden = false;
@@ -183,6 +181,7 @@
           this.$.bVideo.required = false;
           this.$.bPost.required = false;
           this.$.formControls.hidden = false;
+          this.$.typeIndex = 1;
         } else if (this.hasNoWeb(this.$.topicType.value)) {
           this.$.commonFields.hidden = false;
           this.$.hasWebA.hidden = true;
@@ -204,6 +203,7 @@
           this.$.bVideo.required = false;
           this.$.bPost.required = false;
           this.$.formControls.hidden = false;
+          this.$.typeIndex = 0;
         } else {
           this.$.commonFields.hidden = true;
           this.$.hasWebA.hidden = true;
@@ -280,7 +280,8 @@
 
           let topicLookupData = {
             sponsorKey: this.user.uid,
-            sponsorName: this.user.displayName
+            sponsorName: this.user.displayName,
+            topicType: this.$.typeIndex
           };
           let topicLookupUpdates = {};
           topicLookupUpdates["/" + newTopicKey] = topicLookupData;
@@ -306,6 +307,7 @@
           this.$.update.hidden = true;
           this.$.add.hidden = false;
           this.$.topicType.value = null;
+          this.$.typeIndex = null;
           this.isThisWeb();
         }
         return;
