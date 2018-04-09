@@ -371,13 +371,20 @@
         if (this.$.promoteYes.value == "off") {
           this.$.promoteYes.value = "on";
           this.$.promotion.hidden = false;
+          this._infillReplyEmail();
         } else {
-          if (!!this.$.replyEmail.value) {
+          if (!!this.$.replyEmail.value && (this.$.replyEmail.value != this.user.email)) {
             this.$.delReplyEmail.open();
           } else {
             this.$.promoteYes.value = "off";
             this.$.promotion.hidden = true;
           }
+        }
+      }
+
+      _infillReplyEmail(){
+        if(!this.$.replyEmail.value &&  !!this.user){
+          this.$.replyEmail.value = this.user.email
         }
       }
 
