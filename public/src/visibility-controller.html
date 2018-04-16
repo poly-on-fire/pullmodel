@@ -215,7 +215,9 @@
           }
         } else if (this._shouldUpdgradeToSubscriber()) {
           this.dispatch(VisibilityController.actions.showSubscriber());
-          this.dbRole = this.role;
+          if(!this.dbRole) {
+            this.dbRole = this.role;
+          }
           this.updateCookie(this.role);
         } else if (this._logoutCondition()) {
           this.updateCookie(this.role);
