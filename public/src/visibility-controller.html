@@ -342,8 +342,6 @@
       logAccess() {
         if (!this.accessLogged) {
           this.accessLogged = true;
-          //TODO figure out why this fires multiple times. Timeout required? I did some debounce thing somewhere but now I can't remember where
-          console.log('\nRECORDING LOGIN WITH TIMESTAMP WHY TWICE DEBOUNCE? ' + this.accessLogged);
           var postData = {
             date: this.yyyymmdd(),
             timestamp: Date.now()
