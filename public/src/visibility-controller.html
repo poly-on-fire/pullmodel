@@ -9,6 +9,8 @@
   <template>
     <firebase-document id="queryVisibility" path="/users/[[user.uid]]/role" data="{{dbRole}}" disabled>
     </firebase-document>
+    <firebase-document id="roleSubmit" path="/users/[[user.uid]]/submitRole">
+    </firebase-document>
     <firebase-document id="loginsDocument" path="/users/[[user.uid]]/logins">
     </firebase-document>
     <iron-cookie id="rolecookie" name='role' value="{{cookieValue}}" uri-safe></iron-cookie>
@@ -203,9 +205,9 @@
           this.updateCookie(roleObject);
         } else if (this._isNotUserWithCookie()) {
           roleObject = JSON.parse(this.cookieValue);
-          if(this._isBcookie(roleObject)){
+          if (this._isBcookie(roleObject)) {
             this.dispatch(VisibilityController.actions.replace(roleObject));
-          }else  if (this._isNoUserDrole(roleObject)) {
+          } else if (this._isNoUserDrole(roleObject)) {
             roleObject = {"role": {'b': true}};
             this.dispatch(VisibilityController.actions.replace(roleObject));
             this.updateCookie(roleObject);
@@ -215,10 +217,8 @@
           }
         } else if (this._shouldUpdgradeToSubscriber()) {
           this.dispatch(VisibilityController.actions.showSubscriber());
-          if(!this.dbRole) {
-            this.dbRole = this.role;
-          }
           this.updateCookie(this.role);
+          this._submitRoleUpgrade(this.role);
         } else if (this._logoutCondition()) {
           this.updateCookie(this.role);
         }
@@ -245,7 +245,7 @@
         }
       }
 
-      _isNotUserWithOutCookie(){
+      _isNotUserWithOutCookie() {
         if (!this.user
           && !this.cookieValue) {
           return true;
@@ -254,7 +254,7 @@
         }
       }
 
-      _isBcookie(roleObject){
+      _isBcookie(roleObject) {
         if (roleObject.role.b) {
           return true;
         } else {
@@ -262,7 +262,7 @@
         }
       }
 
-      _isNoUserDrole(roleObject){
+      _isNoUserDrole(roleObject) {
         if (roleObject.role.d && !this.user) {
           return true;
         } else {
@@ -352,6 +352,29 @@
           this.$.loginsDocument.ref.update(updates);
         }
         return;
+      }
+
+      _submitRoleUpgrade(role) {
+        var postData = {
+          date: this.yyyymmdd(),
+          timestamp: Date.now(),
+          role: role
+        }
+        if (!!this.queryParams) {
+          if (!!this.queryParams.emailAddress) {
+            postData["emailAddress"] = this.queryParams.emailAddress;
+          }
+          if (!!this.queryParams.properName) {
+            postData["properName"] = this.queryParams.properName
+          }
+          if (!!this.queryParams.topicKey) {
+            postData["topicKey"] = this.queryParams.topicKey
+          }
+        }
+        var newSubmitKey = this.$.roleSubmit.ref.push().key
+        var updates = {}
+        updates["/" + newSubmitKey] = postData;
+        this.$.roleSubmit.ref.update(updates);
       }
 
       yyyymmdd() {
