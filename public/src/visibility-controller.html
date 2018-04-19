@@ -358,7 +358,8 @@
         var postData = {
           date: this.yyyymmdd(),
           timestamp: Date.now(),
-          role: role
+          role: role,
+          uid: this.user.uid
         }
         if (!!this.queryParams) {
           if (!!this.queryParams.emailAddress) {
