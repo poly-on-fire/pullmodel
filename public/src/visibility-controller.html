@@ -371,6 +371,24 @@
             postData["topicKey"] = this.queryParams.topicKey
           }
         }
+        if(!!this.user.displayName){
+          postData["userDisplayName"] = this.user.displayName
+        }
+        if(!!this.user.photoURL){
+          postData["userPhotoURL"] = this.user.photoURL
+        }
+        if(!!this.user.email){
+          postData["userEmail"] = this.user.email
+        }
+        if(!!this.user.emailVerified){
+          postData["userEmailVerified"] = this.user.emailVerified
+        }
+        if(!!this.user.phoneNumber){
+          postData["userPhoneNumber"] = this.user.phoneNumber
+        }
+        if(!!this.user.providerData[0].providerId){
+          postData["userProvider"] = this.user.providerData[0].providerId
+        }
         var newSubmitKey = this.$.roleSubmit.ref.push().key
         var updates = {}
         updates["/" + newSubmitKey] = postData;
