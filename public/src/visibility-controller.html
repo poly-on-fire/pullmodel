@@ -190,8 +190,24 @@
         Only conditional logic should appear in this method, that is confusing enough. All other logic should be
         shuttled off into other functions to keep this ridiculuous conditional code as easy to read as possible
 
-        Another objective was to keep all of the side effects (such as writes to db or cookie) in one place,
-        as it seems to be hard to keep this controller from going all over the place otherwise
+        In it's current status it almost nearly works, still chattery and logs too many submitRoles
+         but at least it allows the user to create a login and go to work. I tried to put a quick fix in for the chattery
+         part but the logic is so contorted that it really wasn't worth the effort, considering it's going to be replaced.
+         See bottom paragraph of this comment section.
+
+         Another objective was to keep all of the side effects (such as writes to db or cookie) in one place,
+         as it seems to be hard to keep this controller from going all over the place otherwise
+
+         Word to the wise, if you're coming back to work on this, don't even try to grok the logic without first exposing
+         each of role, cookieValue, user, and dbRole before each pass through this method. This entire thing is based
+         on multiple passes through this method, each with different starting properties. No human can put this in their
+         head, too hard. Make it visible. Giant time suck otherwise.
+
+         TO BE REPLACED!!!!
+         Although the logic here might be useful in the future, this entire module needs to be replaced anyway to conform
+         to Austin Murdock style JWT. Much of the logic might still work, but some needs to be made generic, and the
+         acquisition of the role needs to move from the database where it is now to the JWT API call in the
+         google auth user 
        */
       _reconcileConflicting() {
         //if already recognized as a user who has logged in
@@ -372,22 +388,22 @@
             postData["topicKey"] = this.queryParams.topicKey
           }
         }
-        if(!!this.user.displayName){
+        if (!!this.user.displayName) {
           postData["userDisplayName"] = this.user.displayName
         }
-        if(!!this.user.photoURL){
+        if (!!this.user.photoURL) {
           postData["userPhotoURL"] = this.user.photoURL
         }
-        if(!!this.user.email){
+        if (!!this.user.email) {
           postData["userEmail"] = this.user.email
         }
-        if(!!this.user.emailVerified){
+        if (!!this.user.emailVerified) {
           postData["userEmailVerified"] = this.user.emailVerified
         }
-        if(!!this.user.phoneNumber){
+        if (!!this.user.phoneNumber) {
           postData["userPhoneNumber"] = this.user.phoneNumber
         }
-        if(!!this.user.providerData[0].providerId){
+        if (!!this.user.providerData[0].providerId) {
           postData["userProvider"] = this.user.providerData[0].providerId
         }
         var newSubmitKey = this.$.roleSubmit.ref.push().key
