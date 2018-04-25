@@ -1,5 +1,5 @@
-nvm install v6.11.5
-nvm use v6.11.5 # because of cloud functions, otherwise would use latest
+nvm install v6.14.0
+nvm use v6.14.0 # because of cloud functions, otherwise would use latest
 npm install -g polymer-cli
 npm install -g bower
 npm install -g firebase-tools
