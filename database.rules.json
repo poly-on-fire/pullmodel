@@ -42,6 +42,13 @@
       ".write": true,
       ".read": false
     },
+    "emailStart": {
+      ".write": false,
+      ".read": false,
+      "$groupid": {
+        ".indexOn": "emailAddress"
+      }
+    },
     "returningLog": {
       ".write": true,
       ".read": false
