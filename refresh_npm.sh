@@ -1,5 +1,6 @@
-nvm install v6.14.0
-nvm use v6.14.0 # because of cloud functions, otherwise would use latest
+nvm install v9.11.1
+nvm use v9.11.1
+# cloud functions uses v6.14.0 but not so sure that I care within a local running npm
 npm install -g polymer-cli
 npm install -g bower
 npm install -g firebase-tools
