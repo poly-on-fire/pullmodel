@@ -281,7 +281,10 @@
           let topicLookupData = {
             sponsorKey: this.user.uid,
             sponsorName: this.user.displayName,
-            typeIndex: this.$.typeIndex
+            typeIndex: this.$.typeIndex,
+            listed: false,
+            description: this.$.description.value,
+            name: this.$.name.value
           };
           let topicLookupUpdates = {};
           topicLookupUpdates["/" + newTopicKey] = topicLookupData;
