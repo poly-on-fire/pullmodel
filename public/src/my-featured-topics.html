@@ -1,0 +1,59 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html"/>
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html"/>
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="featured-topics">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <firebase-query id="queryTopics" path="/topicLookup" order-by-child="listed" equal-to="true" data="{{topics}}">
+    </firebase-query>
+    <div class="card">
+      <div class="circle">Featured:</div>
+      <p>Featured Topics:</p>
+      <p>Topics featured by this site, for open consumption.</p>
+      <p>Most topics can only be subscribed to by invitation of the author. These topics are designated for anyone to
+        subscribe to.</p>
+    </div>
+    <div class="card">
+      <ul>
+        <template is="dom-repeat" items="[[topics]]" as="topic">
+          <li>
+            <h3>[[topic.name]]</h3>
+            <p><strong>Author: </strong>[[topic.sponsorName]]
+              <br/><strong>Facebook Messenger Subscribe Key: </strong>[[topic.topicKey]]
+              <template is="dom-if" if="[[topic.link]]">
+                <br/>
+                <span>
+                    <a href="[[topic.link]]" target="_blank"> web page for subscription  </a><small>(one option)</small></span>
+                </span>
+              </template>
+              <br/>
+              <strong>Description: </strong>[[topic.description]]
+          </li>
+        </template>
+      </ul>
+    </div>
+  </template>
+
+  <script>
+    class FeaturedTopics extends Polymer.Element {
+      static get is() {
+        return 'featured-topics';
+      }
+    }
+
+    window.customElements.define(FeaturedTopics.is, FeaturedTopics);
+  </script>
+</dom-module>

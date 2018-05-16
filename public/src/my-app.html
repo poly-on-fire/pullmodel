@@ -39,6 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="my-manage-subscriptions.html">
 <link rel="lazy-import" href="my-manage-topics.html">
 <link rel="lazy-import" href="my-read-faq.html">
+<link rel="lazy-import" href="my-featured-topics.html">
 <link rel="lazy-import" href="my-security-groups.html">
 <link rel="lazy-import" href="my-subscriber-groups.html">
 <link rel="lazy-import" href="my-super-admin.html">
@@ -197,6 +198,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                          role="navigation">
             <a name="about" href="[[rootPath]]about">About</a>
             <a name="read-faq" href="[[rootPath]]read-faq">FAQ</a>
+            <a name="featured-topics" href="[[rootPath]]featured-topics">Featured Topics</a>
             <div hidden$="[[user]]">
               <hr>
               <a name="help-options" href="[[rootPath]]help-options">Get Help Options</a>
@@ -268,6 +270,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <my-trial name="trial"></my-trial>
           <my-unsubscribe name="unsubscribe"></my-unsubscribe>
           <read-faq name="read-faq" user=[[user]]></read-faq>
+          <featured-topics name="featured-topics" user=[[user]]></featured-topics>
           <super-admin name="super-admin" user=[[user]]></super-admin>
           <security-groups name="security-groups" user=[[user]]></security-groups>
           <topic-types name="topic-types" user=[[user]]></topic-types>
