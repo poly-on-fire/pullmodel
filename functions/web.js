@@ -38,13 +38,11 @@ app.post('/webhook/', function (req, res) {
         let text = event.message.text;
         try {
           if (isEnrollAs(text)) {
-            enrollmentOptioned(sender, text);
+            enroll(sender, text);
+          } else if (isSubscribeTo(text)) {
+            enroll(sender, text);
           } else {
-            if (isSubscribeTo(text)) {
-              text = "You are subscribed!"
-            } else {
-              text = "Thanks. We got your message, and will respond as quickly as our rather modest systems allow."
-            }
+            text = "Thanks. We got your message, and will respond as quickly as our rather modest systems allow."
             sendText(sender, text);
           }
         } catch (err) {
@@ -83,15 +81,33 @@ const sendText = (sender, text) => {
   })
 }
 
-const enrollmentOptioned = function (sender, text) {
+const enroll = function (sender, text) {
   let id = text.substring(8, text.length);
   return db.ref('/fbSearch/' + id).once('value').then(function (snapshot) {
-      let msg = "Enrollment failed. We will respond as quickly as our rather modest systems allow to help you resolve this issue";
+      let msg = "Enrollment failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
       if (!!snapshot) {
         if (snapshot.val() !== null) {
           var timeStamp = (snapshot.val().timeStamp);
           if (!!timeStamp) {
             msg = "You are enrolled!";
+          }
+        }
+      }
+      sendText(sender, msg);
+    }
+  );
+  return false;
+}
+
+const subscribe = function (sender, text) {
+  let id = text.substring(11, text.length);
+  return db.ref('/topicLookup/' + id).once('value').then(function (snapshot) {
+      let msg = "Subscription failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
+      if (!!snapshot) {
+        if (snapshot.val() !== null) {
+          var topicKey = (snapshot.val().topicKey);
+          if (!!topicKey) {
+            msg = "You are subscribed!";
           }
         }
       }
