@@ -7,8 +7,11 @@ const request = require('request');
 const stringify = require('json-stringify');
 const db = admin.database();
 const chatReceivedRef = db.ref("chatReceived");
+const fbSubEnrlRef = db.ref("fbSubEnrl");
 const app = express();
 const VERIFY_TOKEN = "pullmodel";
+const SUBSCRIBE = 'subscribe';
+const ENROLL = 'enroll';
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -90,6 +93,7 @@ const enroll = function (sender, text) {
           var timeStamp = (snapshot.val().timeStamp);
           if (!!timeStamp) {
             msg = "You are enrolled!";
+            fbSubEnrlChange(sender, id, ENROLL);
           }
         }
       }
@@ -97,6 +101,22 @@ const enroll = function (sender, text) {
     }
   );
   return false;
+}
+
+const fbSubEnrlChange = function (sender, id, status) {
+  let statusRef = null;
+  if(status===ENROLL || status===SUBSCRIBE){
+    statusRef = fbSubEnrlRef.child("/"+status+"/").ref
+
+  }else{
+    console.log("WOOPSIES DON'T DO THAT NEED ENROLL OR SUBSCRIBE");
+  }
+  let obj = {
+    "sender": sender,
+    "id": id,
+    "timeStamp": Date.now()
+  };
+  statusRef.push().set(obj);
 }
 
 const subscribe = function (sender, text) {
@@ -109,6 +129,7 @@ const subscribe = function (sender, text) {
           var topicKey = (snapshot.val().topicKey);
           if (!!topicKey) {
             msg = "You are subscribed!";
+            fbSubEnrlChange(sender, id, SUBSCRIBE);
           }
         }
       }
