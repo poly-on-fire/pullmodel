@@ -89,7 +89,7 @@ const enroll = function (sender, text) {
   return db.ref('/fbSearch/' + id).once('value').then(function (snapshot) {
       let msg = "Enrollment failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
       if (!!snapshot) {
-        doThing(snapshot.val(), sender, id, msg);
+        enrollMsg(snapshot.val(), sender, id, msg);
       } else {
         sendText(sender, msg);
       }
@@ -98,12 +98,11 @@ const enroll = function (sender, text) {
   return false;
 }
 
-const doThing = function (snapVal, sender, id, msg) {
+const enrollMsg = function (snapVal, sender, id, msg) {
   if (snapVal !== null) {
     var timeStamp = (snapVal.timeStamp);
     if (!!timeStamp) {
       msg = "You are enrolled!";
-      console.log("DID THING");
       fbSubEnrlChange(sender, id, ENROLL);
     }
   }
@@ -130,6 +129,9 @@ const fbSubEnrlChange = function (sender, id, status) {
   }
 }
 
+/*
+This is some ugly-ass code. My understanding of the syntax around functions and especially nested promise.then() functions sux
+ */
 const subscribe = function (sender, text) {
   let id = text.substring(11, text.length);
   return db.ref('/topicLookup/' + id).once('value').then(function (snapshot) {
@@ -138,12 +140,19 @@ const subscribe = function (sender, text) {
         if (snapshot.val() !== null) {
           var topicKey = (snapshot.val().topicKey);
           if (!!topicKey) {
-            msg = "You are subscribed!";
-            fbSubEnrlChange(sender, id, SUBSCRIBE);
-          }
-        }
-      }
-      sendText(sender, msg);
+            let blah = db.ref('/fbSubEnrl/enroll/sender/' + sender).once('value').then(function (snaptheshot) {
+              if (snaptheshot.val() !== null) {
+                msg = "You are subscribed!";
+                fbSubEnrlChange(sender, id, SUBSCRIBE);
+                console.log("HOW TO KEEP THIS FROM BOUNCING? " + JSON.stringify(snaptheshot.val()));
+              } else {
+                msg = "We tried to subscribe you. You had a valid topic, but you must first be enrolled into our system. Please log in to pullModel.com with facebook and enroll in the facebook messenger system using the app."
+              }
+              sendText(sender, msg);
+            });
+          }else{sendText(sender, msg);}
+        }else{sendText(sender, msg);}
+      }else{sendText(sender, msg);}
     }
   );
   return false;
