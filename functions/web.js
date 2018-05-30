@@ -89,18 +89,25 @@ const enroll = function (sender, text) {
   return db.ref('/fbSearch/' + id).once('value').then(function (snapshot) {
       let msg = "Enrollment failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
       if (!!snapshot) {
-        if (snapshot.val() !== null) {
-          var timeStamp = (snapshot.val().timeStamp);
-          if (!!timeStamp) {
-            msg = "You are enrolled!";
-            fbSubEnrlChange(sender, id, ENROLL);
-          }
-        }
+        doThing(snapshot.val(), sender, id, msg);
+      }else {
+        sendText(sender, msg);
       }
-      sendText(sender, msg);
     }
   );
   return false;
+}
+
+const doThing = function(snapVal, sender, id, msg){
+  if (snapVal !== null) {
+    var timeStamp = (snapVal.timeStamp);
+    if (!!timeStamp) {
+      msg = "You are enrolled!";
+      console.log("DID THING");
+      fbSubEnrlChange(sender, id, ENROLL);
+    }
+  }
+  sendText(sender, msg);
 }
 
 const fbSubEnrlChange = function (sender, id, status) {
