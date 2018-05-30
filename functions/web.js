@@ -40,7 +40,7 @@ app.post('/webhook/', function (req, res) {
           if (isEnrollAs(text)) {
             enroll(sender, text);
           } else if (isSubscribeTo(text)) {
-            enroll(sender, text);
+            subscribe(sender, text);
           } else {
             text = "Thanks. We got your message, and will respond as quickly as our rather modest systems allow."
             sendText(sender, text);
@@ -101,6 +101,7 @@ const enroll = function (sender, text) {
 
 const subscribe = function (sender, text) {
   let id = text.substring(11, text.length);
+  console.log("LOOK AT " + id);
   return db.ref('/topicLookup/' + id).once('value').then(function (snapshot) {
       let msg = "Subscription failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
       if (!!snapshot) {
