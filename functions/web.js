@@ -90,7 +90,7 @@ const enroll = function (sender, text) {
       let msg = "Enrollment failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
       if (!!snapshot) {
         doThing(snapshot.val(), sender, id, msg);
-      }else {
+      } else {
         sendText(sender, msg);
       }
     }
@@ -98,7 +98,7 @@ const enroll = function (sender, text) {
   return false;
 }
 
-const doThing = function(snapVal, sender, id, msg){
+const doThing = function (snapVal, sender, id, msg) {
   if (snapVal !== null) {
     var timeStamp = (snapVal.timeStamp);
     if (!!timeStamp) {
@@ -112,10 +112,9 @@ const doThing = function(snapVal, sender, id, msg){
 
 const fbSubEnrlChange = function (sender, id, status) {
   let statusRef = null;
-  if(status===ENROLL || status===SUBSCRIBE){
-    statusRef = fbSubEnrlRef.child("/"+status+"/").ref
-
-  }else{
+  if (status === ENROLL || status === SUBSCRIBE) {
+    statusRef = fbSubEnrlRef.child("/" + status + "/").ref
+  } else {
     console.log("WOOPSIES DON'T DO THAT NEED ENROLL OR SUBSCRIBE");
   }
   let obj = {
@@ -123,12 +122,16 @@ const fbSubEnrlChange = function (sender, id, status) {
     "id": id,
     "timeStamp": Date.now()
   };
-  statusRef.push().set(obj);
+  statusRef.child("/sender/").child("/" + sender + "/").set(obj);
+  if (status === SUBSCRIBE) {
+    statusRef.child("/topic/").child("/" + id + "/").set(obj);
+  } else if (status === ENROLL) {
+    statusRef.child("/user/").child("/" + id + "/").set(obj);
+  }
 }
 
 const subscribe = function (sender, text) {
   let id = text.substring(11, text.length);
-  console.log("LOOK AT " + id);
   return db.ref('/topicLookup/' + id).once('value').then(function (snapshot) {
       let msg = "Subscription failed. We will respond as quickly as our rather modest systems allow, to help you resolve this issue";
       if (!!snapshot) {
