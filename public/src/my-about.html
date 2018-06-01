@@ -33,12 +33,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="card">
       <div class="circle">1</div>
       <h1>Welcome!</em></h1>
-      <p>This humble app will be in beta mode for the forseeable future, and some functionality may be clunky or a bit challenging to use.</p>
-      <p>This app is created for a limited number of friends and associates of it's creator. This could change in the future,
+      <p>pullmodel is an information subscribtion service</p>
+      <p><strong><em>"I'm a little bit over-informed right now, can you just give this to me one piece at a time, so I can absorb
+        it over a period of days and weeks?"</em></strong>
+      </p>
+      <p>This humble app will be in beta mode for the forseeable future, and some functionality may be clunky or a bit
+        challenging to use.</p>
+      <p>This app is created for a limited number of friends and associates of it's creator. This could change in the
+        future,
         but that expansion was not what the app was created for.</p>
-      <p>For more info on what this app is about, see <a href="https://betterologist.net/2018/04/about-pullmodel/">this blog</a>.</p>
-      <p>For the open sourced code that is this app, see  <a href="https://github.com/poly-on-fire/pullmodel">this front end code</a> and <a href="https://github.com/poly-on-fire/autopm">this back end code</a>.</p>
-      <p>For the latest 5 minute video covering basic pullModel functionality see <a href="https://youtu.be/WBr9ng8oNHs">this video</a>.</p>
+      <p>For more info on what this app is about, see <a href="https://betterologist.net/2018/04/about-pullmodel/">this
+        blog</a>.</p>
+      <p>For the open sourced code that is this app, see <a href="https://github.com/poly-on-fire/pullmodel">this front
+        end code</a> and <a href="https://github.com/poly-on-fire/autopm">this back end code</a>.</p>
+      <p>For the latest 5 minute video covering basic pullModel functionality see <a
+              href="https://youtu.be/WBr9ng8oNHs">this video</a>.</p>
       <p>My handle on the Polymer, or Firebase slack feeds is <strong>petecarapetyan</strong></p>
     </div>
     <!--</div>-->
@@ -47,19 +56,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     class MyAbout extends ReduxMixin
 
-    (Polymer.Element)
-    {
+    (Polymer.Element) {
       static
-      get
-      is()
-      {
+      get is() {
         return 'my-about';
       }
 
       static
-      get
-      properties()
-      {
+      get properties() {
         return {
           role: {
             type: Object,
