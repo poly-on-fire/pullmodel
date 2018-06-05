@@ -31,7 +31,8 @@
     "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
     "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.3",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
-    "paper-dialog": "PolymerElements/paper-dialog#^2.1.0"
+    "paper-dialog": "PolymerElements/paper-dialog#^2.1.0",
+    "poly-on-fire-rtdb-selector": "poly-on-fire/poly-on-fire-rtdb-selector"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
