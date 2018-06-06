@@ -39,10 +39,10 @@
     </div>
     <div class="card">
       <poly-on-fire-rtdb-selector id="topic"
-                    placeholder='Select topic' field='name'
-                    dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
-                    error-message="Please select a Topic" required
-                    on-change="topicSelected"></poly-on-fire-rtdb-selector>
+                                  placeholder='Select topic' field='name'
+                                  dbpath="/users/[[user.uid]]/topic" combolabel="Select Topic"
+                                  error-message="Please select a Topic" required
+                                  on-change="topicSelected"></poly-on-fire-rtdb-selector>
       <h2>[[topicName]]</h2>
     </div>
     <div id=validatable class="card" hidden>
@@ -68,6 +68,7 @@
       </div>
       <div class="card">
         <template is="dom-repeat" items="[[emailMetas]]" as="message">
+
           <span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>
           <span><small><br>[[message.contentExtract]]</small></span>
           <hr>
@@ -106,6 +107,13 @@
           },
           topicName: {
             type: String
+          },
+          daysToBlock: {
+            type: Array
+          },
+          emailMetas: {
+            type: Object,
+            observer: "howMany"
           }
         }
       }
@@ -113,6 +121,28 @@
       resetForm() {
         this.$.name.value = null;
         this.$.description.value = null;
+      }
+
+      howMany() {
+        let blockme = []
+        if(this.emailMetas !== undefined && this.emailMetas.length>0 && !!this.$.topic.key) {
+          this.emailMetas.forEach(function(meta){
+            blockme.push(meta.day);
+          });
+        }
+        if(blockme.length>0){
+          this.daysToBlock = blockme;
+          console.log(this.daysToBlock);
+        }
+      }
+
+      daySelected() {
+        let day = parseInt(this.$.day.value);
+        if(!!this.daysToBlock && !!this.dayValue && this.daysToBlock.length>0 && this.dayValue>-1 && this.daysToBlock.includes(day)){
+          alert("Day " + day + " was already specified, sorry. Please pick a day that is not already specified.");
+          this.dayValue = undefined;
+          this.$.day.value = undefined;
+        }
       }
 
       update(e) {
@@ -140,8 +170,8 @@
       add() {
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
-          let emailKey = this.$.queryUserEmailContent.ref.push().key
           let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
+          let emailKey = this.$.topic.key + "_" + this.padDayto3();
           let emailContent = {
             emailBody: this.$.emailBody.value,
             subject: this.$.subject.value,
