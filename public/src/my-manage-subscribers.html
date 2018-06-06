@@ -111,6 +111,7 @@
         var subscriberQueryRef = this.$.querySubscribers.ref.child(key);
         var postData = {
           name: this.$.name.value,
+          group: this.$.group.key,
           description: descrip,
           timestamp: Date.now()
         }
@@ -131,7 +132,7 @@
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
           let postData = {
-            group: this.$.group.value,
+            group: this.$.group.key,
             subscribers: this.$.subscribers.value ? this.$.subscribers.value : "",
             timestamp: Date.now()
           };
