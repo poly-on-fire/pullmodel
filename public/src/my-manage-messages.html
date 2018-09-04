@@ -8,6 +8,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 
@@ -32,7 +33,6 @@
     </firebase-query>
     <div class="card">
       <div class="circle">Message</div>
-
       <paper-icon-button raised message="[[message]]"
                          icon="my-icons:chevron-right">Update
       </paper-icon-button>
@@ -60,8 +60,8 @@
                          required always-float-label></paper-input>
             <paper-textarea id="emailBody" label="Email Body:"
                             required always-float-label></paper-textarea>
-            <paper-button id="add" on-click="add" type="button">Add</paper-button>
-            <paper-button id="update" on-click="update" type="button" hidden>Update</paper-button>
+            <paper-button id="add" on-click="addUpdate" type="button">Add</paper-button>
+            <paper-button id="update" on-click="addUpdate" type="button" hidden>Update</paper-button>
             <paper-button id="clear" on-click="clear" type="button">Clear/Cancel</paper-button>
           </form>
         </iron-form>
@@ -70,11 +70,25 @@
         <template is="dom-repeat" items="[[emailMetas]]" as="message">
 
           <span>Day [[message.day]]:<strong> [[message.subjectExtract]]</strong></span>
-          <span><small><br>[[message.contentExtract]]</small></span>
+          <span><small><br>[[message.contentExtract]]</small></span><br>
+          <paper-icon-button raised message="[[message]]" on-tap="_delete" icon="my-icons:close">Delete
+          </paper-icon-button>
+          <paper-icon-button raised message="[[message]]" on-tap="display" icon="my-icons:chevron-right">Update
+          </paper-icon-button>
           <hr>
         </template>
       </div>
     </div>
+    <paper-dialog id="deleteActiveRecord">
+      <h2>Delete this message?</h2>
+      <p>
+        Are you sure you want to delete this message?
+      </p>
+      <div class="buttons">
+        <paper-button dialog-dismiss on-tap='_deleteRecords'>Yes, please delete</paper-button>
+        <paper-button dialog-confirm autofocus >No! Go back!</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 
@@ -114,6 +128,9 @@
           emailMetas: {
             type: Object,
             observer: "howMany"
+          },
+          activeRecord: {
+            type: String
           }
         }
       }
@@ -144,29 +161,29 @@
         }
       }
 
-      update(e) {
-        let descrip = this.$.description.value ? this.$.description.value : "";
-        let key = this.$.key.value;
-        let messageQueryRef = this.$.queryMessages.ref.child(key);
-        let postData = {
-          name: this.$.name.value,
-          description: descrip,
-          timestamp: Date.now()
-        }
-        messageQueryRef.ref.update(postData);
-        this.$.name.value = null;
-        this.$.description.value = null;
+      // update(e) {
+        // let descrip = this.$.description.value ? this.$.description.value : "";
+        // let key = this.$.key.value;
+        // let messageQueryRef = this.$.queryMessages.ref.child(key);
+        // let postData = {
+        //   name: this.$.name.value,
+        //   description: descrip,
+        //   timestamp: Date.now()
+        // }
+        // messageQueryRef.ref.update(postData);
+        // this.$.name.value = null;
+        // this.$.description.value = null;
+        //
+        // this.$.key.hidden = true;
+        // this.$.add.hidden = false;
+        // this.$.update.hidden = true;
+        // this.$.updateTitle.hidden = true;
+        // this.$.addTitle.hidden = false;
+        // this.$.addupdate.reset()
+      //   return;
+      // }
 
-        this.$.key.hidden = true;
-        this.$.add.hidden = false;
-        this.$.update.hidden = true;
-        this.$.updateTitle.hidden = true;
-        this.$.addTitle.hidden = false;
-        this.$.addupdate.reset()
-        return;
-      }
-
-      add() {
+      addUpdate() {
         let myForm = this.$.addupdate;
         if (myForm.validate()) {
           let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
@@ -196,6 +213,7 @@
           this.$.emailBody.value = null;
           this.dayValue = null;
           this.topicSelected();
+          this.$.day.disabled = false;
         }
         return;
       }
@@ -212,7 +230,7 @@
       }
 
       padDayto3() {
-        let dayNumber = this.dayValue;
+        let dayNumber = ""+this.dayValue;
         dayNumber = dayNumber.padStart(3, "0");
         return dayNumber;
       }
@@ -273,34 +291,56 @@
 
       clear() {
         this.$.addupdate.reset();
-        this.$.name.value = null;
-        this.$.description.value = null;
+        this.$.subject.value = null;
+        this.$.emailBody.value = null;
+        this.dayValue = null;
+        this.$.day.value = null;
+        this.$.updateTitle.hidden = true;
+        this.$.addTitle.hidden = false;
         this.$.add.hidden = false;
         this.$.update.hidden = true;
-        this.$.addTitle.hidden = false;
-        this.$.updateTitle.hidden = true;
+        this.$.day.disabled = false;
         return;
       }
 
       display(e) {
         let key = e.currentTarget.message.$key;
-        let messageQueryRef = this.$.queryMessages.ref.child(key);
-        let aMessage = null;
-        messageQueryRef.on('value', function (snapshot) {
-          aMessage = snapshot.val();
+        console.log(key);
+        let messageContentQueryRef = this.$.queryUserEmailContent.ref.child(key);
+        console.log(messageContentQueryRef.path);
+        let aMessageContent = null;
+        messageContentQueryRef.on('value', function (snapshot) {
+          aMessageContent = snapshot.val();
+          console.log("SO\n"+JSON.stringify(aMessageContent));
         });
-        this.$.key.value = key;
-        this.$.name.value = aMessage.name;
-        this.$.description.value = aMessage.description;
-        this.$.add.hidden = true;
+        let messageMetaQueryRef = this.$.queryUserEmailMeta.ref.child(key);
+        console.log(messageMetaQueryRef.path);
+        let aMetaMessage = null;
+        messageMetaQueryRef.on('value', function (snapshot) {
+          aMetaMessage = snapshot.val();
+          console.log("HA\n"+JSON.stringify(aMetaMessage));
+        });
+        this.$.key.hidden = true;
         this.$.update.hidden = false;
-        this.$.addTitle.hidden = true;
+        this.$.add.hidden = true;
         this.$.updateTitle.hidden = false;
+        this.$.addTitle.hidden = true;
+        this.$.subject.value = aMessageContent.subject;
+        this.$.emailBody.value = aMessageContent.emailBody;
+        this.$.day.disabled = true; //else delete old record if change!
+        this.dayValue = aMetaMessage.day;
       }
 
-      remove(e) {
-        let key = e.currentTarget.message.$key;
-        this.$.queryMessages.ref.child(key).remove();
+      _delete(e) {
+        this.activeRecord = e.currentTarget.message.$key;
+        this.$.deleteActiveRecord.open();
+      }
+
+      _deleteRecords() {
+        let key = this.activeRecord;
+        this.$.queryUserEmailContent.ref.child(key).remove();
+        this.$.queryUserEmailMeta.ref.child(key).remove();
+        this.activeRecord = null;
       }
     }
 
