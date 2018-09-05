@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/poly-on-fire-rtdb-selector/poly-on-fire-rtdb-selector.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/polymer-quill/polymer-quill.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="my-icons.html">
 
@@ -20,6 +21,7 @@
         padding: 10px;
       }
     </style>
+    <style include="quill-core quill-snow quill-bubble"></style>
     <firebase-query id="queryTopicName" path="/users/[[user.uid]]/topicName">
     </firebase-query>
     <firebase-query id="queryUserEmailMeta" path="/users/[[user.uid]]/emailMeta" order-by-child='keyDay'
@@ -31,11 +33,9 @@
     </firebase-query>
     <firebase-query id="queryTopic" path="/users/[[user.uid]]/topic" data="{{Topic}}">
     </firebase-query>
+
     <div class="card">
       <div class="circle">Message</div>
-      <paper-icon-button raised message="[[message]]"
-                         icon="my-icons:chevron-right">Update
-      </paper-icon-button>
     </div>
     <div class="card">
       <poly-on-fire-rtdb-selector id="topic"
@@ -58,8 +58,12 @@
             </paper-input>
             <paper-input id="subject" label="Email Subject:"
                          required always-float-label></paper-input>
-            <paper-textarea id="emailBody" label="Email Body:"
-                            required always-float-label></paper-textarea>
+            <br>
+            <div class="card">Email Body:
+              <div id="editor"></div>
+            </div>
+
+            <input id="emailBody" label="Email Body:" hidden></input>
             <paper-button id="add" on-click="addUpdate" type="button">Add</paper-button>
             <paper-button id="update" on-click="addUpdate" type="button" hidden>Update</paper-button>
             <paper-button id="clear" on-click="clear" type="button">Clear/Cancel</paper-button>
@@ -86,7 +90,7 @@
       </p>
       <div class="buttons">
         <paper-button dialog-dismiss on-tap='_deleteRecords'>Yes, please delete</paper-button>
-        <paper-button dialog-confirm autofocus >No! Go back!</paper-button>
+        <paper-button dialog-confirm autofocus>No! Go back!</paper-button>
       </div>
     </paper-dialog>
 
@@ -129,10 +133,28 @@
             type: Object,
             observer: "howMany"
           },
-          activeRecord: {
+          activeRecord: { //need same key two usages
             type: String
           }
         }
+      }
+
+      ready() {
+        super.ready();
+        let body = this.$.emailBody;
+        let toolbarOptions = [[{header: ['1', '2', '3', false]}], ['bold', 'italic', 'underline', 'link'], [{list: 'ordered'}, {list: 'bullet'}], ['clean'], ['link', 'image']];
+        let container = this.$.editor;
+        this.editor = new Quill(container, {
+          placeholder: 'Compose an epic...',
+          theme: 'snow',
+          modules: {
+            toolbar: toolbarOptions
+          }
+        });
+        let quill = this.editor;
+        quill.on('text-change', function(delta, oldDelta, source) {
+          body.value = container.firstChild.innerHTML;
+        });
       }
 
       resetForm() {
@@ -142,49 +164,29 @@
 
       howMany() {
         let blockme = []
-        if(this.emailMetas !== undefined && this.emailMetas.length>0 && !!this.$.topic.key) {
-          this.emailMetas.forEach(function(meta){
+        if (this.emailMetas !== undefined && this.emailMetas.length > 0 && !!this.$.topic.key) {
+          this.emailMetas.forEach(function (meta) {
             blockme.push(meta.day);
           });
         }
-        if(blockme.length>0){
+        if (blockme.length > 0) {
           this.daysToBlock = blockme;
         }
       }
 
       daySelected() {
         let day = parseInt(this.$.day.value);
-        if(!!this.daysToBlock && !!this.dayValue && this.daysToBlock.length>0 && this.dayValue>-1 && this.daysToBlock.includes(day)){
+        if (!!this.daysToBlock && !!this.dayValue && this.daysToBlock.length > 0 && this.dayValue > -1 && this.daysToBlock.includes(day)) {
           alert("Day " + day + " was already specified, sorry. Please pick a day that is not already specified.");
           this.dayValue = undefined;
           this.$.day.value = undefined;
         }
       }
 
-      // update(e) {
-        // let descrip = this.$.description.value ? this.$.description.value : "";
-        // let key = this.$.key.value;
-        // let messageQueryRef = this.$.queryMessages.ref.child(key);
-        // let postData = {
-        //   name: this.$.name.value,
-        //   description: descrip,
-        //   timestamp: Date.now()
-        // }
-        // messageQueryRef.ref.update(postData);
-        // this.$.name.value = null;
-        // this.$.description.value = null;
-        //
-        // this.$.key.hidden = true;
-        // this.$.add.hidden = false;
-        // this.$.update.hidden = true;
-        // this.$.updateTitle.hidden = true;
-        // this.$.addTitle.hidden = false;
-        // this.$.addupdate.reset()
-      //   return;
-      // }
-
       addUpdate() {
         let myForm = this.$.addupdate;
+        let bodyText = this.editor.getText();
+
         if (myForm.validate()) {
           let emailMetaObject = this.emailMetaObjectCreate(this.$.topic.value);
           let emailKey = this.$.topic.key + "_" + this.padDayto3();
@@ -192,7 +194,7 @@
             emailBody: this.$.emailBody.value,
             subject: this.$.subject.value,
           };
-          emailMetaObject.contentExtract = this.bodyExtract(emailContent);
+          emailMetaObject.contentExtract = this.bodyExtract(bodyText);
           emailMetaObject.subject = encodeURIComponent(this.$.subject.value);
           emailMetaObject.subjectExtract = this.emailSubjectExtract(this.$.subject.value);
           emailMetaObject.topicExtract = this.topicExtract(this.$.topic.value);
@@ -211,6 +213,7 @@
           this.$.addTitle.hidden = false;
           this.$.subject.value = null;
           this.$.emailBody.value = null;
+          this.$.editor.innerHTML = null;
           this.dayValue = null;
           this.topicSelected();
           this.$.day.disabled = false;
@@ -230,7 +233,7 @@
       }
 
       padDayto3() {
-        let dayNumber = ""+this.dayValue;
+        let dayNumber = "" + this.dayValue;
         dayNumber = dayNumber.padStart(3, "0");
         return dayNumber;
       }
@@ -254,7 +257,7 @@
       }
 
       bodyExtract(emailContent) {
-        let extract = emailContent.emailBody.replace(/(\r\n|\n|\r)/gm, "");
+        let extract = emailContent.replace(/(\r\n|\n|\r)/gm, "");
         extract = extract.substring(0, 100)
         return extract;
       }
@@ -305,20 +308,15 @@
 
       display(e) {
         let key = e.currentTarget.message.$key;
-        console.log(key);
         let messageContentQueryRef = this.$.queryUserEmailContent.ref.child(key);
-        console.log(messageContentQueryRef.path);
         let aMessageContent = null;
         messageContentQueryRef.on('value', function (snapshot) {
           aMessageContent = snapshot.val();
-          console.log("SO\n"+JSON.stringify(aMessageContent));
         });
         let messageMetaQueryRef = this.$.queryUserEmailMeta.ref.child(key);
-        console.log(messageMetaQueryRef.path);
         let aMetaMessage = null;
         messageMetaQueryRef.on('value', function (snapshot) {
           aMetaMessage = snapshot.val();
-          console.log("HA\n"+JSON.stringify(aMetaMessage));
         });
         this.$.key.hidden = true;
         this.$.update.hidden = false;
@@ -326,9 +324,10 @@
         this.$.updateTitle.hidden = false;
         this.$.addTitle.hidden = true;
         this.$.subject.value = aMessageContent.subject;
-        this.$.emailBody.value = aMessageContent.emailBody;
+        this.$.editor.innerHTML = aMessageContent.emailBody;
         this.$.day.disabled = true; //else delete old record if change!
         this.dayValue = aMetaMessage.day;
+
       }
 
       _delete(e) {
